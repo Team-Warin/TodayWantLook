@@ -1,0 +1,26 @@
+.container {
+  background-color: rgb(241, 244, 249);
+  padding: 13%;
+}
+
+.login_container {
+  background-color: white;
+}
+
+.login_container > div > h1 {
+  font-size: 40px;
+  font-weight: 400;
+}
+
+.login_container > div > p {
+  font-size: 27px;
+  font-weight: 600;
+}
+
+.btn {
+  font-size: 20px;
+}
+
+.google {
+  background-color: rgb(241, 244, 249);
+}
