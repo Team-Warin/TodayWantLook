@@ -1,3 +1,15 @@
-export default function Home() {
+import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+
+  if (typeof session?.user.likes === 'boolean') {
+    if (!session.user.likes) {
+      redirect('/like');
+    }
+  }
+
   return <main></main>;
 }

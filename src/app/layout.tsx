@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { BMJUA } from '@/modules/font';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 import Navbar from '@/components/Navbar';
 
@@ -20,7 +20,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang='ko'>
+    <html lang='ko' className='white'>
       <body className={BMJUA.className}>
         <Navbar session={session} />
         {children}

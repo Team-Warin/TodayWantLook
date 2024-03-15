@@ -7,6 +7,8 @@ import style from '@/styles/Signin.module.css';
 
 import Image from 'next/image';
 
+import { Button } from '@nextui-org/button';
+
 import { getProviders, signIn } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from './api/auth/[...nextauth]';
@@ -37,10 +39,8 @@ export default function SignIn({
         <div className='w-full h-full p-5 ps-14'>
           {Object.values(providers).map((provider, i: number) => {
             return (
-              <button
-                className={`${color[provider.name].style} ${
-                  style.btn
-                } flex justify-center items-center gap-2 w-full p-3 pt-5 pb-5 shadow-md rounded-xl`}
+              <Button
+                className={`${color[provider.name].style} ${style.btn}`}
                 onClick={() => signIn(provider.id)}
                 key={i}
               >
@@ -48,6 +48,8 @@ export default function SignIn({
                   src={color[provider.name].icon}
                   width={40}
                   height={40}
+                  placeholder='blur'
+                  blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
                   alt={provider.name}
                 ></Image>
                 <p>
@@ -55,7 +57,7 @@ export default function SignIn({
                     {provider.name}로 로그인 하기
                   </span>
                 </p>
-              </button>
+              </Button>
             );
           })}
         </div>

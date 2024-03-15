@@ -1,24 +1,28 @@
 .container {
+  @apply p-[13%];
   background-color: rgb(241, 244, 249);
-  padding: 13%;
 }
 
 .login_container {
-  background-color: white;
+  @apply bg-white;
 }
 
 .login_container > div > h1 {
-  font-size: 40px;
-  font-weight: 400;
+  @apply text-5xl font-semibold;
 }
 
 .login_container > div > p {
-  font-size: 27px;
-  font-weight: 600;
+  @apply text-2xl font-semibold;
 }
 
 .btn {
-  font-size: 20px;
+  @apply w-full text-xl flex justify-center items-center shadow-md gap-2 pt-8 pb-8;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+.btn:hover {
+  transform: scale(1.05);
 }
 
 .google {
