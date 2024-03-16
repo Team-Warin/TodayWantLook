@@ -20,19 +20,6 @@ const nextConfig = {
       },
     ],
   },
-  async headers() {
-    return [
-      {
-        source: '/api/media',
-        headers: [
-          {
-            key: 'x-Auth',
-            value: process.env.API_KEY,
-          },
-        ],
-      },
-    ];
-  },
 };
 
 export default nextConfig;
