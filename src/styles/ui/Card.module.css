@@ -1,0 +1,30 @@
+.container {
+  @apply w-[149px];
+  transition: transform 0.3s ease;
+}
+
+.container:hover {
+  transform: scale(1.05);
+}
+
+.poster_container {
+  @apply h-[258px] overflow-hidden rounded-lg relative;
+}
+
+.poster {
+  @apply absolute origin-bottom bottom-0 scale-[1.7] z-10;
+}
+
+.poster_title {
+  @apply mt-2;
+}
+
+.poster_title > p:nth-child(1) {
+  @apply w-full whitespace-nowrap overflow-hidden text-ellipsis;
+}
+
+.poster_title > p:nth-child(2) {
+  @apply w-full whitespace-nowrap overflow-hidden text-ellipsis;
+  font-size: 13px;
+  color: gray;
+}
