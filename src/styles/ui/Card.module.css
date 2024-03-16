@@ -1,5 +1,5 @@
 .container {
-  @apply w-[149px];
+  @apply w-[149px] cursor-pointer;
   transition: transform 0.3s ease;
 }
 
@@ -8,7 +8,7 @@
 }
 
 .poster_container {
-  @apply h-[258px] overflow-hidden rounded-lg relative;
+  @apply h-[258px] overflow-hidden rounded-lg relative shadow;
 }
 
 .poster {

@@ -1,0 +1,7 @@
+.checkbox {
+  transition: transform 0.3s ease;
+}
+
+.checked {
+  @apply scale-95 brightness-50;
+}
