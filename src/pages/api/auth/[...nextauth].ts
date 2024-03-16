@@ -30,7 +30,7 @@ export const authOptions = {
     signIn: '/signin',
   },
   adapter: MongoDBAdapter(connectDB, {
-    databaseName: 'LikeOTT',
+    databaseName: process.env.DB_NAME,
   }) as Adapter,
   callbacks: {
     async session({ session, user }: { session: Session; user: User }) {

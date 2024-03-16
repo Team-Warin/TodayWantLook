@@ -13,7 +13,25 @@ const nextConfig = {
         hostname: 'img.icons8.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'kr-a.kakaopagecdn.com',
+        pathname: '/**',
+      },
     ],
+  },
+  async headers() {
+    return [
+      {
+        source: '/api/media',
+        headers: [
+          {
+            key: 'x-Auth',
+            value: process.env.API_KEY,
+          },
+        ],
+      },
+    ];
   },
 };
 
