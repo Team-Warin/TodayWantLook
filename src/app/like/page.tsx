@@ -34,6 +34,11 @@ export default function Like() {
       const containerWidth: number = (container.current?.clientWidth ?? 1) - 24;
       const cardWidth: number = container.current?.clientWidth ?? 1;
 
+      console.log(
+        Math.floor((containerWidth / cardWidth) * 10),
+        Math.floor((containerWidth / cardWidth) * 10) * 3
+      );
+
       setRow(Math.floor((containerWidth / cardWidth) * 10));
       setItmes(Math.floor((containerWidth / cardWidth) * 10) * 3);
     }
@@ -65,18 +70,23 @@ export default function Like() {
       >
         {(data ?? [...Array(30).keys()])
           .slice(0, items)
-          .map((data: MediaData | number, i: number) => {
+          .map((media: MediaData | number, i: number) => {
             return (
               <LikeMedia
                 key={i}
                 isLoading={isLoading}
-                data={data}
+                data={media}
                 likes={likes}
                 setLikes={setLikes}
                 ref={card}
               ></LikeMedia>
             );
           })}
+        {data
+          ? [...Array(row - (data.length % row)).keys()].map((_, i: number) => {
+              return <div key={i} className={`w-[149px] h-[298px]`}></div>;
+            })
+          : null}
         <div id='observer' className='w-full h-3'></div>
       </div>
     </div>
