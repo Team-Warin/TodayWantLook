@@ -48,8 +48,8 @@ export default function Like() {
   }, [windowWidth]);
 
   useEffect(() => {
-    if (card) {
-      const containerWidth: number = windowWidth - 24;
+    if (card && windowWidth > 1) {
+      const containerWidth: number = windowWidth - 50;
       const cardWidth: number = card.current?.clientWidth ?? 149;
 
       setRow(Math.floor(containerWidth / cardWidth));
@@ -90,6 +90,9 @@ export default function Like() {
           })}
         {data
           ? [...Array(row - (data.length % row)).keys()].map((_, i: number) => {
+              if (data.length % row === 0) {
+                return null;
+              }
               return <div key={i} className={`w-[149px] h-[298px]`}></div>;
             })
           : null}
