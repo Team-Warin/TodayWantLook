@@ -5,14 +5,20 @@ import style from '@/styles/ui/Card.module.css';
 import Image from 'next/image';
 
 import { Skeleton } from '@nextui-org/react';
+import { ForwardedRef, forwardRef } from 'react';
 
-export default function Card(props: {
+interface CardProps {
   isLoading: boolean;
   data: MediaData | number;
-}) {
-  if (props.isLoading) {
+}
+
+function Card(
+  { isLoading, data }: CardProps,
+  ref: ForwardedRef<HTMLDivElement>
+) {
+  if (isLoading) {
     return (
-      <div className={style.container}>
+      <div className={style.container} ref={ref}>
         <Skeleton className='rounded-lg'>
           <div className={style.poster_container}></div>
         </Skeleton>
@@ -26,7 +32,7 @@ export default function Card(props: {
         </div>
       </div>
     );
-  } else if (typeof props.data !== 'number') {
+  } else if (typeof data !== 'number') {
     return (
       <div className={style.container}>
         <div className={style.poster_container}>
@@ -34,15 +40,15 @@ export default function Card(props: {
             className={style.poster}
             width={450}
             height={380}
-            src={props.data.img}
+            src={data.img}
             placeholder='blur'
             blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
             alt={'poster'}
           ></Image>
-          {props.data.backdrop_img ? (
+          {data.backdrop_img ? (
             <Image
               className='absolute z-0'
-              src={props.data.backdrop_img}
+              src={data.backdrop_img}
               fill={true}
               sizes='(max-width: 149px), (max-width: 258px)'
               placeholder='blur'
@@ -52,10 +58,12 @@ export default function Card(props: {
           ) : null}
         </div>
         <div className={style.poster_title}>
-          <p>{props.data.title}</p>
-          <p>{props.data.author}</p>
+          <p>{data.title}</p>
+          <p>{data.author}</p>
         </div>
       </div>
     );
   }
 }
+
+export default forwardRef(Card);
