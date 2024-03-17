@@ -22,31 +22,40 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export default function Like() {
   const { data, error, isLoading } = useSWR('/api/media', fetcher);
 
-  const container = useRef<HTMLDivElement>(null);
   const card = useRef<HTMLDivElement>(null);
 
   let [likes, setLikes] = useState<MediaData[]>([]);
+  let [windowWidth, setWindowWidth] = useState(0);
   let [row, setRow] = useState(0);
   let [items, setItmes] = useState(0);
-
-  useEffect(() => {
-    if (card && container) {
-      const containerWidth: number = (container.current?.clientWidth ?? 1) - 24;
-      const cardWidth: number = container.current?.clientWidth ?? 1;
-
-      console.log(
-        Math.floor((containerWidth / cardWidth) * 10),
-        Math.floor((containerWidth / cardWidth) * 10) * 3
-      );
-
-      setRow(Math.floor((containerWidth / cardWidth) * 10));
-      setItmes(Math.floor((containerWidth / cardWidth) * 10) * 3);
-    }
-  }, []);
 
   function Observer() {
     setItmes((items += row * 2));
   }
+
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('resize', () => setWindowWidth(window.innerWidth));
+
+    return () => {
+      window.removeEventListener('resize', () =>
+        setWindowWidth(window.innerWidth)
+      );
+    };
+  }, [windowWidth]);
+
+  useEffect(() => {
+    if (card) {
+      const containerWidth: number = windowWidth - 24;
+      const cardWidth: number = card.current?.clientWidth ?? 149;
+
+      setRow(Math.floor(containerWidth / cardWidth));
+      setItmes(Math.floor(containerWidth / cardWidth) * 3);
+    }
+  }, [windowWidth]);
 
   useEffect(() => {
     if (row) {
@@ -64,10 +73,7 @@ export default function Like() {
 
   return (
     <div className='w-full mt-5 p-3'>
-      <div
-        className='w-full flex justify-between flex-wrap gap-4'
-        ref={container}
-      >
+      <div className='w-full flex justify-between flex-wrap gap-4'>
         {(data ?? [...Array(30).keys()])
           .slice(0, items)
           .map((media: MediaData | number, i: number) => {
