@@ -4,6 +4,7 @@ import type { MediaData } from '@/types/media';
 import type { Dispatch, ForwardedRef, RefObject, SetStateAction } from 'react';
 
 import style from '@/styles/Like.module.css';
+import cardStyle from '@/styles/ui/Card.module.css';
 
 import useSWR from 'swr';
 
@@ -49,11 +50,17 @@ export default function Like() {
 
   useEffect(() => {
     if (card && windowWidth > 1) {
-      const containerWidth: number = windowWidth - 50;
       const cardWidth: number = card.current?.clientWidth ?? 149;
+      let rows = 0;
 
-      setRow(Math.floor(containerWidth / cardWidth));
-      setItmes(Math.floor(containerWidth / cardWidth) * 3);
+      if ((windowWidth - 24) % (cardWidth + 16) >= cardWidth) {
+        rows = Math.floor((windowWidth - 24) / (cardWidth + 16)) + 1;
+      } else {
+        rows = Math.floor((windowWidth - 24) / (cardWidth + 16));
+      }
+
+      setRow(rows);
+      setItmes(rows * 3);
     }
   }, [windowWidth]);
 
@@ -96,6 +103,9 @@ export default function Like() {
               return <div key={i} className={`w-[149px] h-[298px]`}></div>;
             })
           : null}
+        {data ? null : (
+          <div className={`${cardStyle.container} h-4`} ref={card}></div> //더미 카드 초반 카드 width를 알기위함
+        )}
         <div id='observer' className='w-full h-3'></div>
       </div>
     </div>
