@@ -4,6 +4,7 @@ import type { MediaData } from '@/types/media';
 import type { Dispatch, ForwardedRef, RefObject, SetStateAction } from 'react';
 
 import style from '@/styles/Like.module.css';
+import cardStyle from '@/styles/ui/Card.module.css';
 
 import useSWR from 'swr';
 
@@ -22,26 +23,46 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export default function Like() {
   const { data, error, isLoading } = useSWR('/api/media', fetcher);
 
-  const container = useRef<HTMLDivElement>(null);
   const card = useRef<HTMLDivElement>(null);
 
   let [likes, setLikes] = useState<MediaData[]>([]);
+  let [windowWidth, setWindowWidth] = useState(0);
   let [row, setRow] = useState(0);
   let [items, setItmes] = useState(0);
-
-  useEffect(() => {
-    if (card && container) {
-      const containerWidth: number = (container.current?.clientWidth ?? 1) - 24;
-      const cardWidth: number = container.current?.clientWidth ?? 1;
-
-      setRow(Math.floor((containerWidth / cardWidth) * 10));
-      setItmes(Math.floor((containerWidth / cardWidth) * 10) * 3);
-    }
-  }, []);
 
   function Observer() {
     setItmes((items += row * 2));
   }
+
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('resize', () => setWindowWidth(window.innerWidth));
+
+    return () => {
+      window.removeEventListener('resize', () =>
+        setWindowWidth(window.innerWidth)
+      );
+    };
+  }, [windowWidth]);
+
+  useEffect(() => {
+    if (card && windowWidth > 1) {
+      const cardWidth: number = card.current?.clientWidth ?? 149;
+      let rows = 0;
+
+      if ((windowWidth - 24) % (cardWidth + 16) >= cardWidth) {
+        rows = Math.floor((windowWidth - 24) / (cardWidth + 16)) + 1;
+      } else {
+        rows = Math.floor((windowWidth - 24) / (cardWidth + 16));
+      }
+
+      setRow(rows);
+      setItmes(rows * 3);
+    }
+  }, [windowWidth]);
 
   useEffect(() => {
     if (row) {
@@ -59,24 +80,32 @@ export default function Like() {
 
   return (
     <div className='w-full mt-5 p-3'>
-      <div
-        className='w-full flex justify-between flex-wrap gap-4'
-        ref={container}
-      >
+      <div className='w-full flex justify-between flex-wrap gap-4'>
         {(data ?? [...Array(30).keys()])
           .slice(0, items)
-          .map((data: MediaData | number, i: number) => {
+          .map((media: MediaData | number, i: number) => {
             return (
               <LikeMedia
                 key={i}
                 isLoading={isLoading}
-                data={data}
+                data={media}
                 likes={likes}
                 setLikes={setLikes}
                 ref={card}
               ></LikeMedia>
             );
           })}
+        {data
+          ? [...Array(row - (data.length % row)).keys()].map((_, i: number) => {
+              if (data.length % row === 0) {
+                return null;
+              }
+              return <div key={i} className={`w-[149px] h-[298px]`}></div>;
+            })
+          : null}
+        {data ? null : (
+          <div className={`${cardStyle.container} h-4`} ref={card}></div> //더미 카드 초반 카드 width를 알기위함
+        )}
         <div id='observer' className='w-full h-3'></div>
       </div>
     </div>
