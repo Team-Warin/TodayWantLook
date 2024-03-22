@@ -1,15 +1,18 @@
 'use client';
 
-import type { MediaData } from '@/types/media';
-import type { Dispatch, ForwardedRef, RefObject, SetStateAction } from 'react';
+import type { MediaData, FilterType } from '@/types/media';
+import type { Dispatch, ForwardedRef, SetStateAction } from 'react';
+
+import axios from 'axios';
 
 import style from '@/styles/Like.module.css';
 import cardStyle from '@/styles/ui/Card.module.css';
 
-import useSWR from 'swr';
+import useSWRMutation from 'swr/mutation';
 
 import Card from '@/components/ui/Card';
 import { useState, useEffect, useRef, forwardRef } from 'react';
+import Filter from '@/components/ui/Filter';
 
 interface LikeMediaProps {
   isLoading: boolean;
@@ -18,12 +21,20 @@ interface LikeMediaProps {
   setLikes: Dispatch<SetStateAction<MediaData[]>>;
 }
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+async function refetch(url: string, { arg }: { arg: FilterType }) {
+  return await axios.post(url, arg).then((res) => res.data);
+}
 
 export default function Like() {
-  const { data, error, isLoading } = useSWR('/api/media', fetcher);
+  const [filter, setFilter] = useState<FilterType>({
+    title: null,
+    genre: [],
+    type: [],
+  });
 
   const card = useRef<HTMLDivElement>(null);
+
+  const { trigger, data, isMutating } = useSWRMutation('/api/media', refetch);
 
   let [likes, setLikes] = useState<MediaData[]>([]);
   let [windowWidth, setWindowWidth] = useState(0);
@@ -33,6 +44,10 @@ export default function Like() {
   function Observer() {
     setItmes((items += row * 2));
   }
+
+  useEffect(() => {
+    trigger(filter);
+  }, [filter]);
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
@@ -80,14 +95,16 @@ export default function Like() {
 
   return (
     <div className='w-full mt-5 p-3'>
+      <Filter filter={filter} setFilter={setFilter} />
       <div className='w-full flex justify-between flex-wrap gap-4'>
+        {data ? data.length < 1 ? <div>작품이 없어요.</div> : null : null}
         {(data ?? [...Array(30).keys()])
           .slice(0, items)
           .map((media: MediaData | number, i: number) => {
             return (
               <LikeMedia
                 key={i}
-                isLoading={isLoading}
+                isLoading={isMutating}
                 data={media}
                 likes={likes}
                 setLikes={setLikes}
@@ -95,13 +112,15 @@ export default function Like() {
               ></LikeMedia>
             );
           })}
-        {data
-          ? [...Array(row - (data.length % row)).keys()].map((_, i: number) => {
-              if (data.length % row === 0) {
-                return null;
+        {data && row
+          ? [...Array(Math.floor(row - (data.length % row))).keys()].map(
+              (_, i: number) => {
+                if (data.length % row === 0) {
+                  return null;
+                }
+                return <div key={i} className={`w-[149px] h-[298px]`}></div>;
               }
-              return <div key={i} className={`w-[149px] h-[298px]`}></div>;
-            })
+            )
           : null}
         {data ? null : (
           <div className={`${cardStyle.container} h-4`} ref={card}></div> //더미 카드 초반 카드 width를 알기위함
@@ -132,7 +151,7 @@ const LikeMedia = forwardRef(
           if (typeof data !== 'number') {
             if (checked) {
               temp = temp.filter((e: MediaData) => {
-                console.log(e.mediaId !== data.mediaId);
+                return e.mediaId !== data.mediaId;
               });
             } else if (data) {
               temp.push(data);

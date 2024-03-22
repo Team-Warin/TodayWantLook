@@ -59,7 +59,9 @@ function Card(
         </div>
         <div className={style.poster_title}>
           <p>{data.title}</p>
-          <p>{data.author}</p>
+          <p>
+            {data.author} <span className={style.rate}>★ {data.rate}</span>
+          </p>
         </div>
       </div>
     );

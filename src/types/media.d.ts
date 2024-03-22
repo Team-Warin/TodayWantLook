@@ -22,4 +22,10 @@ interface MediaData {
   };
 }
 
-export type { MediaData };
+interface FilterType {
+  title: string | null;
+  genre: (string | null)[];
+  type: (string | null)[];
+}
+
+export type { MediaData, FilterType };

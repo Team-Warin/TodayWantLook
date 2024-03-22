@@ -1,0 +1,14 @@
+.container {
+  @apply flex gap-2;
+}
+
+.btn {
+  @apply text-white rounded-full;
+  background-color: rgb(116, 225, 116);
+  filter: brightness(0.7);
+  transition: filter 0.3s ease;
+}
+
+.btn.check {
+  filter: brightness(1);
+}

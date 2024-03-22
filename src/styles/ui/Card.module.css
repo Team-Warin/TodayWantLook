@@ -28,3 +28,7 @@
   font-size: 13px;
   color: gray;
 }
+
+.rate {
+  letter-spacing: -1px;
+}
