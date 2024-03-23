@@ -1,0 +1,18 @@
+.container {
+  @apply flex gap-2;
+}
+
+.btn {
+  @apply text-white rounded-full shadow;
+  background-color: white;
+  color: rgb(116, 225, 116);
+  transform: scale(0.9);
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+.btn.check {
+  background-color: rgb(116, 225, 116);
+  color: white;
+  transform: scale(1);
+}

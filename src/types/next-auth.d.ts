@@ -2,26 +2,23 @@ import { DefaultSession } from 'next-auth';
 import NextAuth from 'next-auth/next';
 
 interface MediaData {
+  mediaId: string;
   type: string;
-  MediaId: number;
   rate: number;
-  check: {
-    view: boolean;
-    rate: boolean;
-  };
+  check: { like: boolean; rate: boolean };
 }
 
 declare module 'next-auth' {
   interface Session {
     user: {
-      nickname?: string | undefined | null;
-      likes?: boolean | undefined | null;
-      rates?: (MediaData | null)[] | undefined | null;
+      nickname: string;
+      likes: boolean;
+      rates: MediaData[];
     } & DefaultSession['user'];
   }
 
   interface User {
-    likes?: boolean | undefined | null;
-    rates?: (MediaData | null)[] | undefined | null;
+    likes: boolean;
+    rates: MediaData[];
   }
 }
