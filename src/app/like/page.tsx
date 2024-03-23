@@ -9,10 +9,22 @@ import style from '@/styles/Like.module.css';
 import cardStyle from '@/styles/ui/Card.module.css';
 
 import useSWRMutation from 'swr/mutation';
+import { useSession } from 'next-auth/react';
 
 import Card from '@/components/ui/Card';
-import { useState, useEffect, useRef, forwardRef } from 'react';
 import Filter from '@/components/ui/Filter';
+import { useState, useEffect, useRef, forwardRef } from 'react';
+import {
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from '@nextui-org/react';
+import { redirect } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 
 interface LikeMediaProps {
   isLoading: boolean;
@@ -26,10 +38,21 @@ async function refetch(url: string, { arg }: { arg: FilterType }) {
 }
 
 export default function Like() {
+  const session = useSession();
+
+  if (session.status === 'unauthenticated') {
+    signIn();
+  } else if (session.status === 'authenticated') {
+    if (session.data.user.likes) {
+      redirect('/');
+    }
+  }
+
   const [filter, setFilter] = useState<FilterType>({
-    title: null,
+    title: '',
     genre: [],
     type: [],
+    updateDays: [],
   });
 
   const card = useRef<HTMLDivElement>(null);
@@ -94,9 +117,26 @@ export default function Like() {
   }, [row]);
 
   return (
-    <div className='w-full mt-5 p-3'>
+    <div className={style.container}>
+      <div className={style.submitContainer}>
+        {likes.length >= 1 ? (
+          <Button
+            className={style.btn}
+            onClick={() => {
+              axios.post('/api/like', { likes });
+            }}
+          >
+            제출하기
+          </Button>
+        ) : (
+          <Button isDisabled className={`${style.btn}`}>
+            제출하기
+          </Button>
+        )}
+      </div>
+      <FirstModal></FirstModal>
       <Filter filter={filter} setFilter={setFilter} />
-      <div className='w-full flex justify-between flex-wrap gap-4'>
+      <div className={style.mediaContainer}>
         {data ? data.length < 1 ? <div>작품이 없어요.</div> : null : null}
         {(data ?? [...Array(30).keys()])
           .slice(0, items)
@@ -118,16 +158,49 @@ export default function Like() {
                 if (data.length % row === 0) {
                   return null;
                 }
-                return <div key={i} className={`w-[149px] h-[298px]`}></div>;
+                return <div key={i} className={cardStyle.container}></div>;
               }
             )
           : null}
         {data ? null : (
           <div className={`${cardStyle.container} h-4`} ref={card}></div> //더미 카드 초반 카드 width를 알기위함
         )}
-        <div id='observer' className='w-full h-3'></div>
+        <div id='observer' className={style.observer}></div>
       </div>
     </div>
+  );
+}
+
+function FirstModal() {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  useEffect(() => {
+    onOpen();
+  }, []);
+
+  return (
+    <Modal backdrop='blur' isOpen={isOpen} onOpenChange={onOpenChange}>
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className='flex flex-col gap-1'>
+              좋아하는 작품을 골라주세요!
+            </ModalHeader>
+            <ModalBody>
+              <p>
+                좋아하거나 즐겨본 작품을 골라주세요. <br />
+                작품을 추천하거나 소개할 알고리즘을 위해 이 데이터가 사용됩니다.
+              </p>
+            </ModalBody>
+            <ModalFooter>
+              <Button className={style.btn} onPress={onClose}>
+                알겠어요
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
   );
 }
 

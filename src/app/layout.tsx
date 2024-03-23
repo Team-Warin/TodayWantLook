@@ -6,6 +6,7 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import Navbar from '@/components/Navbar';
 
 import './globals.css';
+import { NextAuthProvider } from '@/components/provider/NextAuthProvider';
 
 export const metadata: Metadata = {
   title: '오늘 뭐 봐?',
@@ -22,8 +23,10 @@ export default async function RootLayout({
   return (
     <html lang='ko' className='white'>
       <body className={BMJUA.className}>
-        <Navbar session={session} />
-        {children}
+        <NextAuthProvider session={session}>
+          <Navbar session={session} />
+          {children}
+        </NextAuthProvider>
       </body>
     </html>
   );

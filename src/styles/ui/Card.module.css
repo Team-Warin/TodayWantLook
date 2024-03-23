@@ -23,10 +23,14 @@
   @apply w-full whitespace-nowrap overflow-hidden text-ellipsis;
 }
 
-.poster_title > p:nth-child(2) {
-  @apply w-full whitespace-nowrap overflow-hidden text-ellipsis;
+.poster_title > div {
+  @apply flex items-center gap-1;
   font-size: 13px;
   color: gray;
+}
+
+.author {
+  @apply inline-block max-w-[60%] whitespace-nowrap overflow-hidden text-ellipsis;
 }
 
 .rate {

@@ -1,7 +1,29 @@
 .checkbox {
+  @apply cursor-pointer;
   transition: transform 0.3s ease;
 }
 
 .checked {
   @apply scale-95 brightness-50;
+}
+
+.container {
+  @apply w-full mt-5 p-3;
+}
+
+.mediaContainer {
+  @apply w-full flex justify-between flex-wrap gap-4;
+}
+
+.observer {
+  @apply w-full h-[90px];
+}
+
+.submitContainer {
+  @apply flex w-full h-[75px] p-5 shadow fixed z-20 bg-white bottom-0 left-0 justify-end items-center;
+}
+
+.btn {
+  @apply text-white cursor-pointer;
+  background-color: rgb(116, 225, 116);
 }
