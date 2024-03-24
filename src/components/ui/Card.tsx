@@ -36,15 +36,17 @@ function Card(
     return (
       <div className={style.container}>
         <div className={style.poster_container}>
-          <Image
-            className={style.poster}
-            width={450}
-            height={380}
-            src={data.img}
-            placeholder='blur'
-            blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
-            alt={'poster'}
-          ></Image>
+          {data.img ? (
+            <Image
+              className={style.poster}
+              width={450}
+              height={380}
+              src={data.img}
+              placeholder='blur'
+              blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
+              alt={'poster'}
+            ></Image>
+          ) : null}
           {data.backdrop_img ? (
             <Image
               className='absolute z-0'

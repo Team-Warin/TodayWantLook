@@ -106,6 +106,8 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
       });
     });
 
+    // console.log(await db.collection('media').find({ type: 'movie' }).toArray());
+
     const result = await db
       .collection('media')
       .find({ $and: filter })
