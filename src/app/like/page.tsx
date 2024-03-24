@@ -123,7 +123,7 @@ export default function Like() {
           <Button
             className={style.btn}
             onClick={() => {
-              axios.post('/api/like', { likes });
+              if (likes.length >= 1) axios.post('/api/like', { likes });
             }}
           >
             제출하기
