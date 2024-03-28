@@ -40,14 +40,6 @@ async function refetch(url: string, { arg }: { arg: FilterType }) {
 export default function Like() {
   const session = useSession();
 
-  if (session.status === 'unauthenticated') {
-    signIn();
-  } else if (session.status === 'authenticated') {
-    if (session.data.user.likes) {
-      redirect('/');
-    }
-  }
-
   const [filter, setFilter] = useState<FilterType>({
     title: '',
     genre: [],
@@ -73,6 +65,14 @@ export default function Like() {
   }, [filter]);
 
   useEffect(() => {
+    if (session.status === 'unauthenticated') {
+      signIn();
+    } else if (session.status === 'authenticated') {
+      if (session.data.user.likes) {
+        redirect('/');
+      }
+    }
+
     setWindowWidth(window.innerWidth);
   }, []);
 
