@@ -33,8 +33,15 @@ export default function SignIn({
         className={`${style.login_container} flex p-10 w-full h-full rounded-3xl shadow-lg`}
       >
         <div className='w-full h-full'>
-          <h1 className={BMJUA.className}>TodayWantLook</h1>
-          <p>로그인</p>
+          <Image
+            width={80}
+            height={80}
+            placeholder='blur'
+            blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
+            src={'/Logo.svg'}
+            alt='logo'
+          ></Image>
+          <p className='mt-2'>로그인</p>
         </div>
         <div className='w-full h-full p-5 ps-14'>
           {Object.values(providers).map((provider, i: number) => {
