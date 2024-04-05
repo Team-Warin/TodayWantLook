@@ -12,6 +12,9 @@ interface FilterProps {
   setFilter: Dispatch<SetStateAction<FilterType>>;
 }
 
+/**
+ * Filter UI Component
+ */
 export default function Filter({ filter, setFilter }: FilterProps) {
   let [value, setValue] = useState('');
 

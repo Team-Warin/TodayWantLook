@@ -28,13 +28,13 @@
   transform: scale(1.05);
 }
 
-.navbar > a:nth-child(1) {
+.navbar > div:nth-child(1) {
   font-size: 22px;
   transform: scale(1);
   transition: transform 0.3s ease;
 }
 
-.navbar > a:nth-child(1):hover {
+.navbar > div:nth-child(1):hover {
   transform: scale(1.05);
 }
 

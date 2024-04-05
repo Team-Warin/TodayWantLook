@@ -17,13 +17,26 @@ import {
 } from '@nextui-org/react';
 import { signIn, signOut } from 'next-auth/react';
 
+/**
+ * Navbar UI Components
+ */
 export default function Navbar({ session }: { session: Session | null }) {
   return (
     <div className={`w-full h-[80px] ${style.container}`}>
       <div
         className={`flex justify-between items-center w-full h-full rounded-xl shadow-lg ${style.navbar}`}
       >
-        <Link href='/'>TodayWantLook</Link>
+        <div className='flex items-center gap-1'>
+          <Image
+            width={45}
+            height={45}
+            placeholder='blur'
+            blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
+            src={'/Logo.svg'}
+            alt='logo'
+          ></Image>
+          <Link href='/'>TodayWantLook</Link>
+        </div>
         {session?.user.image ? (
           <Popover placement='bottom-end'>
             <PopoverTrigger>

@@ -4,6 +4,9 @@ import { Providers } from '../components/provider/providers';
 
 import '../app/globals.css';
 
+/**
+ * pages 최상위 컴포넌트
+ */
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
