@@ -6,6 +6,9 @@ import { connectDB } from '@/modules/database';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from './auth/[...nextauth]';
 
+/**
+ * 첫 로그인시 /like 페이지에서 사용자가 좋아하는 작품을 받아 DB에 업로드하는 api
+ */
 export default async function Media(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions);
 

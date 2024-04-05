@@ -37,6 +37,9 @@ async function refetch(url: string, { arg }: { arg: FilterType }) {
   return await axios.post(url, arg).then((res) => res.data);
 }
 
+/**
+ * /like 페이지
+ */
 export default function Like() {
   const session = useSession();
 
@@ -171,6 +174,9 @@ export default function Like() {
   );
 }
 
+/**
+ * Modal 알림
+ */
 function FirstModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -204,6 +210,15 @@ function FirstModal() {
   );
 }
 
+/**
+ * Item Card
+ * data가 number거나 isLoading이 true라면 Skeleton UI return
+ * data가 MediaData고 isLoading이 false라면 작품 Card return
+ * @param {boolean} isLoading
+ * @param {number | MediaData} data
+ * @param {MediaData[]} likes
+ * @param {Dispatch<SetStateAction<MediaData[]>>} setLikes
+ */
 const LikeMedia = forwardRef(
   (
     { isLoading, data, likes, setLikes }: LikeMediaProps,

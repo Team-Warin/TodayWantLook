@@ -2,6 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { connectDB } from '@/modules/database';
 
+/**
+ * /api/media api get요청을 받는 코드
+ */
 export default async function Media(req: NextApiRequest, res: NextApiResponse) {
   const db = (await connectDB).db(process.env.DB_NAME);
 

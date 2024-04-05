@@ -13,8 +13,9 @@ import { getProviders, signIn } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from './api/auth/[...nextauth]';
 
-import { BMJUA } from '@/modules/font';
-
+/**
+ * /sign 페이지
+ */
 export default function SignIn({
   providers,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {

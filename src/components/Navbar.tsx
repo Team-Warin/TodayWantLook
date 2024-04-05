@@ -17,6 +17,9 @@ import {
 } from '@nextui-org/react';
 import { signIn, signOut } from 'next-auth/react';
 
+/**
+ * Navbar UI Components
+ */
 export default function Navbar({ session }: { session: Session | null }) {
   return (
     <div className={`w-full h-[80px] ${style.container}`}>

@@ -12,6 +12,9 @@ interface CardProps {
   data: MediaData | number;
 }
 
+/**
+ * Card UI Component
+ */
 function Card(
   { isLoading, data }: CardProps,
   ref: ForwardedRef<HTMLDivElement>
