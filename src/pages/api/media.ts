@@ -67,6 +67,8 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
           filterList.genre.push(keyword.genre[genre]);
         }
       }
+    } else {
+      filterList.genre.push(/./);
     }
 
     if (req.body.updateDays) {
@@ -78,6 +80,8 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
           filterList.updateDays.push(keyword.updateDay[updateDay]);
         }
       }
+    } else {
+      filterList.updateDays.push(/./);
     }
 
     if (req.body.type) {
@@ -90,6 +94,8 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
           filterList.type.push(keyword.type[type]);
         }
       }
+    } else {
+      filterList.type.push(/./);
     }
 
     if (req.body.title) {
@@ -98,6 +104,8 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
       } else {
         filterList.title.push(new RegExp(`(?=.*(${req.body.title}).*).*`));
       }
+    } else {
+      filterList.title.push(/./);
     }
 
     const filter: { [key: string]: { $in: RegExp[] } }[] = [];
@@ -116,6 +124,10 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
       .find({ $and: filter })
       .toArray();
 
-    await res.status(200).send(result);
+    if (result) {
+      await res.status(200).send(result);
+    } else {
+      await res.status(400).send('Bad Request');
+    }
   }
 }
