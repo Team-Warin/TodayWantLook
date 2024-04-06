@@ -7,6 +7,7 @@ import { connectDB } from '@/modules/database';
  */
 export default async function Media(req: NextApiRequest, res: NextApiResponse) {
   const db = (await connectDB).db(process.env.DB_NAME);
+  let result;
 
   const keyword: {
     type: { [key: string]: RegExp };
@@ -119,15 +120,14 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
 
     // console.log(await db.collection('media').find({ type: 'movie' }).toArray());
 
-    const result = await db
-      .collection('media')
-      .find({ $and: filter })
-      .toArray();
+    result = await db.collection('media').find({ $and: filter }).toArray();
+  } else if (req.method === 'GET') {
+    result = await db.collection('media').find().toArray();
+  }
 
-    if (result) {
-      await res.status(200).send(result);
-    } else {
-      await res.status(400).send('Bad Request');
-    }
+  if (result) {
+    await res.status(200).send(result);
+  } else {
+    await res.status(400).send('Bad Request');
   }
 }
