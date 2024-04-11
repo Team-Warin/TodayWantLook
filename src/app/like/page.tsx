@@ -23,7 +23,7 @@ import {
   ModalFooter,
   useDisclosure,
 } from '@nextui-org/react';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 
 interface LikeMediaProps {
@@ -42,6 +42,7 @@ async function refetch(url: string, { arg }: { arg: FilterType }) {
  */
 export default function Like() {
   const session = useSession();
+  const { push } = useRouter();
 
   const [filter, setFilter] = useState<FilterType>({
     title: '',
@@ -72,7 +73,7 @@ export default function Like() {
       signIn();
     } else if (session.status === 'authenticated') {
       if (session.data.user.likes) {
-        redirect('/');
+        push('/');
       }
     }
 
@@ -126,7 +127,10 @@ export default function Like() {
           <Button
             className={style.btn}
             onClick={() => {
-              if (likes.length >= 1) axios.post('/api/like', { likes });
+              if (likes.length >= 1)
+                axios.post('/api/like', { likes }).then((res) => {
+                  if (res.status == 200) push('/');
+                });
             }}
           >
             제출하기

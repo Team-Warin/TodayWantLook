@@ -9,4 +9,13 @@ const BMJUA = localFont({
   ],
 });
 
-export { BMJUA };
+const Sokcho = localFont({
+  src: [
+    {
+      path: '../font/SokchoBadaDotum.woff2',
+      weight: '500',
+    },
+  ],
+});
+
+export { BMJUA, Sokcho };

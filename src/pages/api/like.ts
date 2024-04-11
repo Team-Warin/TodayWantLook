@@ -1,4 +1,4 @@
-import type { MediaData } from '@/types/media';
+import type { MediaData, Rate } from '@/types/media';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { connectDB } from '@/modules/database';
@@ -20,60 +20,63 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
     const reqData: { likes: MediaData[] } = req.body;
     const db = (await connectDB).db(process.env.DB_NAME);
 
-    let data: MediaData;
-    let userLikes: {
-      mediaId: string;
-      type: string;
-      rate: number;
-      check: { like: boolean; rate: boolean };
-    }[] = session.user.rates;
+    let dbData = await db.collection<Rate>('user_rates').find({}).toArray();
 
-    for (data of reqData.likes) {
-      let temp: {
-        mediaId: string;
-        type: string;
-        rate: number;
-        check: { like: boolean; rate: boolean };
-      };
+    let findData: Rate | undefined;
+    let newData: Rate[] = [];
+    let editData: Rate[] = [];
 
-      const inData:
-        | {
-            mediaId: string;
-            type: string;
-            rate: number;
-            check: { like: boolean; rate: boolean };
-          }
-        | undefined = userLikes.find((e) => e.mediaId === data.mediaId);
-
-      if (inData) {
-        temp = inData;
+    for (let media of reqData.likes) {
+      findData = dbData.find((item) => item.mediaId === media.mediaId);
+      if (findData) {
+        if (!findData.check.like) {
+          findData.check.like = true;
+          findData.rate += 5;
+          editData.push(findData);
+        }
       } else {
-        temp = {
-          mediaId: data.mediaId,
-          type: data.type,
-          rate: 0,
+        newData.push({
+          userId: session.user.email,
+          mediaId: media.mediaId,
+          rate: 5,
           check: {
-            like: false,
-            rate: false,
+            like: true,
+            rating: false,
+            view: false,
           },
-        };
+        });
       }
-
-      temp.rate += 5;
-      temp.check.like = true;
-
-      userLikes.push(temp);
     }
 
-    db.collection('users').updateOne(
-      { email: session.user.email },
-      {
-        $set: {
-          likes: true,
-          rates: userLikes,
-        },
+    if (newData.length > 0) {
+      await db.collection<Rate>('user_rates').insertMany(newData);
+    }
+
+    if (editData.length > 0) {
+      for (let data of editData) {
+        await db.collection<Rate>('user_rates').updateOne(
+          { mediaId: data.mediaId },
+          {
+            $set: {
+              rate: data.rate,
+              check: data.check,
+            },
+          }
+        );
       }
-    );
-    res.status(200).redirect(302, '/');
+    }
+
+    if (!session.user.likes) {
+      db.collection('users').updateOne(
+        { email: session.user.email },
+        {
+          $set: {
+            likes: true,
+          },
+        }
+      );
+    }
+
+    res.status(200).send('success');
   }
 }

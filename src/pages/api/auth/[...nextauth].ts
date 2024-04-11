@@ -6,6 +6,7 @@ import GoogleProvider from 'next-auth/providers/google';
 
 import { connectDB } from '@/modules/database';
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
+import { nameCreate } from '@/modules/nickname';
 
 export const authOptions = {
   secret: process.env.JWT_SECRET,
@@ -18,11 +19,10 @@ export const authOptions = {
         return {
           id: profile.sub,
           name: profile.name,
-          nickname: '웹툰을 좋아하는 하마',
+          nickname: nameCreate(),
           email: profile.email,
           image: profile.picture,
           likes: false,
-          rates: [],
         };
       },
     }),
@@ -36,7 +36,7 @@ export const authOptions = {
   callbacks: {
     async session({ session, user }: { session: Session; user: User }) {
       session.user.likes = user.likes;
-      session.user.rates = user.rates;
+      session.user.nickname = user.nickname;
       return session;
     },
   },

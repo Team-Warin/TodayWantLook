@@ -11,7 +11,7 @@ interface MediaData {
   backdrop_img?: string;
   service?: string[];
   updateDays?: string[];
-  rate: number;
+  rate: numObjectId;
   rates: { user: string; rate: number; comment: string | null }[];
   additional?: {
     new: boolean;
@@ -29,4 +29,16 @@ interface FilterType {
   updateDays: (string | null)[];
 }
 
-export type { MediaData, FilterType };
+interface Rate {
+  userId: string | null | undefined;
+  mediaId: string;
+  rate: number;
+  comment?: string;
+  check: {
+    view: boolean;
+    like: boolean;
+    rating: boolean;
+  };
+}
+
+export type { MediaData, FilterType, Rate };
