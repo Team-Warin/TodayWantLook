@@ -13,12 +13,11 @@ declare module 'next-auth' {
     user: {
       nickname: string;
       likes: boolean;
-      rates: MediaData[];
     } & DefaultSession['user'];
   }
 
   interface User {
+    nickname: string;
     likes: boolean;
-    rates: MediaData[];
   }
 }
