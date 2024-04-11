@@ -10,10 +10,10 @@
   font-size: 25px;
 }
 
-.mediaContainer {
-  @apply flex gap-3 h-[350px] items-center max-w-full;
+.scrollContainer {
+  @apply h-[350px] flex gap-3 items-center w-full;
 }
 
-.mediaContainer > div {
-  @apply flex-shrink-0;
+.scrollContainer > div {
+  @apply flex gap-3;
 }
