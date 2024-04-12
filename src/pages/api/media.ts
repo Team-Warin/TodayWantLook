@@ -51,12 +51,7 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
       genre?: RegExp[];
       type?: RegExp[];
       updateDays?: RegExp[];
-    } = {
-      title: [],
-      genre: [],
-      type: [],
-      updateDays: [],
-    };
+    } = {};
 
     if (req.body.genre) {
       if (req.body.genre.length >= 1) {
@@ -104,13 +99,11 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
 
     const filter: { [key: string]: { $in: RegExp[] } }[] = [];
     Object.keys(filterList).forEach((key: string) => {
-      if (typeof filterList[key] !== 'undefined') {
-        filterList[key].forEach((regex: RegExp) => {
-          const tempObj: { [key: string]: { $in: RegExp[] } } = {};
-          tempObj[key] = { $in: [regex] };
-          filter.push(tempObj);
-        });
-      }
+      (filterList[key] ?? []).forEach((regex: RegExp) => {
+        const tempObj: { [key: string]: { $in: RegExp[] } } = {};
+        tempObj[key] = { $in: [regex] };
+        filter.push(tempObj);
+      });
     });
 
     result = await db
