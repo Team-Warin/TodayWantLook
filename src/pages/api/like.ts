@@ -27,7 +27,10 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
     let editData: Rate[] = [];
 
     for (let media of reqData.likes) {
-      findData = dbData.find((item) => item.mediaId === media.mediaId);
+      findData = dbData.find(
+        (item) =>
+          item.mediaId === media.mediaId && item.userId === session.user.email
+      );
       if (findData) {
         if (!findData.check.like) {
           findData.check.like = true;
