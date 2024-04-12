@@ -122,7 +122,7 @@ export default function Filter({ filter, setFilter }: FilterProps) {
                       if (data.type === 'all') {
                         temp.updateDays = [];
                       } else if (temp.updateDays.indexOf(data.type) === -1) {
-                        temp.updateDays.push(data.type);
+                        temp.updateDays = [data.type];
                       } else if (temp.updateDays.indexOf(data.type) !== -1) {
                         temp.updateDays = temp.updateDays.filter(
                           (e) => e !== data.type
