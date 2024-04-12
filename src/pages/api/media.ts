@@ -33,7 +33,7 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
     },
     updateDay: {
       mon: /(mon)/,
-      tue: /(the)/,
+      tue: /(tue)/,
       wed: /(wed)/,
       thu: /(thu)/,
       fri: /(fri)/,
@@ -46,11 +46,11 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
 
   if (req.method === 'POST') {
     const filterList: {
-      [key: string]: RegExp[];
-      title: RegExp[];
-      genre: RegExp[];
-      type: RegExp[];
-      updateDays: RegExp[];
+      [key: string]: RegExp[] | undefined;
+      title?: RegExp[];
+      genre?: RegExp[];
+      type?: RegExp[];
+      updateDays?: RegExp[];
     } = {
       title: [],
       genre: [],
@@ -59,68 +59,64 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
     };
 
     if (req.body.genre) {
-      if (req.body.genre.length < 1) {
-        filterList.genre.push(/./);
-      } else {
+      if (req.body.genre.length >= 1) {
         let genre: string;
+
+        filterList.genre = [];
 
         for (genre of req.body.genre) {
           filterList.genre.push(keyword.genre[genre]);
         }
       }
-    } else {
-      filterList.genre.push(/./);
     }
 
     if (req.body.updateDays) {
-      if (req.body.updateDays.length < 1) {
-        filterList.updateDays.push(/./);
-      } else {
+      if (req.body.updateDays.length >= 1) {
         let updateDay: string;
+
+        filterList.updateDays = [];
+
         for (updateDay of req.body.updateDays) {
           filterList.updateDays.push(keyword.updateDay[updateDay]);
         }
       }
-    } else {
-      filterList.updateDays.push(/./);
     }
 
     if (req.body.type) {
-      if (req.body.type.length < 1) {
-        filterList.type.push(/./);
-      } else {
+      if (req.body.type.length >= 1) {
         let type: string;
+
+        filterList.type = [];
 
         for (type of req.body.type) {
           filterList.type.push(keyword.type[type]);
         }
       }
-    } else {
-      filterList.type.push(/./);
     }
 
     if (req.body.title) {
-      if (req.body.title === '') {
-        filterList.title.push(/./);
-      } else {
+      if (req.body.title !== '') {
+        filterList.title = [];
+
         filterList.title.push(new RegExp(`(?=.*(${req.body.title}).*).*`));
       }
-    } else {
-      filterList.title.push(/./);
     }
 
     const filter: { [key: string]: { $in: RegExp[] } }[] = [];
     Object.keys(filterList).forEach((key: string) => {
-      filterList[key].forEach((regex: RegExp) => {
-        const tempObj: { [key: string]: { $in: RegExp[] } } = {};
-        tempObj[key] = { $in: [regex] };
-        filter.push(tempObj);
-      });
+      if (filterList[key]) {
+        filterList[key].forEach((regex: RegExp) => {
+          const tempObj: { [key: string]: { $in: RegExp[] } } = {};
+          tempObj[key] = { $in: [regex] };
+          filter.push(tempObj);
+        });
+      }
     });
 
-    // console.log(await db.collection('media').find({ type: 'movie' }).toArray());
-
-    result = await db.collection('media').find({ $and: filter }).toArray();
+    result = await db
+      .collection('media')
+      .find(filter.length >= 1 ? { $and: filter } : {})
+      .toArray();
   } else if (req.method === 'GET') {
     result = await db.collection('media').find().toArray();
   }
