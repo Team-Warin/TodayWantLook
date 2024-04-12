@@ -104,7 +104,7 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
 
     const filter: { [key: string]: { $in: RegExp[] } }[] = [];
     Object.keys(filterList).forEach((key: string) => {
-      if (filterList[key]) {
+      if (typeof filterList[key] !== 'undefined') {
         filterList[key].forEach((regex: RegExp) => {
           const tempObj: { [key: string]: { $in: RegExp[] } } = {};
           tempObj[key] = { $in: [regex] };
