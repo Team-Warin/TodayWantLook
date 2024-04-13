@@ -58,19 +58,21 @@ export default function Filter({ filter, setFilter }: FilterProps) {
         defaultExpandedKeys={['1', '2', '3', '4']}
       >
         <AccordionItem key='1' aria-label='search' title='검색'>
-          <Input
-            placeholder='제목을 입력해주세요.'
-            value={value}
-            onValueChange={setValue}
-            onKeyDown={(e) => {
-              if (e.code == 'Enter') {
-                let temp = { ...filter };
-                temp.title = value;
+          <div>
+            <Input
+              placeholder='제목을 입력해주세요.'
+              value={value}
+              onValueChange={setValue}
+              onKeyDown={(e) => {
+                if (e.code == 'Enter') {
+                  let temp = { ...filter };
+                  temp.title = value;
 
-                setFilter(temp);
-              }
-            }}
-          ></Input>
+                  setFilter(temp);
+                }
+              }}
+            ></Input>
+          </div>
         </AccordionItem>
         <AccordionItem key='2' aria-label='genre' title='장르'>
           <div className={style.container}>

@@ -20,7 +20,7 @@
 }
 
 .submitContainer {
-  @apply flex w-full h-[75px] p-5 shadow fixed z-20 bg-white bottom-0 left-0 justify-end items-center;
+  @apply flex w-full h-[75px] p-5 shadow fixed z-20 bg-white bottom-0 left-0 justify-between items-center;
 }
 
 .btn {
