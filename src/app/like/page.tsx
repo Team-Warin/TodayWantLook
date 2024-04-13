@@ -23,6 +23,10 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Code,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
@@ -57,7 +61,10 @@ export default function Like() {
 
   const { trigger, data, isMutating } = useSWRMutation('/api/media', refetch);
 
+  const max: number = 10;
+
   let [likes, setLikes] = useState<MediaData[]>([]);
+  const [likeOpen, setLikeOpen] = useState<boolean>(false);
   let [windowWidth, setWindowWidth] = useState(0);
   let [row, setRow] = useState(0);
   let [items, setItmes] = useState(0);
@@ -80,6 +87,16 @@ export default function Like() {
     }
 
     setWindowWidth(window.innerWidth);
+
+    const likeList = () => {
+      setLikeOpen(false);
+    };
+
+    window.addEventListener('scroll', likeList);
+
+    return () => {
+      window.removeEventListener('scroll', likeList);
+    };
   }, []);
 
   useEffect(() => {
@@ -125,6 +142,52 @@ export default function Like() {
   return (
     <div className={style.container}>
       <div className={style.submitContainer}>
+        <Popover
+          placement='top'
+          isOpen={likeOpen}
+          onOpenChange={(open) => {
+            setLikeOpen(open);
+          }}
+        >
+          <PopoverTrigger>
+            <Button variant='light'>
+              {likes.length} / {max}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className='px-1 py-2 w-[150px]'>
+              {likes.length >= 1 ? (
+                likes.map((media, i) => {
+                  return (
+                    <div key={i} className='flex justify-between gap-3'>
+                      <p className='whitespace-nowrap overflow-hidden text-ellipsis'>
+                        {media.title}
+                      </p>
+                      <p
+                        className='cursor-pointer transition-transform hover:scale-110'
+                        onClick={() => {
+                          let temp = [...likes];
+
+                          temp = temp.filter((e: MediaData) => {
+                            return e.mediaId !== media.mediaId;
+                          });
+
+                          setLikes(temp);
+                        }}
+                      >
+                        ❌
+                      </p>
+                    </div>
+                  );
+                })
+              ) : (
+                <div>
+                  <p>아무 작품도 없습니다.</p>
+                </div>
+              )}
+            </div>
+          </PopoverContent>
+        </Popover>
         {likes.length >= 1 ? (
           <Button
             className={style.btn}
@@ -208,6 +271,12 @@ function NoteModal() {
               <p>
                 좋아하거나 즐겨본 작품을 골라주세요. <br />
                 작품을 추천하거나 소개할 알고리즘을 위해 이 데이터가 사용됩니다.
+                <br />
+                <br />
+                <Code color='danger'>
+                  최소 <span className='font-bold'>1</span>개 최대{' '}
+                  <span className='font-bold'>10</span>개 선택 가능합니다.
+                </Code>
               </p>
             </ModalBody>
             <ModalFooter>
@@ -260,9 +329,9 @@ function SubmitModal({
                           return e.mediaId !== media.mediaId;
                         });
 
-                        if (temp.length < 1) onClose();
-
                         setLikes(temp);
+
+                        if (temp.length < 1) onClose();
                       }}
                     >
                       ❌
@@ -328,6 +397,7 @@ const LikeMedia = forwardRef(
                   return e.mediaId !== data.mediaId;
                 });
               } else if (data) {
+                if (temp.length >= 10) return;
                 temp.push(data);
               }
             }
