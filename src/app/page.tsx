@@ -53,7 +53,7 @@ export default async function Home() {
 
   return (
     <main>
-      <div className={style.container}>
+      <div>
         {data.length > 0 ? (
           <>
             <p className={style.sectionTitle}>

@@ -53,7 +53,10 @@ export default function Filter({ filter, setFilter }: FilterProps) {
 
   return (
     <div className='mb-5'>
-      <Accordion selectionMode='multiple' defaultExpandedKeys={['1', '2']}>
+      <Accordion
+        selectionMode='multiple'
+        defaultExpandedKeys={['1', '2', '3', '4']}
+      >
         <AccordionItem key='1' aria-label='search' title='검색'>
           <Input
             placeholder='제목을 입력해주세요.'
