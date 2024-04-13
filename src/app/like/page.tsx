@@ -2,6 +2,7 @@
 
 import type { MediaData, FilterType } from '@/types/media';
 import type { Dispatch, ForwardedRef, SetStateAction } from 'react';
+import type { NavigateOptions } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import axios from 'axios';
 
@@ -44,6 +45,7 @@ export default function Like() {
   const session = useSession();
   const { push } = useRouter();
 
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [filter, setFilter] = useState<FilterType>({
     title: '',
     genre: [],
@@ -127,10 +129,9 @@ export default function Like() {
           <Button
             className={style.btn}
             onClick={() => {
-              if (likes.length >= 1)
-                axios.post('/api/like', { likes }).then((res) => {
-                  if (res.status == 200) push('/');
-                });
+              if (likes.length >= 1) {
+                onOpen();
+              }
             }}
           >
             제출하기
@@ -141,7 +142,14 @@ export default function Like() {
           </Button>
         )}
       </div>
-      <FirstModal></FirstModal>
+      <NoteModal />
+      <SubmitModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        likes={likes}
+        setLikes={setLikes}
+        push={push}
+      />
       <Filter filter={filter} setFilter={setFilter} />
       <div className={style.mediaContainer}>
         {data ? data.length < 1 ? <div>작품이 없어요.</div> : null : null}
@@ -181,7 +189,7 @@ export default function Like() {
 /**
  * Modal 알림
  */
-function FirstModal() {
+function NoteModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
@@ -215,6 +223,80 @@ function FirstModal() {
 }
 
 /**
+ * 제출 modal
+ */
+function SubmitModal({
+  isOpen,
+  onOpenChange,
+  likes,
+  setLikes,
+  push,
+}: {
+  isOpen: boolean;
+  onOpenChange: () => void;
+  likes: MediaData[];
+  setLikes: Dispatch<SetStateAction<MediaData[]>>;
+  push: (href: string, options?: NavigateOptions) => void;
+}) {
+  return (
+    <Modal backdrop='blur' isOpen={isOpen} onOpenChange={onOpenChange}>
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className='flex flex-col gap-1'>
+              선택한 선호하는 작품!!
+            </ModalHeader>
+            <ModalBody>
+              {likes.map((media, i) => {
+                return (
+                  <div key={i} className='flex justify-between'>
+                    <p>{media.title}</p>
+                    <p
+                      className='cursor-pointer transition-transform hover:scale-110'
+                      onClick={() => {
+                        let temp = [...likes];
+
+                        temp = temp.filter((e: MediaData) => {
+                          return e.mediaId !== media.mediaId;
+                        });
+
+                        if (temp.length < 1) onClose();
+
+                        setLikes(temp);
+                      }}
+                    >
+                      ❌
+                    </p>
+                  </div>
+                );
+              })}
+            </ModalBody>
+            <ModalFooter>
+              <Button color='danger' variant='light' onPress={onClose}>
+                조금 더 생각해볼래요
+              </Button>
+              <Button
+                className={style.btn}
+                onPress={() => {
+                  if (likes.length >= 1) {
+                    axios.post('/api/like', { likes }).then((res) => {
+                      if (res.status == 200) push('/');
+                    });
+                    onClose();
+                  }
+                }}
+              >
+                제출하기!
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
+  );
+}
+
+/**
  * Item Card
  * data가 number거나 isLoading이 true라면 Skeleton UI return
  * data가 MediaData고 isLoading이 false라면 작품 Card return
@@ -228,35 +310,35 @@ const LikeMedia = forwardRef(
     { isLoading, data, likes, setLikes }: LikeMediaProps,
     ref: ForwardedRef<HTMLDivElement>
   ) => {
-    let [checked, setChecked] = useState(false);
-
     if (isLoading) {
       return <Card isLoading={isLoading} data={data} ref={ref}></Card>;
-    }
-    return (
-      <div
-        ref={ref}
-        className={`${style.checkbox} ${checked ? style.checked : ''}`}
-        onClick={() => {
-          let temp = [...likes];
+    } else if (typeof data !== 'number') {
+      return (
+        <div
+          ref={ref}
+          className={`${style.checkbox} ${
+            likes.indexOf(data) != -1 ? style.checked : ''
+          }`}
+          onClick={() => {
+            let temp = [...likes];
 
-          if (typeof data !== 'number') {
-            if (checked) {
-              temp = temp.filter((e: MediaData) => {
-                return e.mediaId !== data.mediaId;
-              });
-            } else if (data) {
-              temp.push(data);
+            if (typeof data !== 'number') {
+              if (likes.indexOf(data) != -1) {
+                temp = temp.filter((e: MediaData) => {
+                  return e.mediaId !== data.mediaId;
+                });
+              } else if (data) {
+                temp.push(data);
+              }
             }
-          }
 
-          setLikes(temp);
-          setChecked(!checked);
-        }}
-      >
-        <Card isLoading={isLoading} data={data}></Card>
-      </div>
-    );
+            setLikes(temp);
+          }}
+        >
+          <Card isLoading={isLoading} data={data}></Card>
+        </div>
+      );
+    }
 
     LikeMedia.displayName = 'LikeMedia';
   }

@@ -60,6 +60,16 @@ function Card(
               blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
               alt={'posterBg'}
             ></Image>
+          ) : data.img ? (
+            <Image
+              className='absolute z-0 blur-md'
+              src={data.img}
+              width={450}
+              height={380}
+              placeholder='blur'
+              blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
+              alt={'posterBg'}
+            ></Image>
           ) : null}
         </div>
         <div className={style.poster_title}>
