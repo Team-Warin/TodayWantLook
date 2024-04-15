@@ -22,7 +22,10 @@ export default function Scroll({ data }: { data: MediaData[] }) {
     if (scrollRef.current) {
       const scroll = scrollRef.current.scrollLeft;
       if (scroll <= 0 || scroll >= width * 2) {
-        scrollRef.current.scrollLeft = width;
+        scrollRef.current.scrollTo({
+          left: width,
+          behavior: 'instant',
+        });
       }
     }
   }, [width]);
@@ -30,7 +33,10 @@ export default function Scroll({ data }: { data: MediaData[] }) {
   useLayoutEffect(() => {
     if (contentRef.current && scrollRef.current) {
       setWidth(contentRef.current.offsetWidth);
-      scrollRef.current.scrollLeft = width;
+      scrollRef.current.scrollTo({
+        left: width,
+        behavior: 'instant',
+      });
     }
   });
 
