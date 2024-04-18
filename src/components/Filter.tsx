@@ -1,11 +1,15 @@
 'use client';
 
 import type { FilterType } from '@/types/media';
-import { useState, type Dispatch, type SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 
 import style from '@/styles/Filter.module.css';
 
-import { Button, Accordion, AccordionItem, Input } from '@nextui-org/react';
+import { useState } from 'react';
+
+import { Button } from '@nextui-org/button';
+import { Input } from '@nextui-org/input';
+import { Accordion, AccordionItem } from '@nextui-org/accordion';
 
 interface FilterProps {
   filter: FilterType;

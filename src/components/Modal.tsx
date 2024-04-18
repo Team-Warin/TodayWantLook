@@ -1,15 +1,15 @@
 'use client';
 
+import type { Dispatch, SetStateAction } from 'react';
+
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
-  useDisclosure,
-} from '@nextui-org/react';
-import { type Dispatch, type SetStateAction, useState } from 'react';
+} from '@nextui-org/modal';
+import { Button } from '@nextui-org/button';
 
 export default function ShowModal({
   show,

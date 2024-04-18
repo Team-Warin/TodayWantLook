@@ -16,8 +16,8 @@ import useDidMountEffect from '@/components/hooks/useDidMountEffect';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 
+import { Code } from '@nextui-org/code';
 import Card from '@/components/Card';
-import { Code } from '@nextui-org/react';
 
 const Filter = dynamic(() => import('@/components/Filter'));
 const ShowModal = dynamic(() => import('@/components/Modal'));
@@ -36,20 +36,16 @@ const ShowModal = dynamic(() => import('@/components/Modal'));
 export default function Like() {
   const max = 10;
 
-  const controller = new AbortController();
+  let controller: AbortController;
 
   async function mediaFetch(
     url: string,
     { arg }: { arg: { filter: FilterType; page: [number, number] } }
   ) {
-    return await axios
-      .post(url, arg, { signal: controller.signal })
-      .then((res) => res.data)
-      .catch((e) => {
-        if (!(e instanceof axios.CanceledError)) {
-          console.error(e);
-        }
-      });
+    controller = new AbortController();
+    const signal = controller.signal;
+
+    return await axios.post(url, arg, { signal }).then((res) => res.data);
   }
 
   const { ref, inView } = useInView({
@@ -108,8 +104,11 @@ export default function Like() {
   useDidMountEffect(() => {
     setMediaData([]);
     setPage(0);
-    controller.abort();
-    setAbort(controller.signal.aborted);
+
+    if (controller) {
+      controller.abort();
+      setAbort(controller.signal.aborted);
+    }
   }, [filter]);
 
   useDidMountEffect(() => {
@@ -129,7 +128,7 @@ export default function Like() {
         page: [mediaData.length, (page + 1) * row * 4],
       }); //Api 요청
     }
-  }, [page, row, filter]);
+  }, [page, row]);
 
   useDidMountEffect(() => {
     if (card && windowWidth > 1) {
