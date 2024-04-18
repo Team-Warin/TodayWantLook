@@ -11,7 +11,7 @@ import { headers } from 'next/headers';
 import { Session } from 'next-auth';
 import { connectDB } from '@/modules/database';
 
-import Scroll from '@/components/ui/Scroll';
+import Scroll from '@/components/Scroll';
 
 async function getRecommend(session: Session) {
   const baseUrl = `${

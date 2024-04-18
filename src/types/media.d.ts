@@ -24,9 +24,9 @@ interface MediaData {
 
 interface FilterType {
   title: string;
-  genre: (string | null)[];
-  type: (string | null)[];
-  updateDays: (string | null)[];
+  genre: string[];
+  type: string[];
+  updateDays: string[];
 }
 
 interface Rate {

@@ -3,7 +3,7 @@
 import type { FilterType } from '@/types/media';
 import { useState, type Dispatch, type SetStateAction } from 'react';
 
-import style from '@/styles/ui/Filter.module.css';
+import style from '@/styles/Filter.module.css';
 
 import { Button, Accordion, AccordionItem, Input } from '@nextui-org/react';
 
