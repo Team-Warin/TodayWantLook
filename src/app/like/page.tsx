@@ -1,41 +1,26 @@
 'use client';
 
 import type { MediaData, FilterType } from '@/types/media';
-import type { Dispatch, ForwardedRef, SetStateAction } from 'react';
-import type { NavigateOptions } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import axios from 'axios';
+import dynamic from 'next/dynamic';
 
 import style from '@/styles/Like.module.css';
 import cardStyle from '@/styles/Card.module.css';
 
 import useSWRMutation from 'swr/mutation';
-import { useSession } from 'next-auth/react';
-
-import Card from '@/components/Card';
-import Filter from '@/components/Filter';
-import { useState, useEffect, useRef, forwardRef, useCallback } from 'react';
-import {
-  Button,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-  Code,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
-
+import { useState, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
-import ShowModal from '@/components/Modal';
+import useDidMountEffect from '@/components/hooks/useDidMountEffect';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
-import useDidMountEffect from '@/components/hooks/useDidMountEffect';
+
+import Card from '@/components/Card';
+import { Code } from '@nextui-org/react';
+
+const Filter = dynamic(() => import('@/components/Filter'));
+const ShowModal = dynamic(() => import('@/components/Modal'));
 
 /**
  * @async
