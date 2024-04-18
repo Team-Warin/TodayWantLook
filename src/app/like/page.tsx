@@ -6,6 +6,10 @@ import type { NavigateOptions } from 'next/dist/shared/lib/app-router-context.sh
 
 import axios from 'axios';
 
+import { useState, useEffect, useRef } from 'react';
+import { useInView } from 'react-intersection-observer';
+import useDidMountEffect from '@/components/hooks/useDidMountEffect';
+
 import style from '@/styles/Like.module.css';
 import cardStyle from '@/styles/Card.module.css';
 
@@ -14,15 +18,9 @@ import { useSession } from 'next-auth/react';
 
 import Card from '@/components/Card';
 import Filter from '@/components/Filter';
-import { useState, useEffect, useRef, forwardRef, useCallback } from 'react';
+import ShowModal from '@/components/Modal';
+
 import {
-  Button,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
   Code,
   Popover,
   PopoverTrigger,
@@ -31,11 +29,8 @@ import {
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 
-import { useInView } from 'react-intersection-observer';
-import ShowModal from '@/components/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
-import useDidMountEffect from '@/components/hooks/useDidMountEffect';
 
 /**
  * @async
