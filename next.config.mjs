@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
+
+import withPlugins from 'next-compose-plugins';
+import withBundleAnalyzer from '@next/bundle-analyzer';
+
 const nextConfig = {
   reactStrictMode: false,
   images: {
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -33,4 +38,11 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withPlugins([
+  [
+    withBundleAnalyzer({
+      enabled: process.env.ANALYZE === 'true',
+    }),
+  ],
+  nextConfig,
+]);

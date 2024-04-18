@@ -4,7 +4,7 @@ import style from '@/styles/Card.module.css';
 
 import Image from 'next/image';
 
-import { Skeleton } from '@nextui-org/react';
+import { Skeleton } from '@nextui-org/skeleton';
 import { ForwardedRef, forwardRef } from 'react';
 
 interface CardProps {

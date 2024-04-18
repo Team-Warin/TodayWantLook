@@ -1,5 +1,10 @@
 import { MongoClient } from 'mongodb';
-const url = `mongodb+srv://${process.env.MONGODB_ID}:${process.env.MONGODB_PASSWORD}@cluster0.sp3gbda.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const url =
+  process.env.DB_URL?.replace(/\{user\}/, process.env.MONGODB_ID ?? '').replace(
+    /\{pwd\}/,
+    process.env.MONGODB_PASSWORD ?? ''
+  ) ?? '';
+
 let connectDB: Promise<MongoClient>;
 
 if (process.env.NODE_ENV === 'development') {

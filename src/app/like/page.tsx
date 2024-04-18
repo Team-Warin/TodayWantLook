@@ -1,44 +1,26 @@
 'use client';
 
 import type { MediaData, FilterType } from '@/types/media';
-import type { Dispatch, ForwardedRef, SetStateAction } from 'react';
-import type { NavigateOptions } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import axios from 'axios';
-
-import { useState, useEffect, useRef } from 'react';
-import { useInView } from 'react-intersection-observer';
-import useDidMountEffect from '@/components/hooks/useDidMountEffect';
+import dynamic from 'next/dynamic';
 
 import style from '@/styles/Like.module.css';
 import cardStyle from '@/styles/Card.module.css';
 
 import useSWRMutation from 'swr/mutation';
-import { useSession } from 'next-auth/react';
-
-import Card from '@/components/Card';
-import Filter from '@/components/Filter';
-import ShowModal from '@/components/Modal';
-
-import {
-  Code,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import { useState, useEffect, useRef } from 'react';
+import { useInView } from 'react-intersection-observer';
+import useDidMountEffect from '@/components/hooks/useDidMountEffect';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 
-/**
- * @async
- * @description useSWR API Post Requst Funciton
- * @param {string} url - Api Url
- * @param {{filter: FilterType; page: [number, number]}} arg - API Request Body
- * @returns {MediaData[]} Media Data Return
- */
+import { Code } from '@nextui-org/code';
+import Card from '@/components/Card';
+
+const Filter = dynamic(() => import('@/components/Filter'));
+const ShowModal = dynamic(() => import('@/components/Modal'));
 
 /**
  * /like 페이지
@@ -46,20 +28,23 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 export default function Like() {
   const max = 10;
 
-  const controller = new AbortController();
+  let controller: AbortController;
 
+  /**
+   * @async
+   * @description useSWR API Post Requst Funciton
+   * @param {string} url - Api Url
+   * @param {{filter: FilterType; page: [number, number]}} arg - API Request Body
+   * @returns {MediaData[]} Media Data Return
+   */
   async function mediaFetch(
     url: string,
     { arg }: { arg: { filter: FilterType; page: [number, number] } }
   ) {
-    return await axios
-      .post(url, arg, { signal: controller.signal })
-      .then((res) => res.data)
-      .catch((e) => {
-        if (!(e instanceof axios.CanceledError)) {
-          console.error(e);
-        }
-      });
+    controller = new AbortController();
+    const signal = controller.signal;
+
+    return await axios.post(url, arg, { signal }).then((res) => res.data);
   }
 
   const { ref, inView } = useInView({
@@ -118,8 +103,11 @@ export default function Like() {
   useDidMountEffect(() => {
     setMediaData([]);
     setPage(0);
-    controller.abort();
-    setAbort(controller.signal.aborted);
+
+    if (controller) {
+      controller.abort();
+      setAbort(controller.signal.aborted);
+    }
   }, [filter]);
 
   useDidMountEffect(() => {
@@ -139,7 +127,7 @@ export default function Like() {
         page: [mediaData.length, (page + 1) * row * 4],
       }); //Api 요청
     }
-  }, [page, row, filter]);
+  }, [page, row]);
 
   useDidMountEffect(() => {
     if (card && windowWidth > 1) {

@@ -7,14 +7,10 @@ import Image from 'next/image';
 
 import style from '@/styles/Navbar.module.css';
 
-import {
-  Button,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  Listbox,
-  ListboxItem,
-} from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Listbox, ListboxItem } from '@nextui-org/listbox';
+import { Popover, PopoverTrigger, PopoverContent } from '@nextui-org/popover';
+
 import { signIn, signOut } from 'next-auth/react';
 
 /**
