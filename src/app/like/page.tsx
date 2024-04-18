@@ -23,14 +23,6 @@ const Filter = dynamic(() => import('@/components/Filter'));
 const ShowModal = dynamic(() => import('@/components/Modal'));
 
 /**
- * @async
- * @description useSWR API Post Requst Funciton
- * @param {string} url - Api Url
- * @param {{filter: FilterType; page: [number, number]}} arg - API Request Body
- * @returns {MediaData[]} Media Data Return
- */
-
-/**
  * /like 페이지
  */
 export default function Like() {
@@ -38,6 +30,13 @@ export default function Like() {
 
   let controller: AbortController;
 
+  /**
+   * @async
+   * @description useSWR API Post Requst Funciton
+   * @param {string} url - Api Url
+   * @param {{filter: FilterType; page: [number, number]}} arg - API Request Body
+   * @returns {MediaData[]} Media Data Return
+   */
   async function mediaFetch(
     url: string,
     { arg }: { arg: { filter: FilterType; page: [number, number] } }
