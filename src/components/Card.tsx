@@ -1,6 +1,6 @@
 import type { MediaData } from '@/types/media';
 
-import style from '@/styles/ui/Card.module.css';
+import style from '@/styles/Card.module.css';
 
 import Image from 'next/image';
 
@@ -19,7 +19,7 @@ function Card(
   { isLoading, data }: CardProps,
   ref: ForwardedRef<HTMLDivElement>
 ) {
-  if (isLoading) {
+  if (isLoading && typeof data === 'number') {
     return (
       <div className={style.container} ref={ref}>
         <Skeleton className='rounded-lg'>
@@ -45,6 +45,7 @@ function Card(
               width={450}
               height={380}
               src={data.img}
+              loading='lazy'
               placeholder='blur'
               blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
               alt={'poster'}
@@ -56,6 +57,7 @@ function Card(
               src={data.backdrop_img}
               fill={true}
               sizes='(max-width: 149px), (max-width: 258px)'
+              loading='lazy'
               placeholder='blur'
               blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
               alt={'posterBg'}
@@ -66,6 +68,7 @@ function Card(
               src={data.img}
               width={450}
               height={380}
+              loading='lazy'
               placeholder='blur'
               blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
               alt={'posterBg'}

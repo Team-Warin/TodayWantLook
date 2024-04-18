@@ -1,6 +1,5 @@
 .checkbox {
-  @apply cursor-pointer;
-  transition: transform 0.3s ease;
+  @apply cursor-pointer relative transition-transform;
 }
 
 .checked {
@@ -15,15 +14,14 @@
   @apply w-full flex justify-between flex-wrap gap-4;
 }
 
-.observer {
-  @apply w-full h-[90px];
-}
-
 .submitContainer {
   @apply flex w-full h-[75px] p-5 shadow fixed z-20 bg-white bottom-0 left-0 justify-between items-center;
 }
 
-.btn {
-  @apply text-white cursor-pointer;
-  background-color: rgb(116, 225, 116);
+.checkbox > div:nth-child(1) {
+  @apply w-full h-full absolute flex justify-center items-center text-green-600 text-6xl z-20 opacity-0 transition-opacity;
+}
+
+.checked > div:nth-child(1) {
+  @apply opacity-100;
 }

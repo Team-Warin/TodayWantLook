@@ -7,13 +7,13 @@ import type { NavigateOptions } from 'next/dist/shared/lib/app-router-context.sh
 import axios from 'axios';
 
 import style from '@/styles/Like.module.css';
-import cardStyle from '@/styles/ui/Card.module.css';
+import cardStyle from '@/styles/Card.module.css';
 
 import useSWRMutation from 'swr/mutation';
 import { useSession } from 'next-auth/react';
 
-import Card from '@/components/ui/Card';
-import Filter from '@/components/ui/Filter';
+import Card from '@/components/Card';
+import Filter from '@/components/Filter';
 import { useState, useEffect, useRef, forwardRef } from 'react';
 import {
   Button,
@@ -31,14 +31,23 @@ import {
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 
-interface LikeMediaProps {
-  isLoading: boolean;
-  data: MediaData | number;
-  likes: MediaData[];
-  setLikes: Dispatch<SetStateAction<MediaData[]>>;
-}
+import { useInView } from 'react-intersection-observer';
+import ShowModal from '@/components/Modal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+import useDidMountEffect from '@/components/hooks/useDidMountEffect';
 
-async function refetch(url: string, { arg }: { arg: FilterType }) {
+/**
+ * @async
+ * @description useSWR API Post Requst Funciton
+ * @param {string} url - Api Url
+ * @param {{filter: FilterType; page: [number, number]}} arg - API Request Body
+ * @returns {MediaData[]} Media Data Return
+ */
+async function mediaFetch(
+  url: string,
+  { arg }: { arg: { filter: FilterType; page: [number, number] } }
+) {
   return await axios.post(url, arg).then((res) => res.data);
 }
 
@@ -46,10 +55,18 @@ async function refetch(url: string, { arg }: { arg: FilterType }) {
  * /like 페이지
  */
 export default function Like() {
-  const session = useSession();
-  const { push } = useRouter();
+  const max = 10;
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { ref, inView } = useInView({
+    threshold: 1.0,
+  });
+
+  const [modal, setModal] = useState<boolean>(true); // 방문 Modal
+  const [mediaData, setMediaData] = useState<MediaData[]>([]); // 작품 데이터
+  let [mediaCount, setMediaCount] = useState<number>(0); //작품 데이터 갯수
+
+  let [likes, setLikes] = useState<MediaData[]>([]);
+
   const [filter, setFilter] = useState<FilterType>({
     title: '',
     genre: [],
@@ -57,59 +74,59 @@ export default function Like() {
     updateDays: [],
   });
 
+  let [page, setPage] = useState<number>(0);
+  const [row, setRow] = useState<number>(0);
+  const [windowWidth, setWindowWidth] = useState<number>(0);
+
   const card = useRef<HTMLDivElement>(null);
 
-  const { trigger, data, isMutating } = useSWRMutation('/api/media', refetch);
-
-  const max: number = 10;
-
-  let [likes, setLikes] = useState<MediaData[]>([]);
-  const [likeOpen, setLikeOpen] = useState<boolean>(false);
-  let [windowWidth, setWindowWidth] = useState(0);
-  let [row, setRow] = useState(0);
-  let [items, setItmes] = useState(0);
-
-  function Observer() {
-    setItmes((items += row * 2));
-  }
+  const { trigger, data, isMutating } = useSWRMutation(
+    '/api/media',
+    mediaFetch,
+    { revalidate: false }
+  );
 
   useEffect(() => {
-    trigger(filter);
-  }, [filter]);
-
-  useEffect(() => {
-    if (session.status === 'unauthenticated') {
-      signIn();
-    } else if (session.status === 'authenticated') {
-      if (session.data.user.likes) {
-        push('/');
-      }
-    }
-
     setWindowWidth(window.innerWidth);
-
-    const likeList = () => {
-      setLikeOpen(false);
-    };
-
-    window.addEventListener('scroll', likeList);
-
-    return () => {
-      window.removeEventListener('scroll', likeList);
-    };
   }, []);
 
   useEffect(() => {
-    window.addEventListener('resize', () => setWindowWidth(window.innerWidth));
+    const WindowResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', WindowResize);
 
     return () => {
-      window.removeEventListener('resize', () =>
-        setWindowWidth(window.innerWidth)
-      );
+      window.removeEventListener('resize', WindowResize);
     };
   }, [windowWidth]);
 
-  useEffect(() => {
+  useDidMountEffect(() => {
+    if (data) {
+      setMediaCount(data.mediaCount);
+      setMediaData([...mediaData, ...data.mediaData]); // 데이터 불러온것 State에 추가
+    }
+  }, [data]);
+
+  useDidMountEffect(() => {
+    setMediaData([]);
+    setPage(0);
+  }, [filter]);
+
+  useDidMountEffect(() => {
+    if (
+      (row && !isMutating && mediaData.length < (page + 1) * row * 4) ||
+      (row && page < 1)
+    ) {
+      trigger({
+        filter: filter,
+        page: [mediaData.length, (page + 1) * row * 4],
+      }); //Api 요청
+    }
+  }, [page, row]);
+
+  useDidMountEffect(() => {
     if (card && windowWidth > 1) {
       const cardWidth: number = card.current?.clientWidth ?? 149;
       let rows = 0;
@@ -119,297 +136,107 @@ export default function Like() {
       } else {
         rows = Math.floor((windowWidth - 24) / (cardWidth + 16));
       }
-
       setRow(rows);
-      setItmes(rows * 3);
     }
   }, [windowWidth]);
 
-  useEffect(() => {
-    if (row) {
-      const observer = new IntersectionObserver(Observer, {
-        threshold: 0,
-      });
-
-      const observerTarget = document.getElementById('observer');
-
-      if (observerTarget) {
-        observer.observe(observerTarget);
-      }
+  useDidMountEffect(() => {
+    if (inView) {
+      setPage((page += 1));
     }
-  }, [row]);
+  }, [inView]);
 
   return (
     <div className={style.container}>
-      <div className={style.submitContainer}>
-        <Popover
-          placement='top'
-          isOpen={likeOpen}
-          onOpenChange={(open) => {
-            setLikeOpen(open);
-          }}
-        >
-          <PopoverTrigger>
-            <Button variant='light'>
-              {likes.length} / {max}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <div className='px-1 py-2 w-[150px]'>
-              {likes.length >= 1 ? (
-                likes.map((media, i) => {
-                  return (
-                    <div key={i} className='flex justify-between gap-3'>
-                      <p className='whitespace-nowrap overflow-hidden text-ellipsis'>
-                        {media.title}
-                      </p>
-                      <p
-                        className='cursor-pointer transition-transform hover:scale-110'
-                        onClick={() => {
-                          let temp = [...likes];
-
-                          temp = temp.filter((e: MediaData) => {
-                            return e.mediaId !== media.mediaId;
-                          });
-
-                          setLikes(temp);
-                        }}
-                      >
-                        ❌
-                      </p>
-                    </div>
-                  );
-                })
-              ) : (
-                <div>
-                  <p>아무 작품도 없습니다.</p>
-                </div>
-              )}
-            </div>
-          </PopoverContent>
-        </Popover>
-        {likes.length >= 1 ? (
-          <Button
-            className={style.btn}
-            onClick={() => {
-              if (likes.length >= 1) {
-                onOpen();
-              }
-            }}
-          >
-            제출하기
-          </Button>
-        ) : (
-          <Button isDisabled className={`${style.btn}`}>
-            제출하기
-          </Button>
-        )}
-      </div>
-      <NoteModal />
-      <SubmitModal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        likes={likes}
-        setLikes={setLikes}
-        push={push}
+      {row === 0 ? (
+        <div className={cardStyle.container} ref={card}></div> // 데이터 불러오기전 Card Dummy
+      ) : null}
+      <ShowModal
+        show={modal}
+        setShow={setModal}
+        modal={{
+          title: '좋아하는 작품을 골라주세요~!',
+          body: (
+            <p>
+              좋아하거나 즐겨본 작품을 골라주세요. <br />
+              작품을 추천하거나 소개할 알고리즘을 위해 이 데이터가 사용됩니다.
+              <br />
+              <br />
+              <Code color='danger'>
+                최소 <span className='font-bold'>1</span>개 최대{' '}
+                <span className='font-bold'>{max}</span>개 선택 가능합니다.
+              </Code>
+            </p>
+          ),
+          btn: [{ text: '알겠어요', color: 'primary' }],
+        }}
       />
       <Filter filter={filter} setFilter={setFilter} />
       <div className={style.mediaContainer}>
-        {data ? data.length < 1 ? <div>작품이 없어요.</div> : null : null}
-        {(data ?? [...Array(30).keys()])
-          .slice(0, items)
+        {(isMutating
+          ? [
+              ...mediaData,
+              ...Array(
+                row === 0
+                  ? 30
+                  : (page + 1) * row * 4 - mediaData.length < 0
+                  ? 0
+                  : (page + 1) * row * 4 - mediaData.length
+              ).keys(),
+            ]
+          : mediaData
+        )
+          .slice(0, (page + 1) * row * 4)
           .map((media: MediaData | number, i: number) => {
             return (
-              <LikeMedia
+              <div
                 key={i}
-                isLoading={isMutating}
-                data={media}
-                likes={likes}
-                setLikes={setLikes}
+                className={`${style.checkbox} ${
+                  typeof media !== 'number'
+                    ? likes.indexOf(media) != -1
+                      ? style.checked
+                      : ''
+                    : ''
+                }`}
+                onClick={() => {
+                  let temp = [...likes];
+
+                  if (typeof media !== 'number') {
+                    if (likes.indexOf(media) != -1) {
+                      temp = temp.filter((e: MediaData) => {
+                        return e.mediaId !== media.mediaId;
+                      });
+                    } else if (media) {
+                      if (temp.length >= 10) return;
+                      temp.push(media);
+                    }
+                  }
+
+                  setLikes(temp);
+                }}
                 ref={card}
-              ></LikeMedia>
+              >
+                <div>
+                  <FontAwesomeIcon icon={faCheck} />
+                </div>
+                <Card isLoading={isMutating} data={media}></Card>
+              </div>
             );
           })}
-        {data && row
-          ? [...Array(Math.floor(row - (data.length % row))).keys()].map(
+        {mediaData && row
+          ? [...Array(Math.floor(row - (mediaData.length % row))).keys()].map(
               (_, i: number) => {
-                if (data.length % row === 0) {
+                if (mediaData.length % row === 0) {
                   return null;
                 }
                 return <div key={i} className={cardStyle.container}></div>;
               }
             )
           : null}
-        {data ? null : (
-          <div className={`${cardStyle.container} h-4`} ref={card}></div> //더미 카드 초반 카드 width를 알기위함
-        )}
-        <div id='observer' className={style.observer}></div>
       </div>
+      {(page + 1) * row * 4 >= mediaCount || isMutating ? null : (
+        <div id='observer' ref={ref}></div>
+      )}
     </div>
   );
 }
-
-/**
- * Modal 알림
- */
-function NoteModal() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-  useEffect(() => {
-    onOpen();
-  }, []);
-
-  return (
-    <Modal backdrop='blur' isOpen={isOpen} onOpenChange={onOpenChange}>
-      <ModalContent>
-        {(onClose) => (
-          <>
-            <ModalHeader className='flex flex-col gap-1'>
-              좋아하는 작품을 골라주세요!
-            </ModalHeader>
-            <ModalBody>
-              <p>
-                좋아하거나 즐겨본 작품을 골라주세요. <br />
-                작품을 추천하거나 소개할 알고리즘을 위해 이 데이터가 사용됩니다.
-                <br />
-                <br />
-                <Code color='danger'>
-                  최소 <span className='font-bold'>1</span>개 최대{' '}
-                  <span className='font-bold'>10</span>개 선택 가능합니다.
-                </Code>
-              </p>
-            </ModalBody>
-            <ModalFooter>
-              <Button className={style.btn} onPress={onClose}>
-                알겠어요
-              </Button>
-            </ModalFooter>
-          </>
-        )}
-      </ModalContent>
-    </Modal>
-  );
-}
-
-/**
- * 제출 modal
- */
-function SubmitModal({
-  isOpen,
-  onOpenChange,
-  likes,
-  setLikes,
-  push,
-}: {
-  isOpen: boolean;
-  onOpenChange: () => void;
-  likes: MediaData[];
-  setLikes: Dispatch<SetStateAction<MediaData[]>>;
-  push: (href: string, options?: NavigateOptions) => void;
-}) {
-  return (
-    <Modal backdrop='blur' isOpen={isOpen} onOpenChange={onOpenChange}>
-      <ModalContent>
-        {(onClose) => (
-          <>
-            <ModalHeader className='flex flex-col gap-1'>
-              선택한 선호하는 작품!!
-            </ModalHeader>
-            <ModalBody>
-              {likes.map((media, i) => {
-                return (
-                  <div key={i} className='flex justify-between'>
-                    <p>{media.title}</p>
-                    <p
-                      className='cursor-pointer transition-transform hover:scale-110'
-                      onClick={() => {
-                        let temp = [...likes];
-
-                        temp = temp.filter((e: MediaData) => {
-                          return e.mediaId !== media.mediaId;
-                        });
-
-                        setLikes(temp);
-
-                        if (temp.length < 1) onClose();
-                      }}
-                    >
-                      ❌
-                    </p>
-                  </div>
-                );
-              })}
-            </ModalBody>
-            <ModalFooter>
-              <Button color='danger' variant='light' onPress={onClose}>
-                조금 더 생각해볼래요
-              </Button>
-              <Button
-                className={style.btn}
-                onPress={() => {
-                  if (likes.length >= 1) {
-                    axios.post('/api/like', { likes }).then((res) => {
-                      if (res.status == 200) push('/');
-                    });
-                    onClose();
-                  }
-                }}
-              >
-                제출하기!
-              </Button>
-            </ModalFooter>
-          </>
-        )}
-      </ModalContent>
-    </Modal>
-  );
-}
-
-/**
- * Item Card
- * data가 number거나 isLoading이 true라면 Skeleton UI return
- * data가 MediaData고 isLoading이 false라면 작품 Card return
- * @param {boolean} isLoading
- * @param {number | MediaData} data
- * @param {MediaData[]} likes
- * @param {Dispatch<SetStateAction<MediaData[]>>} setLikes
- */
-const LikeMedia = forwardRef(
-  (
-    { isLoading, data, likes, setLikes }: LikeMediaProps,
-    ref: ForwardedRef<HTMLDivElement>
-  ) => {
-    if (isLoading) {
-      return <Card isLoading={isLoading} data={data} ref={ref}></Card>;
-    } else if (typeof data !== 'number') {
-      return (
-        <div
-          ref={ref}
-          className={`${style.checkbox} ${
-            likes.indexOf(data) != -1 ? style.checked : ''
-          }`}
-          onClick={() => {
-            let temp = [...likes];
-
-            if (typeof data !== 'number') {
-              if (likes.indexOf(data) != -1) {
-                temp = temp.filter((e: MediaData) => {
-                  return e.mediaId !== data.mediaId;
-                });
-              } else if (data) {
-                if (temp.length >= 10) return;
-                temp.push(data);
-              }
-            }
-
-            setLikes(temp);
-          }}
-        >
-          <Card isLoading={isLoading} data={data}></Card>
-        </div>
-      );
-    }
-
-    LikeMedia.displayName = 'LikeMedia';
-  }
-);

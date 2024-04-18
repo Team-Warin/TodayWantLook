@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app';
 
-import { Providers } from '../components/provider/providers';
+import { Providers } from '../components/provider/Providers';
 
 import '../app/globals.css';
 

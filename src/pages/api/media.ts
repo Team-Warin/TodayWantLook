@@ -1,13 +1,25 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { FilterType } from '@/types/media';
 
 import { connectDB } from '@/modules/database';
+
+interface MediaApiRequest extends NextApiRequest {
+  body: {
+    filter: FilterType;
+    page: [number, number];
+  };
+}
 
 /**
  * /api/media api get요청을 받는 코드
  */
-export default async function Media(req: NextApiRequest, res: NextApiResponse) {
+export default async function Media(
+  req: MediaApiRequest,
+  res: NextApiResponse
+) {
   const db = (await connectDB).db(process.env.DB_NAME);
   let result;
+  let mediaCount: number = 1;
 
   const keyword: {
     type: { [key: string]: RegExp };
@@ -53,47 +65,49 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
       updateDays?: RegExp[];
     } = {};
 
-    if (req.body.genre) {
-      if (req.body.genre.length >= 1) {
+    if (req.body.filter.genre) {
+      if (req.body.filter.genre.length >= 1) {
         let genre: string;
 
         filterList.genre = [];
 
-        for (genre of req.body.genre) {
+        for (genre of req.body.filter.genre) {
           filterList.genre.push(keyword.genre[genre]);
         }
       }
     }
 
-    if (req.body.updateDays) {
-      if (req.body.updateDays.length >= 1) {
+    if (req.body.filter.updateDays) {
+      if (req.body.filter.updateDays.length >= 1) {
         let updateDay: string;
 
         filterList.updateDays = [];
 
-        for (updateDay of req.body.updateDays) {
+        for (updateDay of req.body.filter.updateDays) {
           filterList.updateDays.push(keyword.updateDay[updateDay]);
         }
       }
     }
 
-    if (req.body.type) {
-      if (req.body.type.length >= 1) {
+    if (req.body.filter.type) {
+      if (req.body.filter.type.length >= 1) {
         let type: string;
 
         filterList.type = [];
 
-        for (type of req.body.type) {
+        for (type of req.body.filter.type) {
           filterList.type.push(keyword.type[type]);
         }
       }
     }
 
-    if (req.body.title) {
-      if (req.body.title !== '') {
+    if (req.body.filter.title) {
+      if (req.body.filter.title !== '') {
         filterList.title = [];
 
-        filterList.title.push(new RegExp(`(?=.*(${req.body.title}).*).*`));
+        filterList.title.push(
+          new RegExp(`(?=.*(${req.body.filter.title}).*).*`)
+        );
       }
     }
 
@@ -110,12 +124,16 @@ export default async function Media(req: NextApiRequest, res: NextApiResponse) {
       .collection('media')
       .find(filter.length >= 1 ? { $and: filter } : {})
       .toArray();
-  } else if (req.method === 'GET') {
-    result = await db.collection('media').find().toArray();
+    mediaCount = result.length;
+  } else {
+    res.status(400).send('Post Request Only');
   }
 
-  if (result) {
-    await res.status(200).send(result);
+  if (result && mediaCount) {
+    await res.status(200).send({
+      mediaData: result.slice(req.body.page[0], req.body.page[1]),
+      mediaCount: mediaCount,
+    });
   } else {
     await res.status(400).send('Bad Request');
   }

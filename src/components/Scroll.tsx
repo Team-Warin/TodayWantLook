@@ -4,7 +4,7 @@ import type { MediaData } from '@/types/media';
 
 import style from '@/styles/Main.module.css';
 
-import Card from '@/components/ui/Card';
+import Card from '@/components/Card';
 
 import { ScrollShadow } from '@nextui-org/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
