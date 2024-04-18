@@ -6,6 +6,10 @@ import type { NavigateOptions } from 'next/dist/shared/lib/app-router-context.sh
 
 import axios from 'axios';
 
+import { useState, useEffect, useRef } from 'react';
+import { useInView } from 'react-intersection-observer';
+import useDidMountEffect from '@/components/hooks/useDidMountEffect';
+
 import style from '@/styles/Like.module.css';
 import cardStyle from '@/styles/Card.module.css';
 
@@ -14,15 +18,9 @@ import { useSession } from 'next-auth/react';
 
 import Card from '@/components/Card';
 import Filter from '@/components/Filter';
-import { useState, useEffect, useRef, forwardRef } from 'react';
+import ShowModal from '@/components/Modal';
+
 import {
-  Button,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
   Code,
   Popover,
   PopoverTrigger,
@@ -31,11 +29,8 @@ import {
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 
-import { useInView } from 'react-intersection-observer';
-import ShowModal from '@/components/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
-import useDidMountEffect from '@/components/hooks/useDidMountEffect';
 
 /**
  * @async
@@ -44,18 +39,28 @@ import useDidMountEffect from '@/components/hooks/useDidMountEffect';
  * @param {{filter: FilterType; page: [number, number]}} arg - API Request Body
  * @returns {MediaData[]} Media Data Return
  */
-async function mediaFetch(
-  url: string,
-  { arg }: { arg: { filter: FilterType; page: [number, number] } }
-) {
-  return await axios.post(url, arg).then((res) => res.data);
-}
 
 /**
  * /like 페이지
  */
 export default function Like() {
   const max = 10;
+
+  const controller = new AbortController();
+
+  async function mediaFetch(
+    url: string,
+    { arg }: { arg: { filter: FilterType; page: [number, number] } }
+  ) {
+    return await axios
+      .post(url, arg, { signal: controller.signal })
+      .then((res) => res.data)
+      .catch((e) => {
+        if (!(e instanceof axios.CanceledError)) {
+          console.error(e);
+        }
+      });
+  }
 
   const { ref, inView } = useInView({
     threshold: 1.0,
@@ -64,6 +69,7 @@ export default function Like() {
   const [modal, setModal] = useState<boolean>(true); // 방문 Modal
   const [mediaData, setMediaData] = useState<MediaData[]>([]); // 작품 데이터
   let [mediaCount, setMediaCount] = useState<number>(0); //작품 데이터 갯수
+  let [abort, setAbort] = useState<boolean>(false); // 방문 Modal
 
   let [likes, setLikes] = useState<MediaData[]>([]);
 
@@ -112,19 +118,28 @@ export default function Like() {
   useDidMountEffect(() => {
     setMediaData([]);
     setPage(0);
+    controller.abort();
+    setAbort(controller.signal.aborted);
   }, [filter]);
 
   useDidMountEffect(() => {
-    if (
-      (row && !isMutating && mediaData.length < (page + 1) * row * 4) ||
-      (row && page < 1)
-    ) {
+    if (abort) {
+      trigger({
+        filter: filter,
+        page: [mediaData.length, (page + 1) * row * 4],
+      }); //Api 요청
+      setAbort(false);
+    }
+  }, [abort]);
+
+  useDidMountEffect(() => {
+    if (row && mediaData.length < (page + 1) * row * 4) {
       trigger({
         filter: filter,
         page: [mediaData.length, (page + 1) * row * 4],
       }); //Api 요청
     }
-  }, [page, row]);
+  }, [page, row, filter]);
 
   useDidMountEffect(() => {
     if (card && windowWidth > 1) {
