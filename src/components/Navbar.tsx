@@ -11,7 +11,7 @@ import { Button } from '@nextui-org/button';
 import { Listbox, ListboxItem } from '@nextui-org/listbox';
 import { Popover, PopoverTrigger, PopoverContent } from '@nextui-org/popover';
 
-import { signIn, signOut } from 'next-auth/react';
+import { signIn, signOut } from '@/auth';
 
 /**
  * Navbar UI Components
@@ -66,7 +66,7 @@ export default function Navbar({ session }: { session: Session | null }) {
             </PopoverContent>
           </Popover>
         ) : (
-          <Button className={`${style.btn}`} onClick={() => signIn()}>
+          <Button className={`${style.btn}`} onClick={() => signIn('google')}>
             Sign In
           </Button>
         )}

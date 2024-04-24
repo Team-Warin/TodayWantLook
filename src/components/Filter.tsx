@@ -5,183 +5,112 @@ import type { Dispatch, SetStateAction } from 'react';
 
 import style from '@/styles/Filter.module.css';
 
-import { useState } from 'react';
-
 import { Button } from '@nextui-org/button';
-import { Input } from '@nextui-org/input';
 import { Accordion, AccordionItem } from '@nextui-org/accordion';
-
-interface FilterProps {
-  filter: FilterType;
-  setFilter: Dispatch<SetStateAction<FilterType>>;
-}
+import { Input } from '@nextui-org/input';
 
 /**
  * Filter UI Component
  */
-export default function Filter({ filter, setFilter }: FilterProps) {
-  let [value, setValue] = useState('');
-
-  const filterList = {
-    type: [
-      { name: 'All', type: 'all' },
-      { name: '웹툰', type: 'webtoon' },
-      { name: '영화', type: 'movie' },
-      { name: '드라마', type: 'drama' },
-    ],
-    genre: [
-      { name: 'All', type: 'all' },
-      { name: '판타지', type: '판타지' },
-      { name: '액션', type: '액션' },
-      { name: '로맨스', type: '로맨스' },
-      { name: '무협', type: '무협' },
-      { name: '드라마', type: '드라마' },
-      { name: '일상', type: '일상' },
-      { name: '코믹', type: '코믹' },
-      { name: '공포', type: '공포' },
-      { name: '스릴러', type: '스릴러' },
-    ],
-    updateDays: [
-      { name: 'All', type: 'all' },
-      { name: '월', type: 'mon' },
-      { name: '화', type: 'tue' },
-      { name: '수', type: 'wed' },
-      { name: '목', type: 'thu' },
-      { name: '금', type: 'fri' },
-      { name: '토', type: 'sat' },
-      { name: '일', type: 'sun' },
-      { name: '완결', type: 'finished' },
-      { name: '매일+', type: 'naverDaily' },
-    ],
+export default function Filter({
+  filter,
+  setFilter,
+}: {
+  filter: FilterType;
+  setFilter: Dispatch<SetStateAction<FilterType>>;
+}) {
+  const filterList: {
+    [key: string]: { name: string; filter: { name: string; regex?: string }[] };
+  } = {
+    title: {
+      name: '타이틀',
+      filter: [],
+    },
+    genre: {
+      name: '장르',
+      filter: [
+        { name: 'All' },
+        { name: '로맨스', regex: '(?=.*(로맨스|설레는|달달함).*).*' },
+        { name: '판타지', regex: '(?=.*(판타지|회귀물|차원이동물).*).*' },
+        { name: '액션', regex: '(?=.*(액션|스릴).*).*' },
+        { name: 'SF', regex: '(?=.*(SF|로봇).*).*' },
+        { name: '개그', regex: '(?=.*(개그|웃김|코믹).*).*' },
+        { name: '공포', regex: '(?=.*(공포|무서움).*).*' },
+        { name: '모험', regex: '(?=.*(모험|먼치킨|여행).*).*' },
+        { name: '무협', regex: '(?=.*(무협|무림|사극).*).*' },
+        { name: '미스터리', regex: '(?=.*(미스터리|추리).*).*' },
+        { name: '범죄', regex: '(?=.*(범죄|).*).*' },
+      ],
+    },
+    updateDays: {
+      name: '요일',
+      filter: [
+        { name: 'All' },
+        { name: '월', regex: '' },
+        { name: '화', regex: '' },
+        { name: '수', regex: '' },
+        { name: '목', regex: '' },
+        { name: '금', regex: '' },
+        { name: '토', regex: '' },
+        { name: '일', regex: '' },
+        { name: '완결', regex: '' },
+        { name: '매일+', regex: '' },
+      ],
+    },
+    type: {
+      name: '콘텐츠',
+      filter: [
+        { name: 'All' },
+        { name: '웹툰', regex: '(?=.*(webtoon).*).*' },
+        { name: '영화', regex: '(?=.*(movie).*).*' },
+        { name: '드라마', regex: '(?=.*(drama).*).*' },
+      ],
+    },
   };
 
   return (
-    <div className='mb-5'>
-      <Accordion
-        selectionMode='multiple'
-        defaultExpandedKeys={['1', '2', '3', '4']}
-      >
-        <AccordionItem key='1' aria-label='search' title='검색'>
-          <div>
-            <Input
-              placeholder='제목을 입력해주세요.'
-              value={value}
-              onValueChange={setValue}
-              onKeyDown={(e) => {
-                if (e.code == 'Enter') {
-                  let temp = { ...filter };
-                  temp.title = value;
-
-                  setFilter(temp);
-                }
-              }}
-            ></Input>
-          </div>
-        </AccordionItem>
-        <AccordionItem key='2' aria-label='genre' title='장르'>
-          <div className={style.container}>
-            {filterList.genre.map((data: { name: string; type: string }, i) => {
-              return (
-                <Button
-                  className={`${style.btn} ${
-                    filter.genre.indexOf(data.type) !== -1 ||
-                    (filter.genre.length < 1 && data.type === 'all')
-                      ? style.check
-                      : null
-                  }`}
-                  size='sm'
-                  key={i}
-                  onClick={() => {
-                    let temp: FilterType = { ...filter };
-
-                    if (data.type === 'all') {
-                      temp.genre = [];
-                    } else if (temp.genre.indexOf(data.type) === -1) {
-                      temp.genre.push(data.type);
-                    } else if (temp.genre.indexOf(data.type) !== -1) {
-                      temp.genre = temp.genre.filter((e) => e !== data.type);
-                    }
-
-                    setFilter(temp);
-                  }}
-                >
-                  {data.name}
-                </Button>
-              );
-            })}
-          </div>
-        </AccordionItem>
-        <AccordionItem key='3' aria-label='type' title='요일'>
-          <div className={style.container}>
-            {filterList.updateDays.map(
-              (data: { name: string; type: string }, i) => {
-                return (
-                  <Button
-                    className={`${style.btn} ${
-                      filter.updateDays.indexOf(data.type) !== -1 ||
-                      (filter.updateDays.length < 1 && data.type === 'all')
-                        ? style.check
-                        : null
-                    }`}
-                    size='sm'
-                    key={i}
-                    onClick={() => {
-                      let temp: FilterType = { ...filter };
-
-                      if (data.type === 'all') {
-                        temp.updateDays = [];
-                      } else if (temp.updateDays.indexOf(data.type) === -1) {
-                        temp.updateDays = [data.type];
-                      } else if (temp.updateDays.indexOf(data.type) !== -1) {
-                        temp.updateDays = temp.updateDays.filter(
-                          (e) => e !== data.type
-                        );
-                      }
-
-                      setFilter(temp);
-                    }}
-                  >
-                    {data.name}
-                  </Button>
-                );
-              }
-            )}
-          </div>
-        </AccordionItem>
-        <AccordionItem key='4' aria-label='content' title='콘텐츠'>
-          <div className={style.container}>
-            {filterList.type.map((data: { name: string; type: string }, i) => {
-              return (
-                <Button
-                  className={`${style.btn} ${
-                    filter.type.indexOf(data.type) !== -1 ||
-                    (filter.type.length < 1 && data.type === 'all')
-                      ? style.check
-                      : null
-                  }`}
-                  size='sm'
-                  key={i}
-                  onClick={() => {
-                    let temp: FilterType = { ...filter };
-
-                    if (data.type === 'all') {
-                      temp.type = [];
-                    } else if (temp.type.indexOf(data.type) === -1) {
-                      temp.type.push(data.type);
-                    } else if (temp.type.indexOf(data.type) !== -1) {
-                      temp.type = temp.type.filter((e) => e !== data.type);
-                    }
-
-                    setFilter(temp);
-                  }}
-                >
-                  {data.name}
-                </Button>
-              );
-            })}
-          </div>
-        </AccordionItem>
-      </Accordion>
-    </div>
+    <Accordion
+      defaultExpandedKeys={[
+        ...Array(Object.keys(filterList).length).keys(),
+      ].map((i) => `${i}`)}
+      selectionMode='multiple'
+      variant='shadow'
+      className='pt-3 pb-3'
+    >
+      {Object.keys(filterList).map((title: string, i: number) => {
+        return (
+          <AccordionItem
+            key={i}
+            className='mb-2'
+            aria-label={title}
+            title={filterList[title].name}
+          >
+            <div className='flex flex-wrap gap-3'>
+              {title === 'title' ? (
+                <Input placeholder='제목을 입력해주세요.' />
+              ) : (
+                filterList[title].filter.map((result, i) => {
+                  return (
+                    <Button
+                      key={i}
+                      className={`rounded-full shadow-sm ${
+                        filter[title].indexOf(result.regex ?? '') === -1 &&
+                        !(filter[title].length < 1 && result.name === 'All')
+                          ? style.unCheck
+                          : ''
+                      }`}
+                      color='primary'
+                      size='sm'
+                    >
+                      {result.name}
+                    </Button>
+                  );
+                })
+              )}
+            </div>
+          </AccordionItem>
+        );
+      })}
+    </Accordion>
   );
 }

@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
 import { BMJUA } from '@/modules/font';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 import Navbar from '@/components/Navbar';
 
 import './globals.css';
-import { NextAuthProvider } from '@/components/provider/NextAuthProvider';
+
+import AuthSession from '@/components/provider/AuthSession';
 
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -26,15 +25,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
-
   return (
     <html lang='ko' className='white'>
       <body className={BMJUA.className}>
-        <NextAuthProvider session={session}>
-          <Navbar session={session} />
-          {children}
-        </NextAuthProvider>
+        <AuthSession>{children}</AuthSession>
       </body>
     </html>
   );

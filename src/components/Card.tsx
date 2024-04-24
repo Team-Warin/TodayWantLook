@@ -57,6 +57,7 @@ function Card(
               src={data.backdrop_img}
               fill={true}
               sizes='(max-width: 149px), (max-width: 258px)'
+              quality={data.img ? 50 : 75}
               loading='lazy'
               placeholder='blur'
               blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='

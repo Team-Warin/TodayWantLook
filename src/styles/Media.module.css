@@ -25,3 +25,7 @@
 .checked > div:nth-child(1) {
   @apply opacity-100;
 }
+
+.filterSkeleton {
+  @apply h-[500px] rounded-lg bg-default-300;
+}

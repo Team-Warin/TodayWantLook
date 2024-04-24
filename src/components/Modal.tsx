@@ -1,23 +1,22 @@
-'use client';
-
-import type { Dispatch, SetStateAction } from 'react';
-
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
+  useDisclosure,
 } from '@nextui-org/modal';
 import { Button } from '@nextui-org/button';
 
 export default function ShowModal({
-  show,
-  setShow,
+  isOpen,
+  onClose,
+  defaultOpen,
   modal,
 }: {
-  show: boolean;
-  setShow: Dispatch<SetStateAction<boolean>>;
+  isOpen?: boolean;
+  onClose?: () => void;
+  defaultOpen?: boolean;
   modal: {
     title: string;
     body: JSX.Element;
@@ -43,12 +42,7 @@ export default function ShowModal({
   };
 }) {
   return (
-    <Modal
-      isOpen={show}
-      onOpenChange={(show) => {
-        setShow(show);
-      }}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} defaultOpen={defaultOpen}>
       <ModalContent>
         {(onClose) => (
           <>
