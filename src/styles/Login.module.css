@@ -1,0 +1,27 @@
+.google {
+  background-color: rgb(241, 244, 249);
+}
+
+.bgContainer {
+  transform: translateX(-50%) translateY(-45%) rotate(12deg);
+}
+
+.bgCard:nth-child(odd) > div {
+  animation: left 30s linear infinite;
+}
+
+.bgCard:nth-child(even) > div {
+  animation: right 30s linear infinite;
+}
+
+@keyframes left {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes right {
+  to {
+    transform: translateX(100%);
+  }
+}

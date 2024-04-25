@@ -5,18 +5,21 @@ import style from '@/styles/Card.module.css';
 import Image from 'next/image';
 
 import { Skeleton } from '@nextui-org/skeleton';
-import { ForwardedRef, forwardRef } from 'react';
+import { ForwardedRef, forwardRef, lazy } from 'react';
 
 interface CardProps {
   isLoading: boolean;
   data: MediaData | number;
+  info?: boolean;
+  quality?: number;
+  lazy?: boolean;
 }
 
 /**
  * Card UI Component
  */
 function Card(
-  { isLoading, data }: CardProps,
+  { isLoading, data, info, quality, lazy }: CardProps,
   ref: ForwardedRef<HTMLDivElement>
 ) {
   if (isLoading && typeof data === 'number') {
@@ -44,8 +47,9 @@ function Card(
               className={style.poster}
               width={450}
               height={380}
+              quality={quality ?? 75}
               src={data.img}
-              loading='lazy'
+              loading={lazy === false ? 'eager' : 'lazy'}
               placeholder='blur'
               blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
               alt={'poster'}
@@ -57,8 +61,8 @@ function Card(
               src={data.backdrop_img}
               fill={true}
               sizes='(max-width: 149px), (max-width: 258px)'
-              quality={data.img ? 50 : 75}
-              loading='lazy'
+              quality={quality ?? data.img ? 50 : 75}
+              loading={lazy === false ? 'eager' : 'lazy'}
               placeholder='blur'
               blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
               alt={'posterBg'}
@@ -69,22 +73,25 @@ function Card(
               src={data.img}
               width={450}
               height={380}
-              loading='lazy'
+              quality={quality ?? 75}
+              loading={lazy === false ? 'eager' : 'lazy'}
               placeholder='blur'
               blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
               alt={'posterBg'}
             ></Image>
           ) : null}
         </div>
-        <div className={style.poster_title}>
-          <p>{data.title}</p>
-          <div>
-            <div className={style.author}>
-              <span>{data.author}</span>{' '}
+        {info !== false ? (
+          <div className={style.poster_title}>
+            <p>{data.title}</p>
+            <div>
+              <div className={style.author}>
+                <span>{data.author}</span>{' '}
+              </div>
+              <span className={style.rate}>★ {data.rate}</span>
             </div>
-            <span className={style.rate}>★ {data.rate}</span>
           </div>
-        </div>
+        ) : null}
       </div>
     );
   }

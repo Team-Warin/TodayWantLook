@@ -1,5 +1,6 @@
 import type { JWT } from 'next-auth/jwt';
 import type { NextAuthConfig } from 'next-auth';
+import type { Provider } from 'next-auth/providers';
 
 import { nameCreate } from './modules/nickname';
 import Google from 'next-auth/providers/google';
@@ -48,33 +49,48 @@ async function refreshAccessToken(token: JWT) {
   }
 }
 
+const providers: Provider[] = [
+  Google({
+    authorization: GOOGLE_AUTHORIZATION_URL,
+    allowDangerousEmailAccountLinking: true,
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        nickname: nameCreate(),
+        email: profile.email,
+        image: profile.picture,
+        roles: ['newbie'],
+      };
+    },
+  }),
+];
+
+export const providerMap = providers.map((provider) => {
+  if (typeof provider === 'function') {
+    const providerData = provider();
+    return { id: providerData.id, name: providerData.name };
+  } else {
+    return { id: provider.id, name: provider.name };
+  }
+});
+
 export const authConfig = {
+  debug: false,
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30d
   },
-  providers: [
-    Google({
-      authorization: GOOGLE_AUTHORIZATION_URL,
-      allowDangerousEmailAccountLinking: true,
-      profile(profile) {
-        return {
-          id: profile.sub,
-          name: profile.name,
-          nickname: nameCreate(),
-          email: profile.email,
-          image: profile.picture,
-          roles: ['newbie'],
-        };
-      },
-    }),
-  ],
+  pages: {
+    signIn: '/login',
+  },
+  providers,
   callbacks: {
     signIn: async ({ user, account, profile }) => {
       return true;
     },
     jwt: async ({ token, user, account, trigger }) => {
-      if (user && account) {
+      if (user && account?.expires_in) {
         return {
           /** 닉네임 및 Token 권한 설정 */
           user,
@@ -112,12 +128,14 @@ export const authConfig = {
       return refreshAccessToken(token);
     },
     session: async ({ session, token }) => {
-      /** 닉네임 및 Token 권한 설정 */
-      session.user = token.user;
-      /** Acces Token 및 Refresh Token 설정 */
-      session.access_token = token.access_token;
-      session.refresh_token = token.refresh_token;
-      session.accessTokenExpires = token.accessTokenExpires;
+      if (token.user && session) {
+        /** 닉네임 및 Token 권한 설정 */
+        session.user = token.user;
+        /** Acces Token 및 Refresh Token 설정 */
+        session.access_token = token.access_token;
+        session.refresh_token = token.refresh_token;
+        session.accessTokenExpires = token.accessTokenExpires;
+      }
 
       return session;
     },

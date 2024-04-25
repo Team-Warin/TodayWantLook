@@ -1,44 +1,7 @@
 .container {
-  @apply p-3;
-  transition: padding 0.3s ease;
+  @apply w-full h-[80px] flex justify-between items-center;
 }
 
-.container:hover {
-  @apply p-2;
-}
-
-.navbar {
-  @apply p-4 text-white;
-  background-color: rgb(116, 225, 116);
-  transition: inherit;
-}
-
-.navbar:hover {
-  @apply p-5;
-}
-
-.user {
-  border: 3px white solid;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.user:hover {
-  transform: scale(1.05);
-}
-
-.navbar > div:nth-child(1) {
-  font-size: 22px;
-  transform: scale(1);
-  transition: transform 0.3s ease;
-}
-
-.navbar > div:nth-child(1):hover {
-  transform: scale(1.05);
-}
-
-.btn {
-  @apply bg-white;
-  color: rgb(91, 177, 91);
+.logo {
+  @apply text-xl font-bold;
 }

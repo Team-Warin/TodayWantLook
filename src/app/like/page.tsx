@@ -21,11 +21,6 @@ export default function Like() {
 
   let [like, setLike] = useState<MediaData[]>([]);
 
-  if (session) {
-    console.log(session);
-    session.update('update');
-  }
-
   return (
     <>
       <ShowModal

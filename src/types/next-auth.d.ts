@@ -1,44 +1,29 @@
-import NextAuth from 'next-auth/next';
-
-import { JWT } from 'next-auth/jwt';
 import { DefaultSession } from 'next-auth';
+import { AdapterUser } from 'next-auth/adapters';
+import { JWT } from 'next-auth/jwt';
 
 declare module 'next-auth' {
   interface Session {
     user: {
       nickname: string;
       roles: string[];
-    } & DefaultSession['user'];
+    } & AdapterUser &
+      DefaultSession['user'];
     access_token?: string;
     refresh_token?: string;
-    accessTokenExpires?: number;
-  }
-  interface User {
-    nickname: string;
-    roles: string[];
-  }
-
-  interface Account {
-    expires_in: number;
-  }
-}
-
-declare module '@auth/core/adapters' {
-  interface AdapterUser {
-    nickname: string;
-    roles: string[];
+    accessTokenExpires: number;
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    user?: {
+    user: {
       nickname: string;
       roles: string[];
-    } & DefaultSession['user'] &
+    } & User &
       AdapterUser;
     access_token?: string;
     refresh_token?: string;
-    accessTokenExpires?: number;
+    accessTokenExpires: number;
   }
 }

@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 
 import './globals.css';
 
+import { auth } from '@/auth';
 import AuthSession from '@/components/provider/AuthSession';
 
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -25,10 +26,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html lang='ko' className='white'>
       <body className={BMJUA.className}>
-        <AuthSession>{children}</AuthSession>
+        <AuthSession>
+          <Navbar session={session} />
+          {children}
+        </AuthSession>
       </body>
     </html>
   );
