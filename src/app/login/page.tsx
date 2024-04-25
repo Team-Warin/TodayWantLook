@@ -26,15 +26,15 @@ export default async function Login({
   const db = (await connectDB).db(process.env.DB_NAME);
   const media = await db.collection<MediaData[]>('media').find({}).toArray();
 
-  const bgMediaList = division(media.slice(0, 81), 10) as MediaData[][];
+  const bgMediaList = division(media.slice(0, 61), 10) as MediaData[][];
 
   return (
     <div className='w-full h-screen relative overflow-hidden'>
-      <div className={`flex flex-col gap-5 absolute ${style.bgContainer}`}>
+      <div className={`flex flex-col gap-24 absolute ${style.bgContainer}`}>
         {bgMediaList.map((mediaList: MediaData[], i: number) => {
           return (
-            <div className={`flex gap-5 ${style.bgCard}`} key={i}>
-              {[...Array(4).keys()].map((i: number) => {
+            <div className={`flex gap-5 scale-125 ${style.bgCard}`} key={i}>
+              {[...Array(3).keys()].map((i: number) => {
                 return (
                   <div key={i} className='flex gap-5'>
                     {mediaList.map((media: MediaData, i: number) => {
@@ -43,7 +43,6 @@ export default async function Login({
                           isLoading={false}
                           data={media}
                           info={false}
-                          quality={50}
                           key={i}
                         ></Card>
                       );

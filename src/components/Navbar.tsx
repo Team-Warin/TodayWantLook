@@ -30,7 +30,7 @@ export default function Navbar({ session }: { session: Session | null }) {
       <div className={`${style.container} p-10 fixed`}>
         <div className='flex items-center gap-6'>
           <Link href='/'>
-            <Image src={'./logo.svg'} width={50} height={50} alt='logo'></Image>
+            <Image src={'/logo.webp'} width={75} height={75} alt='logo'></Image>
           </Link>
           <div>
             <Link href='/'>태그검색</Link>

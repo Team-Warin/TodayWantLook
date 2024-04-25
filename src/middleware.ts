@@ -7,7 +7,8 @@ import { NextResponse, userAgent } from 'next/server';
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
-  console.log(userAgent(req), req.nextUrl.pathname);
+  // ua: Chrome-Lighthouse
+
   if (req.auth?.user) {
     if (!req.auth.user.roles.includes('user') && req.nextUrl.pathname === '/') {
       return NextResponse.redirect(new URL('/like', req.url));
