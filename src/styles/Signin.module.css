@@ -1,0 +1,30 @@
+.container {
+  @apply p-[13%];
+  background-color: rgb(241, 244, 249);
+}
+
+.login_container {
+  @apply bg-white;
+}
+
+.login_container > div > h1 {
+  @apply text-5xl font-semibold;
+}
+
+.login_container > div > p {
+  @apply text-2xl font-semibold;
+}
+
+.btn {
+  @apply w-full text-xl flex justify-center items-center shadow-md gap-2 pt-8 pb-8;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.google {
+  background-color: rgb(241, 244, 249);
+}

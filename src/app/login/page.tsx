@@ -24,25 +24,32 @@ export default async function Login({
   };
 
   const db = (await connectDB).db(process.env.DB_NAME);
-  const media = await db.collection<MediaData[]>('media').find({}).toArray();
+  const media = await db
+    .collection<MediaData[]>('media')
+    .aggregate([{ $sample: { size: 40 } }])
+    .toArray();
 
-  const bgMediaList = division(media.slice(0, 61), 10) as MediaData[][];
+  const bgMediaList = division(media, 10) as MediaData[][];
 
   return (
     <div className='w-full h-screen relative overflow-hidden'>
       <div className={`flex flex-col gap-24 absolute ${style.bgContainer}`}>
         {bgMediaList.map((mediaList: MediaData[], i: number) => {
           return (
-            <div className={`flex gap-5 scale-125 ${style.bgCard}`} key={i}>
-              {[...Array(3).keys()].map((i: number) => {
+            <div
+              className={`flex flex-nowrap scale-125 ${style.bgCard}`}
+              key={i}
+            >
+              {[...Array(2).keys()].map((i: number) => {
                 return (
-                  <div key={i} className='flex gap-5'>
+                  <div key={i} className='flex pe-5 gap-5 max-w-max'>
                     {mediaList.map((media: MediaData, i: number) => {
                       return (
                         <Card
                           isLoading={false}
                           data={media}
                           info={false}
+                          lazy={false}
                           key={i}
                         ></Card>
                       );
