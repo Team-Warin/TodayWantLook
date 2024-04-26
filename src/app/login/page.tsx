@@ -61,7 +61,7 @@ export default async function Login({
           );
         })}
       </div>
-      <div className='flex absolute w-full h-full backdrop-brightness-75 justify-center items-center z-10'>
+      <div className='flex absolute w-full h-full backdrop-brightness-[0.3] justify-center items-center z-10'>
         <div className='w-full flex flex-col justify-center items-center gap-5 bg-white p-10 shadow-md rounded-lg max-w-[400px]'>
           <Link href='/'>
             <Image src='/Logo.webp' width={90} height={90} alt='logo' />
