@@ -8,10 +8,12 @@
 
 .bgCard:nth-child(odd) > div {
   animation: scroll_left 30s linear infinite;
+  animation-delay: 0.1s;
 }
 
 .bgCard:nth-child(even) > div {
   animation: scroll_right 30s linear infinite;
+  animation-delay: 0.1s;
 }
 
 @keyframes scroll_left {
