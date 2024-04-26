@@ -33,16 +33,16 @@ export default async function Login({
 
   return (
     <div className='w-full h-screen relative overflow-hidden'>
-      <div className={`flex flex-col gap-24 absolute ${style.bgContainer}`}>
+      <div className={`flex flex-col p-5 gap-24 absolute ${style.bgContainer}`}>
         {bgMediaList.map((mediaList: MediaData[], i: number) => {
           return (
             <div
-              className={`flex flex-nowrap scale-125 ${style.bgCard}`}
+              className={`flex flex-nowrap scale-125 gap-5 ${style.bgCard}`}
               key={i}
             >
               {[...Array(2).keys()].map((i: number) => {
                 return (
-                  <div key={i} className='flex pe-5 gap-5 max-w-max'>
+                  <div key={i} className='flex gap-5 max-w-max'>
                     {mediaList.map((media: MediaData, i: number) => {
                       return (
                         <Card
