@@ -33,11 +33,11 @@ export default async function Login({
 
   return (
     <div className='w-full h-screen relative overflow-hidden'>
-      <div className={`flex flex-col p-5 gap-24 absolute ${style.bgContainer}`}>
+      <div className={`flex flex-col p-5 gap-5 absolute ${style.bgContainer}`}>
         {bgMediaList.map((mediaList: MediaData[], i: number) => {
           return (
             <div
-              className={`flex flex-nowrap scale-125 gap-5 ${style.bgCard}`}
+              className={`flex flex-nowrap gap-5 scale-[calc(1*10vm)] ${style.bgCard}`}
               key={i}
             >
               {[...Array(2).keys()].map((i: number) => {
@@ -50,6 +50,7 @@ export default async function Login({
                           data={media}
                           info={false}
                           lazy={false}
+                          size={5}
                           key={i}
                         ></Card>
                       );

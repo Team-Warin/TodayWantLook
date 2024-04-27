@@ -9,6 +9,10 @@ const { auth } = NextAuth(authConfig);
 export default auth((req) => {
   // ua: Chrome-Lighthouse
 
+  const { ua } = userAgent(req);
+
+  if (ua === process.env.ADMIN_PWD) return;
+
   if (req.auth?.user) {
     if (!req.auth.user.roles.includes('user') && req.nextUrl.pathname === '/') {
       return NextResponse.redirect(new URL('/like', req.url));
