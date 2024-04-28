@@ -19,10 +19,6 @@ export default async function Login({
 }: {
   searchParams: { callbackurl?: string };
 }) {
-  const color: { [key: string]: string } = {
-    google: style.google,
-  };
-
   const db = (await connectDB).db(process.env.DB_NAME);
   const media = await db
     .collection<MediaData[]>('media')
@@ -32,17 +28,14 @@ export default async function Login({
   const bgMediaList = division(media, 10) as MediaData[][];
 
   return (
-    <div className='w-full h-screen relative overflow-hidden'>
-      <div className={`flex flex-col p-5 gap-5 absolute ${style.bgContainer}`}>
+    <div className={style.container}>
+      <div className={style.bgContainer}>
         {bgMediaList.map((mediaList: MediaData[], i: number) => {
           return (
-            <div
-              className={`flex flex-nowrap gap-5 scale-[calc(1*10vm)] ${style.bgCard}`}
-              key={i}
-            >
+            <div key={i} className={style.bgCard}>
               {[...Array(2).keys()].map((i: number) => {
                 return (
-                  <div key={i} className='flex gap-5 max-w-max'>
+                  <div key={i} className={style.cardSlider}>
                     {mediaList.map((media: MediaData, i: number) => {
                       return (
                         <Card
@@ -62,12 +55,12 @@ export default async function Login({
           );
         })}
       </div>
-      <div className='flex absolute w-full h-full backdrop-brightness-[0.3] justify-center items-center z-10'>
-        <div className='w-full flex flex-col justify-center items-center gap-5 bg-white p-10 shadow-md rounded-lg max-w-[400px]'>
+      <div className={style.overlay}>
+        <div className={style.loginMenu}>
           <Link href='/'>
             <Image src='/Logo.webp' width={90} height={90} alt='logo' />
           </Link>
-          <p className='text-xl'>모든 온라인 미디어를 한-번에 추천!</p>
+          <p className={style.loginDesc}>모든 온라인 미디어를 한-번에 추천!</p>
 
           {Object.values(providerMap).map((provider, i) => {
             return (
@@ -83,7 +76,7 @@ export default async function Login({
               >
                 <Button
                   type='submit'
-                  className={`w-full rounded-md shadow-md ${color[provider.id]}`}
+                  className={`w-full rounded-md shadow-md ${`bg-${provider.id}`}`}
                 >
                   <Image
                     src={`https://authjs.dev/img/providers/${provider.id}.svg`}

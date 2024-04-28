@@ -13,6 +13,7 @@
 </p>
 
 ## Usage
+
 ```bash
 npm i
 ```
@@ -20,18 +21,18 @@ npm i
 ```dosini
 //env.local
 
-GOOGLE_CLIENT_ID = ""
-GOOGLE_CLIENT_SECRET = ""
-
-JWT_SECRET = ""
-
-DB_NAME = ""
-MONGODB_ID = ""
-MONGODB_PASSWORD = ""
+DB_NAME = Your DB NAME
+DB_URL = Your DB Url (MongoDB)
 
 NEXTAUTH_URL = http://localhost:3000
+AUTH_SECRET = AuthSecret
 
-API_KEY = ""
+AUTH_GOOGLE_ID = Google OAuthId
+AUTH_GOOGLE_SECRET = Google OAuth Secret
+
+API_KEY = Auth API Key
+
+ADMIN_PWD = Page Admin Permission Pwd
 ```
 
 ```
@@ -62,12 +63,12 @@ bun dev
 
 <b>명지전문대 AI·빅데이터</b>과 <b>캡스톤 디자인 6조</b> 그리고 <b>킹고바이오 대표</b>님의 멘토링 및 도움으로 만들어진 작품입니다.
 
-|이름|역할|
-|:---:|:---:|
-|**INIRU**|`Leader`, `Main Developer`, `Front-End`, `Back-End`, `DataBase`, `Collaborative Filtering`, `Git Project Leader`|
-|**KIMMJ**|`UI/UX Design`, `UI/UX Developer`, `Idea`, `Logo Design`, `DataBase ER Model`|
-|**HYUNW**|`Server Developer`, `QA Tester`, `Media API`, `Social Login`|
-|**이준엽**|`Mentoring`|
+|    이름    |                                                       역할                                                       |
+| :--------: | :--------------------------------------------------------------------------------------------------------------: |
+| **INIRU**  | `Leader`, `Main Developer`, `Front-End`, `Back-End`, `DataBase`, `Collaborative Filtering`, `Git Project Leader` |
+| **KIMMJ**  |                  `UI/UX Design`, `UI/UX Developer`, `Idea`, `Logo Design`, `DataBase ER Model`                   |
+| **HYUNW**  |                           `Server Developer`, `QA Tester`, `Media API`, `Social Login`                           |
+| **이준엽** |                                                   `Mentoring`                                                    |
 
 ## 라이센스
 
@@ -75,4 +76,5 @@ bun dev
 자세한 내용은 [LICENSE](LICENSE)를 참고하십시오.
 
 ## Credits
+
 - 캡스톤 디자인 6조 - Warin
