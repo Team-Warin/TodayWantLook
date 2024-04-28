@@ -19,6 +19,10 @@ export default async function Login({
 }: {
   searchParams: { callbackurl?: string };
 }) {
+  const color: { [key: string]: string } = {
+    google: 'bg-google',
+  };
+
   const db = (await connectDB).db(process.env.DB_NAME);
   const media = await db
     .collection<MediaData[]>('media')
@@ -76,7 +80,7 @@ export default async function Login({
               >
                 <Button
                   type='submit'
-                  className={`w-full rounded-md shadow-md ${`bg-${provider.id}`}`}
+                  className={`w-full rounded-md shadow-md ${color[provider.id]}`}
                 >
                   <Image
                     src={`https://authjs.dev/img/providers/${provider.id}.svg`}
