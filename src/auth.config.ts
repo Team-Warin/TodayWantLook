@@ -5,14 +5,6 @@ import type { Provider } from 'next-auth/providers';
 import { nameCreate } from './modules/nickname';
 import Google from 'next-auth/providers/google';
 
-const GOOGLE_AUTHORIZATION_URL =
-  'https://accounts.google.com/o/oauth2/v2/auth?' +
-  new URLSearchParams({
-    prompt: 'consent',
-    access_type: 'offline',
-    response_type: 'code',
-  });
-
 async function refreshAccessToken(token: JWT) {
   try {
     const url =
@@ -51,7 +43,13 @@ async function refreshAccessToken(token: JWT) {
 
 const providers: Provider[] = [
   Google({
-    authorization: GOOGLE_AUTHORIZATION_URL,
+    authorization: {
+      params: {
+        prompt: 'consent',
+        access_type: 'offline',
+        response_type: 'code',
+      },
+    },
     allowDangerousEmailAccountLinking: true,
     profile(profile) {
       return {
