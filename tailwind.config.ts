@@ -10,7 +10,11 @@ const config: Config = {
     './node_modules/@nextui-org/theme/dist/components/(button|code|input|modal|skeleton|accordion|popover|listbox|scroll-shadow|avatar).js',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        google: '#f1f4f9',
+      },
+    },
   },
   darkMode: 'class',
   plugins: [

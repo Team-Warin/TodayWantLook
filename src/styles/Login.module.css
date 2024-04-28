@@ -1,9 +1,13 @@
-.google {
-  background-color: rgb(241, 244, 249);
+.container {
+  @apply w-full h-dvh relative overflow-hidden;
 }
 
 .bgContainer {
-  transform: rotate(4deg);
+  @apply flex flex-col p-5 gap-5 rotate-[4deg] absolute;
+}
+
+.bgCard {
+  @apply flex flex-nowrap gap-5;
 }
 
 .bgCard:nth-child(odd) > div {
@@ -14,6 +18,27 @@
 .bgCard:nth-child(even) > div {
   animation: scroll_right 30s linear infinite;
   animation-delay: 0.1s;
+}
+
+.cardSlider {
+  @apply flex gap-5;
+}
+
+.overlay {
+  @apply w-full h-dvh absolute flex justify-center items-center backdrop-brightness-[0.3] z-10;
+}
+
+.loginMenu {
+  @apply w-full flex flex-col justify-center items-center gap-5 p-5 transition-all rounded-lg max-w-[400px];
+  /* md 크기 이상 CSS */
+  @apply md:p-10 md:bg-white md:shadow-md;
+}
+
+.loginDesc {
+  @apply text-xl text-white transition-colors;
+
+  /* md 크기 이상 CSS */
+  @apply md:text-black;
 }
 
 @keyframes scroll_left {
