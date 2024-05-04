@@ -2,6 +2,8 @@ import type { JWT } from 'next-auth/jwt';
 import type { NextAuthConfig } from 'next-auth';
 import type { Provider } from 'next-auth/providers';
 
+import { CreateServerClient } from './modules/supabase';
+
 import { nameCreate } from './modules/nickname';
 import Google from 'next-auth/providers/google';
 
@@ -89,7 +91,7 @@ export const authConfig = {
     signIn: async ({ user, account, profile }) => {
       return true;
     },
-    jwt: async ({ token, user, account, trigger }) => {
+    jwt: async ({ token, user, account, trigger, session }) => {
       if (user && account?.expires_in) {
         return {
           /** 닉네임 및 Token 권한 설정 */
@@ -102,20 +104,15 @@ export const authConfig = {
         };
       }
 
-      if (trigger === 'update' && token.email) {
-        const res = await fetch(`${process.env.NEXTAUTH_URL}/api/user`, {
-          method: 'POST',
-          body: JSON.stringify({
-            email: token.email,
-            key: process.env.API_KEY,
-          }),
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-
-          token.nickname = data.nickname;
-          token.roles = data.roles;
+      if (trigger == 'update' && session) {
+        const supabase = CreateServerClient();
+        const { data: session } = await supabase
+          .schema('next_auth')
+          .from('users')
+          .select('*')
+          .eq('id', token.user.id);
+        if (session) {
+          token.user = session[0];
         }
       }
 

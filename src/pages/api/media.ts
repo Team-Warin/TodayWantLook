@@ -1,12 +1,14 @@
+import type { FilterType, MediaData } from '@/types/media';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { FilterType } from '@/types/media';
 
-import { connectDB } from '@/modules/database';
+import { CreateClient } from '@/modules/supabase';
+// import CF_Media from '@/modules/cf';
 
 interface MediaApiRequest extends NextApiRequest {
   body: {
     filter: FilterType;
     page: [number, number];
+    type?: string;
   };
 }
 
@@ -17,24 +19,41 @@ export default async function Media(
   req: MediaApiRequest,
   res: NextApiResponse
 ) {
-  const db = (await connectDB).db(process.env.DB_NAME);
-  let result;
-  let mediaCount: number = 1;
+  let recMedia: MediaData[] = [];
 
   if (req.method === 'POST') {
-    const filterList: {
-      [key: string]: RegExp[] | undefined;
-      title?: RegExp[];
-      genre?: RegExp[];
-      type?: RegExp[];
-      updateDays?: RegExp[];
-    } = {};
+    const supabase = CreateClient();
+
+    const filters: { [key: string]: { $in: RegExp[] } }[] = [];
+    let result = (
+      await supabase.schema('todaywantlook').from('medias').select('*')
+    ).data;
+
+    Object.keys(req.body.filter).forEach((key: string) => {
+      if (!req.body.filter[key].length) return;
+
+      if (typeof req.body.filter[key] === 'string' && result) {
+        result = result?.filter((data) => data.title === req.body.filter[key]);
+      } else if (typeof req.body.filter[key] !== 'string' && result) {
+        req.body.filter[key].map((filter: string | RegExp) => {
+          if (!result) return;
+
+          filter = new RegExp(filter);
+          console.log(filter);
+          result = result.filter((data: { [key: string]: any }) =>
+            data[key].some((query: string) => filter.test(query))
+          );
+        });
+      }
+    });
+
+    if (result) {
+      return res.status(200).send({
+        mediaData: result.slice(req.body.page[0], req.body.page[1]),
+        mediaCount: result.length,
+      });
+    }
   } else {
     res.status(400).send('Post Request Only');
-  }
-
-  if (result && mediaCount) {
-  } else {
-    await res.status(400).send('Bad Request');
   }
 }

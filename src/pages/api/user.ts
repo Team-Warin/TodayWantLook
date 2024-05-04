@@ -14,10 +14,6 @@ interface UserApiRequest extends NextApiRequest {
  */
 export default async function Media(req: UserApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    if (req.body.key !== process.env.API_KEY) {
-      return res.status(403).send('API KEY ERROR');
-    }
-
     const db = (await connectDB).db(process.env.DB_NAME);
     const user = await db
       .collection('users')

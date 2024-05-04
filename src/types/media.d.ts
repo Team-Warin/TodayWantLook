@@ -6,13 +6,12 @@ interface MediaData {
   author?: string;
   summary: string;
   genre: string[];
-  url?: { [key: string]: string };
+  url?: string;
   img: string;
-  backdrop_img?: string;
-  service?: string[];
+  backdropImg?: string;
+  service?: string;
   updateDays?: string[];
   rate: numObjectId;
-  rates: { user: string; rate: number; comment: string | null }[];
   additional?: {
     new: boolean;
     adult: boolean;
@@ -33,8 +32,9 @@ interface FilterType {
 interface Rate {
   userId: string | null | undefined;
   mediaId: string;
+  genre: string[];
   rate: number;
-  comment?: string;
+  comment?: { date: Date; text: string };
   check: {
     view: boolean;
     like: boolean;
