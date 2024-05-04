@@ -14,10 +14,6 @@
   @apply w-full flex justify-between flex-wrap gap-4;
 }
 
-.submitContainer {
-  @apply flex w-full h-[75px] p-5 shadow fixed z-20 bg-white bottom-0 left-0 justify-between items-center;
-}
-
 .checkbox > div:nth-child(1) {
   @apply w-full h-full absolute flex justify-center items-center text-green-600 text-6xl z-20 opacity-0 transition-opacity;
 }
@@ -26,6 +22,10 @@
   @apply opacity-100;
 }
 
-.filterSkeleton {
-  @apply h-[500px] rounded-lg bg-default-300;
+.submitContainer {
+  @apply w-full h-[80px] mt-2;
+}
+
+.submitContainer > div {
+  @apply w-full p-5 flex justify-between items-center h-[80px] bg-slate-50 fixed bottom-0 z-30;
 }

@@ -4,22 +4,34 @@ import { authConfig } from './auth.config';
 
 import { NextResponse, userAgent } from 'next/server';
 
+import { CreateServerClient } from './modules/supabase';
+import { Database } from './types/supabase-next_auth';
+
 const { auth } = NextAuth(authConfig);
 
-export default auth((req) => {
+export default auth(async (req) => {
+  const supabase = CreateServerClient();
+  const { data: session } = await supabase
+    .schema('next_auth')
+    .from('users')
+    .select('*')
+    .eq('id', req.auth?.user.id!);
+
   // ua: Chrome-Lighthouse
 
   const { ua } = userAgent(req);
 
   if (ua === process.env.ADMIN_PWD) return;
 
-  if (req.auth?.user) {
-    if (!req.auth.user.roles.includes('user') && req.nextUrl.pathname === '/') {
+  if (req.auth?.user && session) {
+    if (session[0].roles.includes('admin')) return;
+
+    if (session[0].roles.includes('newbie') && req.nextUrl.pathname === '/') {
       return NextResponse.redirect(new URL('/like', req.url));
     }
 
     if (
-      req.auth.user.roles.includes('user') &&
+      !session[0].roles.includes('newbie') &&
       req.nextUrl.pathname.startsWith('/like')
     ) {
       return NextResponse.redirect(new URL('/', req.url));
@@ -29,8 +41,12 @@ export default auth((req) => {
       return NextResponse.redirect(new URL('/', req.url));
     }
   } else {
+    if (req.nextUrl.pathname.startsWith('/like')) {
+      return NextResponse.redirect(new URL('/', req.url));
+    }
   }
 });
+
 export const config = {
-  matcher: ['/(.*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };

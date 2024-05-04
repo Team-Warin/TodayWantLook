@@ -9,7 +9,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import Logout from '@/app/acction/logout';
+import Logout from '@/action/logout';
 
 import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';

@@ -1,13 +1,22 @@
 'use client';
 
-import type { MediaData, FilterType } from '@/types/media';
+import type { MediaData } from '@/types/media';
+
+import style from '@/styles/Media.module.css';
 
 import dynamic from 'next/dynamic';
-import { useState, Suspense, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+
+import { useRouter } from 'next/navigation';
+
+import addLikes from '@/action/likes';
 
 import { Code } from '@nextui-org/code';
 import Media from '@/components/Media';
-import { useSession } from 'next-auth/react';
+
+import { Button } from '@nextui-org/button';
+import { Popover, PopoverTrigger, PopoverContent } from '@nextui-org/popover';
 
 const ShowModal = dynamic(() => import('@/components/Modal'));
 
@@ -15,11 +24,24 @@ const ShowModal = dynamic(() => import('@/components/Modal'));
  * /like 페이지
  */
 export default function Like() {
+  const router = useRouter();
+
   const max = 10;
 
   const session = useSession();
 
   let [like, setLike] = useState<MediaData[]>([]);
+  let [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const PopoverClose = () => setIsOpen(false);
+
+    window.addEventListener('scroll', PopoverClose);
+
+    return () => {
+      window.removeEventListener('scroll', PopoverClose);
+    };
+  }, []);
 
   return (
     <>
@@ -43,6 +65,36 @@ export default function Like() {
         }}
       />
       <Media max={max} like={like} setLike={setLike} />
+      <div className={style.submitContainer}>
+        <div>
+          <Popover
+            placement='top-start'
+            isOpen={isOpen}
+            onOpenChange={(open) => setIsOpen(open)}
+          >
+            <PopoverTrigger>
+              <Button variant='light' size='lg'>
+                {like.length} / {max}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <div className='px-1 py-2'></div>
+            </PopoverContent>
+          </Popover>
+          <Button
+            color='primary'
+            onClick={async () => {
+              const result = await addLikes(like);
+              if (result) {
+                session.update(result);
+                router.push('/');
+              }
+            }}
+          >
+            제출하기
+          </Button>
+        </div>
+      </div>
     </>
   );
 }

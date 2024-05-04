@@ -46,15 +46,15 @@ export default function Filter({
       name: '요일',
       filter: [
         { name: 'All' },
-        { name: '월', regex: '' },
-        { name: '화', regex: '' },
-        { name: '수', regex: '' },
-        { name: '목', regex: '' },
-        { name: '금', regex: '' },
-        { name: '토', regex: '' },
-        { name: '일', regex: '' },
-        { name: '완결', regex: '' },
-        { name: '매일+', regex: '' },
+        { name: '월', regex: '(mon)' },
+        { name: '화', regex: '(tue)' },
+        { name: '수', regex: '(wed)' },
+        { name: '목', regex: '(thu)' },
+        { name: '금', regex: '(fri)' },
+        { name: '토', regex: '(sat)' },
+        { name: '일', regex: '(sun)' },
+        { name: '완결', regex: '(finished)' },
+        { name: '매일+', regex: '(navberDaily)' },
       ],
     },
     type: {
@@ -101,6 +101,25 @@ export default function Filter({
                       }`}
                       color='primary'
                       size='sm'
+                      onClick={() => {
+                        let temp = { ...filter };
+                        if (temp[title] instanceof Array) {
+                          if (result.name === 'All') {
+                            temp[title] = [];
+                          } else if (result.regex) {
+                            if (!temp[title].includes(result.regex)) {
+                              if (title === 'updateDays') temp[title] = [];
+                              temp[title].push(result.regex);
+                            } else {
+                              temp[title] = temp[title].filter(
+                                (filter: string) => filter !== result.regex
+                              );
+                            }
+                          }
+
+                          setFilter(temp);
+                        }
+                      }}
                     >
                       {result.name}
                     </Button>

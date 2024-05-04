@@ -2,12 +2,12 @@ import NextAuth from 'next-auth';
 
 import { authConfig } from './auth.config';
 
-import { connectDB } from './modules/database';
-import { MongoDBAdapter } from '@auth/mongodb-adapter';
+import { SupabaseAdapter } from '@auth/supabase-adapter';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
-  adapter: MongoDBAdapter(connectDB, {
-    databaseName: process.env.DB_NAME,
+  adapter: SupabaseAdapter({
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    secret: process.env.NEXT_PUBLIC_SUPABASE_ROLE_KEY!,
   }),
 });
