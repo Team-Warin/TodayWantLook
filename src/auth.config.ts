@@ -89,7 +89,7 @@ export const authConfig = {
     signIn: async ({ user, account, profile }) => {
       return true;
     },
-    jwt: async ({ token, user, account, trigger, session }) => {
+    jwt: async ({ token, user, account, trigger }) => {
       if (user && account?.expires_in) {
         return {
           /** 닉네임 및 Token 권한 설정 */
@@ -102,7 +102,7 @@ export const authConfig = {
         };
       }
 
-      if (trigger == 'update' && session) {
+      if (trigger == 'update') {
         const supabase = CreateServerClient();
         const { data: session } = await supabase
           .schema('next_auth')

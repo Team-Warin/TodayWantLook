@@ -84,11 +84,9 @@ export default function Like() {
           <Button
             color='primary'
             onClick={async () => {
-              const result = await addLikes(like);
-              if (result) {
-                session.update(result);
-                router.push('/');
-              }
+              await addLikes(like);
+              session.update('update');
+              router.push('/');
             }}
           >
             제출하기
