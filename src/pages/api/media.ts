@@ -35,7 +35,7 @@ export default async function Media(
       if (typeof req.body.filter[key] === 'string' && result) {
         result = result?.filter((data) => data.title === req.body.filter[key]);
       } else if (typeof req.body.filter[key] !== 'string' && result) {
-        req.body.filter[key].map((filter: string | RegExp) => {
+        (req.body.filter[key] as string[]).map((filter: string | RegExp) => {
           if (!result) return;
 
           filter = new RegExp(filter);

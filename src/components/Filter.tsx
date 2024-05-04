@@ -103,19 +103,23 @@ export default function Filter({
                       size='sm'
                       onClick={() => {
                         let temp = { ...filter };
-                        if (temp[title] instanceof Array) {
+
+                        if (typeof temp[title] !== 'string') {
+                          let _temp: string[] = temp[title] as string[];
+
                           if (result.name === 'All') {
-                            temp[title] = [];
+                            _temp = [];
                           } else if (result.regex) {
-                            if (!temp[title].includes(result.regex)) {
-                              if (title === 'updateDays') temp[title] = [];
-                              temp[title].push(result.regex);
+                            if (!_temp.includes(result.regex)) {
+                              if (title === 'updateDays') _temp = [];
+                              _temp.push(result.regex);
                             } else {
-                              temp[title] = temp[title].filter(
+                              _temp = _temp.filter(
                                 (filter: string) => filter !== result.regex
                               );
                             }
                           }
+                          temp[title] = _temp;
 
                           setFilter(temp);
                         }
