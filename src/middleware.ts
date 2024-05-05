@@ -5,7 +5,6 @@ import { authConfig } from './auth.config';
 import { NextResponse, userAgent } from 'next/server';
 
 import { CreateServerClient } from './modules/supabase';
-import { Database } from './types/supabase-next_auth';
 
 const { auth } = NextAuth(authConfig);
 
@@ -43,6 +42,10 @@ export default auth(async (req) => {
     }
   } else {
     if (req.nextUrl.pathname.startsWith('/like')) {
+      return NextResponse.redirect(new URL('/', req.url));
+    }
+
+    if (req.nextUrl.pathname.startsWith('/user')) {
       return NextResponse.redirect(new URL('/', req.url));
     }
   }

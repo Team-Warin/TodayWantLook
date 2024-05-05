@@ -32,6 +32,7 @@ export default function Like() {
 
   let [like, setLike] = useState<MediaData[]>([]);
   let [isOpen, setIsOpen] = useState<boolean>(false);
+  let [modal, setModal] = useState<boolean>(false);
 
   useEffect(() => {
     const PopoverClose = () => setIsOpen(false);
@@ -62,6 +63,56 @@ export default function Like() {
             </p>
           ),
           btn: [{ text: '알겠어요', color: 'primary' }],
+        }}
+      />
+      <ShowModal
+        isOpen={modal}
+        onClose={() => setModal(false)}
+        modal={{
+          title: '선택한 항목',
+          body: (
+            <div>
+              {like.map((media: MediaData, i: number) => {
+                return (
+                  <div
+                    key={i}
+                    className='flex justify-between items-center gap-5'
+                  >
+                    <p>{media.title}</p>
+                    <Button
+                      size='sm'
+                      variant='light'
+                      color='danger'
+                      onClick={() => {
+                        let temp = [...like];
+
+                        temp = temp.filter((e) => e.mediaId !== media.mediaId);
+
+                        setLike(temp);
+                      }}
+                    >
+                      삭제
+                    </Button>
+                  </div>
+                );
+              })}
+              <Code className='mt-2' color='danger'>
+                이 평가는 변경할 수 있습니다.
+              </Code>
+            </div>
+          ),
+          btn: [
+            { text: '아니요', color: 'danger' },
+            {
+              text: '제출하기',
+              color: 'primary',
+              press: async () => {
+                await addLikes(like);
+                session.update('update');
+                router.push('/');
+              },
+            },
+          ],
         }}
       />
       <Media max={max} like={like} setLike={setLike} />
@@ -113,10 +164,10 @@ export default function Like() {
           </Popover>
           <Button
             color='primary'
-            onClick={async () => {
-              await addLikes(like);
-              session.update('update');
-              router.push('/');
+            disabled={like.length < 1}
+            onClick={() => {
+              if (like.length < 1) return;
+              setModal(!modal);
             }}
           >
             제출하기

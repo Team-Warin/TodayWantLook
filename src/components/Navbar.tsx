@@ -22,18 +22,34 @@ import { Popover, PopoverTrigger, PopoverContent } from '@nextui-org/popover';
 export default function Navbar({ session }: { session: Session | null }) {
   const pathname = usePathname();
 
+  const navMenu: { name: string; url: string; disblePage?: string[] }[] = [
+    { name: '태그 검색', url: '/search' },
+  ];
+
   if (pathname?.startsWith('/login') || pathname?.startsWith('/api/auth'))
     return <></>;
 
   return (
-    <div className={style.container}>
-      <div className={`${style.container} p-10 fixed`}>
+    <div className={`${style.container} relative`}>
+      <div
+        className={`${style.container} p-10 ${pathname === '/' ? 'fixed' : 'absolute'}`}
+      >
         <div className='flex items-center gap-6'>
           <Link href='/'>
             <Image src={'/Logo.webp'} width={75} height={75} alt='logo'></Image>
           </Link>
           <div>
-            <Link href='/'>태그검색</Link>
+            {navMenu.map((menu, i: number) => {
+              return (
+                <Link
+                  key={i}
+                  className={`${pathname === menu.url ? 'text-twl' : ''} transition-colors`}
+                  href={menu.url}
+                >
+                  {menu.name}
+                </Link>
+              );
+            })}
           </div>
         </div>
         <div>

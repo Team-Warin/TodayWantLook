@@ -1,11 +1,7 @@
-import type { Json } from '@/types/supabase-twl';
 import type { FilterType, MediaData } from '@/types/media';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { CreateClient } from '@/modules/supabase';
-
-import { getKeys } from '@/modules/getKeys';
-// import CF_Media from '@/modules/cf';
 
 interface MediaApiRequest extends NextApiRequest {
   body: {

@@ -1,7 +1,6 @@
-import type { WithId } from 'mongodb';
 import type { MediaData } from '@/types/media';
 
-import { connectDB } from './database';
+import { CreateClient } from './supabase';
 
 const { CF } = require('nodeml');
 
@@ -12,8 +11,11 @@ export default async function CF_Media(
   medias: number
 ): Promise<MediaData[] | null> {
   const cf = new CF();
-  const db = (await connectDB).db(process.env.DB_NAME);
-  const data = await db.collection('user_rates').find({}).toArray();
+  const supabase = CreateClient();
+  const data = await supabase
+    .schema('next_auth')
+    .from('users_ratings')
+    .select('*');
 
   cf.maxRelatedItem = maxRelatedItem;
   cf.maxRelatedUser = maxRelatedUser;
@@ -24,9 +26,12 @@ export default async function CF_Media(
   let mediaList: MediaData[] = [];
 
   recommendResult.forEach(async (item: { itemId: string; play: number }) => {
-    const media = await db
-      .collection<MediaData>('media')
-      .findOne({ mediaId: item.itemId });
+    const { data: media } = await supabase
+      .schema('todaywantlook')
+      .from('medias')
+      .select('*')
+      .match({ mediaId: item.itemId })
+      .single();
 
     if (media) mediaList.push(media);
   });
