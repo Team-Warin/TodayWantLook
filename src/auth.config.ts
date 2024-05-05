@@ -108,9 +108,10 @@ export const authConfig = {
           .schema('next_auth')
           .from('users')
           .select('*')
-          .eq('id', token.user.id);
+          .eq('id', token.user.id)
+          .single();
         if (session) {
-          token.user = session[0];
+          token.user = session;
         }
       }
 

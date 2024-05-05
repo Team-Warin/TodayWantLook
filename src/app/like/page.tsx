@@ -78,7 +78,37 @@ export default function Like() {
               </Button>
             </PopoverTrigger>
             <PopoverContent>
-              <div className='px-1 py-2'></div>
+              <div className='px-1 py-2'>
+                {like.length < 1 ? (
+                  <p>아직 아무것도 선택하지 않았습니다.</p>
+                ) : null}
+                {like.map((media: MediaData, i: number) => {
+                  return (
+                    <div
+                      key={i}
+                      className='flex justify-between items-center gap-5'
+                    >
+                      <p>{media.title}</p>
+                      <Button
+                        size='sm'
+                        variant='light'
+                        color='danger'
+                        onClick={() => {
+                          let temp = [...like];
+
+                          temp = temp.filter(
+                            (e) => e.mediaId !== media.mediaId
+                          );
+
+                          setLike(temp);
+                        }}
+                      >
+                        삭제
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
             </PopoverContent>
           </Popover>
           <Button

@@ -33,8 +33,6 @@ export default function Media({
 }) {
   let [controller, setController] = useState<AbortController>(); //api abort controller
 
-  const session = useSession();
-
   const card = useRef<HTMLDivElement>(null);
 
   let [row, setRow] = useState<number>(0);
@@ -43,7 +41,7 @@ export default function Media({
   const [mediaData, setMediaData] = useState<MediaData[]>([]); //작품 데이터
   let [mediaCount, setMediaCount] = useState<number>(0); //작품 데이터 갯수
   const [filter, setFilter] = useState<FilterType>({
-    title: '',
+    title: [],
     genre: [],
     type: [],
     updateDays: [],
@@ -127,16 +125,16 @@ export default function Media({
       setMediaData([]),
       trigger({
         filter: filter,
-        page: [mediaData.length, (page + 1) * row * 4],
+        page: [page === 0 ? page : mediaData.length, (page + 1) * row * 4],
       }),
     ]);
   }, [filter]);
 
   useDidMountEffect(() => {
-    if (inView) {
+    if (inView && !isMutating) {
       setPage((page += 1));
     }
-  }, [inView]);
+  }, [inView, isMutating]);
 
   return (
     <div className={style.container}>
@@ -145,7 +143,7 @@ export default function Media({
         style={{ '--size': '0%' } as CardCSS}
         ref={card}
       ></div>
-      <Filter filter={filter} setFilter={setFilter} />
+      <Filter isMutating={isMutating} filter={filter} setFilter={setFilter} />
       {/* 작품 콘테이너 */}
       <div className={`${style.mediaContainer} mt-5`}>
         {(isMutating
@@ -161,7 +159,12 @@ export default function Media({
             ]
           : mediaData
         )
-          .slice(0, (page + 1) * row * 4)
+          .slice(
+            0,
+            (page + 1) * row * 4 <= mediaCount
+              ? (page + 1) * row * 4
+              : mediaCount + (row - (mediaCount % row))
+          )
           .map((media: MediaData | number, i: number) => {
             if (like && setLike && max) {
               const checked =

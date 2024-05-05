@@ -3,7 +3,7 @@
 }
 
 .poster_container {
-  @apply h-[calc(258px+var(--size))] overflow-hidden rounded-lg relative shadow;
+  @apply h-[calc(258px+var(--size))] overflow-hidden rounded-lg relative shadow-md;
 }
 
 .poster {

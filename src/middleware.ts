@@ -15,7 +15,8 @@ export default auth(async (req) => {
     .schema('next_auth')
     .from('users')
     .select('*')
-    .eq('id', req.auth?.user.id!);
+    .eq('id', req.auth?.user.id!)
+    .single();
 
   // ua: Chrome-Lighthouse
 
@@ -24,14 +25,14 @@ export default auth(async (req) => {
   if (ua === process.env.ADMIN_PWD) return;
 
   if (req.auth?.user && session) {
-    if (session[0].roles.includes('admin')) return;
+    if (session.roles.includes('admin')) return;
 
-    if (session[0].roles.includes('newbie') && req.nextUrl.pathname === '/') {
+    if (session.roles.includes('newbie') && req.nextUrl.pathname === '/') {
       return NextResponse.redirect(new URL('/like', req.url));
     }
 
     if (
-      !session[0].roles.includes('newbie') &&
+      !session.roles.includes('newbie') &&
       req.nextUrl.pathname.startsWith('/like')
     ) {
       return NextResponse.redirect(new URL('/', req.url));

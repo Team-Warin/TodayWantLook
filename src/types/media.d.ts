@@ -22,11 +22,11 @@ interface MediaData {
 }
 
 interface FilterType {
-  [key: string]: string | string[];
-  title: string;
-  genre: RegExp[];
-  type: RegExp[];
-  updateDays: RegExp[];
+  [key: string]: string[];
+  title: string[];
+  genre: string[];
+  type: string[];
+  updateDays: string[];
 }
 
 interface Rate {
