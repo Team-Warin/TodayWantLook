@@ -45,6 +45,8 @@ async function refreshAccessToken(token: JWT) {
 
 const providers: Provider[] = [
   Google({
+    clientId: process.env.AUTH_GOOGLE_ID,
+    clientSecret: process.env.AUTH_GOOGLE_SECRET,
     authorization: {
       params: {
         prompt: 'consent',
