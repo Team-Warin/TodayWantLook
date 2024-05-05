@@ -12,6 +12,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        twl: '#74e174',
         google: '#f1f4f9',
       },
     },

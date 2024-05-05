@@ -1,24 +1,23 @@
 interface MediaData {
-  _id?: ObjectId;
-  type: 'webtoon' | 'movie' | 'drama';
+  type: string;
   mediaId: string;
   title: string;
-  author?: string;
+  author: string | null;
   summary: string;
   genre: string[];
-  url?: string;
-  img: string;
-  backdropImg?: string;
-  service?: string;
-  updateDays?: string[];
+  url: string | null;
+  img: string | null;
+  backdropImg: string | null;
+  service: string | null;
+  updateDays: string[] | null;
   rate: numObjectId;
-  additional?: {
+  additional: {
     new: boolean;
     adult: boolean;
     rest: boolean;
     up: boolean;
     singularityList: string[];
-  };
+  } | null;
 }
 
 interface FilterType {
