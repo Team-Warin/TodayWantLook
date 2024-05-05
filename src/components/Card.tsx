@@ -68,23 +68,11 @@ function Card(
             ) : null}
             {data.backdropImg ? (
               <Image
-                className='absolute z-0'
+                className={`absolute z-0 ${data.img ? 'blur-md' : null}`}
                 src={data.backdropImg}
                 fill={true}
-                sizes='(max-width: 149px), (max-width: 258px)'
+                sizes='(max-width: auto) 100%, (max-width: auto) 100%'
                 quality={quality ?? data.img ? 50 : 75}
-                loading={lazy === false ? 'eager' : 'lazy'}
-                placeholder='blur'
-                blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
-                alt={'posterBg'}
-              ></Image>
-            ) : data.img ? (
-              <Image
-                className='absolute z-0 blur-md'
-                src={data.img}
-                width={450}
-                height={380}
-                quality={quality ?? 75}
                 loading={lazy === false ? 'eager' : 'lazy'}
                 placeholder='blur'
                 blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='

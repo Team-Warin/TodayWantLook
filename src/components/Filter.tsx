@@ -1,7 +1,7 @@
 'use client';
 
 import type { FilterType } from '@/types/media';
-import type { Dispatch, SetStateAction } from 'react';
+import { useRef, useState, type Dispatch, type SetStateAction } from 'react';
 
 import style from '@/styles/Filter.module.css';
 
@@ -13,12 +13,16 @@ import { Input } from '@nextui-org/input';
  * Filter UI Component
  */
 export default function Filter({
+  isMutating,
   filter,
   setFilter,
 }: {
+  isMutating: boolean;
   filter: FilterType;
   setFilter: Dispatch<SetStateAction<FilterType>>;
 }) {
+  let [value, setValue] = useState<string>();
+
   const filterList: {
     [key: string]: { name: string; filter: { name: string; regex?: string }[] };
   } = {
@@ -87,39 +91,61 @@ export default function Filter({
           >
             <div className='flex flex-wrap gap-3'>
               {title === 'title' ? (
-                <Input placeholder='제목을 입력해주세요.' />
+                <Input
+                  placeholder='제목을 입력해주세요.'
+                  value={value}
+                  onValueChange={setValue}
+                  onBlur={() => {
+                    if (!isMutating && value) {
+                      let temp = { ...filter };
+                      temp.title = [`(?=.*(${value}).*).*`];
+
+                      setFilter(temp);
+                    } else if (!isMutating && !value) {
+                      let temp = { ...filter };
+                      temp.title = [];
+
+                      setFilter(temp);
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (!isMutating && e.code === 'Enter' && value) {
+                      let temp = { ...filter };
+                      temp.title = [`(?=.*(${value}).*).*`];
+
+                      setFilter(temp);
+                    } else if (!isMutating && e.code === 'Enter' && !value) {
+                      let temp = { ...filter };
+                      temp.title = [];
+
+                      setFilter(temp);
+                    }
+                  }}
+                />
               ) : (
                 filterList[title].filter.map((result, i) => {
                   return (
                     <Button
                       key={i}
-                      className={`rounded-full shadow-sm ${
-                        filter[title].indexOf(result.regex ?? '') === -1 &&
-                        !(filter[title].length < 1 && result.name === 'All')
-                          ? style.unCheck
-                          : ''
-                      }`}
+                      className={`rounded-full shadow-sm ${filter[title].includes(result.regex ?? '') || (filter[title].length < 1 && result.name === 'All') ? '' : style.unCheck}`}
                       color='primary'
                       size='sm'
                       onClick={() => {
-                        let temp = { ...filter };
+                        let temp: FilterType = { ...filter };
 
                         if (typeof temp[title] !== 'string') {
-                          let _temp: string[] = temp[title] as string[];
-
                           if (result.name === 'All') {
-                            _temp = [];
+                            temp[title] = [];
                           } else if (result.regex) {
-                            if (!_temp.includes(result.regex)) {
-                              if (title === 'updateDays') _temp = [];
-                              _temp.push(result.regex);
+                            if (!temp[title].includes(result.regex)) {
+                              if (title === 'updateDays') temp[title] = [];
+                              temp[title].push(result.regex);
                             } else {
-                              _temp = _temp.filter(
+                              temp[title] = temp[title].filter(
                                 (filter: string) => filter !== result.regex
                               );
                             }
                           }
-                          temp[title] = _temp;
 
                           setFilter(temp);
                         }

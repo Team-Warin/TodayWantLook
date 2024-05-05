@@ -10,7 +10,8 @@ import { providerMap } from '@/auth.config';
 
 import { Button } from '@nextui-org/button';
 
-import { connectDB } from '@/modules/database';
+import { CreateClient } from '@/modules/supabase';
+
 import division from '@/modules/division';
 import Card from '@/components/Card';
 
@@ -23,13 +24,12 @@ export default async function Login({
     google: 'bg-google',
   };
 
-  const db = (await connectDB).db(process.env.DB_NAME);
-  const media = await db
-    .collection<MediaData[]>('media')
-    .aggregate([{ $sample: { size: 40 } }])
-    .toArray();
+  const supabse = CreateClient();
+  const { data: media } = await supabse
+    .schema('todaywantlook')
+    .rpc('get_random_medias', { length: 40 });
 
-  const bgMediaList = division(media, 10) as MediaData[][];
+  const bgMediaList = division(media!, 10) as MediaData[][];
 
   return (
     <div className={style.container}>

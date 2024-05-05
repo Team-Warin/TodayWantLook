@@ -1,7 +1,10 @@
+import type { Json } from '@/types/supabase-twl';
 import type { FilterType, MediaData } from '@/types/media';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { CreateClient } from '@/modules/supabase';
+
+import { getKeys } from '@/modules/getKeys';
 // import CF_Media from '@/modules/cf';
 
 interface MediaApiRequest extends NextApiRequest {
@@ -19,33 +22,17 @@ export default async function Media(
   req: MediaApiRequest,
   res: NextApiResponse
 ) {
-  let recMedia: MediaData[] = [];
-
   if (req.method === 'POST') {
     const supabase = CreateClient();
 
-    const filters: { [key: string]: { $in: RegExp[] } }[] = [];
     let result = (
-      await supabase.schema('todaywantlook').from('medias').select('*')
+      await supabase.schema('todaywantlook').rpc('get_medias', {
+        _title: req.body.filter.title.join(''),
+        _genre: req.body.filter.genre.join(''),
+        _type: req.body.filter.type.join(''),
+        _update: req.body.filter.updateDays.join(''),
+      })
     ).data;
-
-    Object.keys(req.body.filter).forEach((key: string) => {
-      if (!req.body.filter[key].length) return;
-
-      if (typeof req.body.filter[key] === 'string' && result) {
-        result = result?.filter((data) => data.title === req.body.filter[key]);
-      } else if (typeof req.body.filter[key] !== 'string' && result) {
-        (req.body.filter[key] as string[]).map((filter: string | RegExp) => {
-          if (!result) return;
-
-          filter = new RegExp(filter);
-          console.log(filter);
-          result = result.filter((data: { [key: string]: any }) =>
-            data[key].some((query: string) => filter.test(query))
-          );
-        });
-      }
-    });
 
     if (result) {
       return res.status(200).send({
