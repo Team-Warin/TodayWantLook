@@ -95,19 +95,6 @@ export default function Filter({
                   placeholder='제목을 입력해주세요.'
                   value={value}
                   onValueChange={setValue}
-                  onBlur={() => {
-                    if (!isMutating && value) {
-                      let temp = { ...filter };
-                      temp.title = [`(?=.*(${[...value].join('.*')}).*).*`];
-
-                      setFilter(temp);
-                    } else if (!isMutating && !value) {
-                      let temp = { ...filter };
-                      temp.title = [];
-
-                      setFilter(temp);
-                    }
-                  }}
                   onKeyDown={(e) => {
                     if (!isMutating && e.code === 'Enter' && value) {
                       let temp = { ...filter };
