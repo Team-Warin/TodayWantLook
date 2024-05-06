@@ -98,7 +98,9 @@ export default function Filter({
                   onKeyDown={(e) => {
                     if (!isMutating && e.code === 'Enter' && value) {
                       let temp = { ...filter };
-                      temp.title = [`(?=.*(${value}).*).*`];
+                      temp.title = [
+                        `(?=.*(${[...value.replace(' ', '')].join('.*')}).*).*`,
+                      ];
 
                       setFilter(temp);
                     } else if (!isMutating && e.code === 'Enter' && !value) {
