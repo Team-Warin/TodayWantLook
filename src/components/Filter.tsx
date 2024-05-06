@@ -43,7 +43,7 @@ export default function Filter({
         { name: '모험', regex: '(?=.*(모험|먼치킨|여행).*).*' },
         { name: '무협', regex: '(?=.*(무협|무림|사극).*).*' },
         { name: '미스터리', regex: '(?=.*(미스터리|추리).*).*' },
-        { name: '범죄', regex: '(?=.*(범죄|).*).*' },
+        { name: '범죄', regex: '(?=.*(범죄).*).*' },
       ],
     },
     updateDays: {
