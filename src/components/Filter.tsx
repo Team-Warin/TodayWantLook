@@ -58,7 +58,7 @@ export default function Filter({
         { name: '토', regex: '(sat)' },
         { name: '일', regex: '(sun)' },
         { name: '완결', regex: '(finished)' },
-        { name: '매일+', regex: '(navberDaily)' },
+        { name: '매일+', regex: '(naverDaily)' },
       ],
     },
     type: {
