@@ -105,6 +105,8 @@ export default function Media({
       if (mediaData.length >= mediaCount) return;
     }
 
+    if (mediaData.length >= (page + 1) * row * 4) return;
+
     trigger({
       filter: filter,
       page: [mediaData.length, (page + 1) * row * 4],

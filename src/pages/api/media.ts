@@ -21,6 +21,8 @@ export default async function Media(
   if (req.method === 'POST') {
     const supabase = CreateClient();
 
+    console.log(req.body);
+
     const { data: count } = await supabase
       .schema('todaywantlook')
       .rpc('get_count', {
