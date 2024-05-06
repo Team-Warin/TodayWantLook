@@ -98,7 +98,7 @@ export default function Filter({
                   onBlur={() => {
                     if (!isMutating && value) {
                       let temp = { ...filter };
-                      temp.title = [`(?=.*(${value}).*).*`];
+                      temp.title = [`(?=.*(${[...value].join('.*')}).*).*`];
 
                       setFilter(temp);
                     } else if (!isMutating && !value) {
