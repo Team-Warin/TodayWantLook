@@ -1,198 +1,212 @@
-export type Json = {
-  new: boolean;
-  adult: boolean;
-  rest: boolean;
-  up: boolean;
-  singularityList: string[];
-} | null;
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   todaywantlook: {
     Tables: {
       medias: {
         Row: {
-          additional: Json | null;
-          author: string | null;
-          backdropImg: string | null;
-          genre: string[];
-          img: string | null;
-          mediaId: string;
-          rate: number;
-          service: string | null;
-          summary: string;
-          title: string;
-          type: string;
-          updateDays: string[] | null;
-          url: string | null;
-        };
+          additional: Json | null
+          author: string | null
+          backdropImg: string | null
+          genre: string[]
+          img: string | null
+          mediaId: string
+          rate: number
+          service: string | null
+          summary: string
+          title: string
+          type: string
+          updateDays: string[] | null
+          url: string | null
+        }
         Insert: {
-          additional?: Json | null;
-          author?: string | null;
-          backdropImg?: string | null;
-          genre: string[];
-          img?: string | null;
-          mediaId?: string;
-          rate: number;
-          service?: string | null;
-          summary: string;
-          title: string;
-          type: string;
-          updateDays?: string[] | null;
-          url?: string | null;
-        };
+          additional?: Json | null
+          author?: string | null
+          backdropImg?: string | null
+          genre: string[]
+          img?: string | null
+          mediaId?: string
+          rate: number
+          service?: string | null
+          summary: string
+          title: string
+          type: string
+          updateDays?: string[] | null
+          url?: string | null
+        }
         Update: {
-          additional?: Json | null;
-          author?: string | null;
-          backdropImg?: string | null;
-          genre?: string[];
-          img?: string | null;
-          mediaId?: string;
-          rate?: number;
-          service?: string | null;
-          summary?: string;
-          title?: string;
-          type?: string;
-          updateDays?: string[] | null;
-          url?: string | null;
-        };
-        Relationships: [];
-      };
-    };
+          additional?: Json | null
+          author?: string | null
+          backdropImg?: string | null
+          genre?: string[]
+          img?: string | null
+          mediaId?: string
+          rate?: number
+          service?: string | null
+          summary?: string
+          title?: string
+          type?: string
+          updateDays?: string[] | null
+          url?: string | null
+        }
+        Relationships: []
+      }
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
+      get_count:
+        | {
+            Args: Record<PropertyKey, never>
+            Returns: number
+          }
+        | {
+            Args: {
+              _title: string
+              _type: string
+              _genre: string
+              _update: string
+            }
+            Returns: number
+          }
       get_medias: {
         Args: {
-          _title: string;
-          _type: string;
-          _genre: string;
-          _update: string;
-        };
+          _title: string
+          _type: string
+          _genre: string
+          _update: string
+        }
         Returns: {
-          additional: Json | null;
-          author: string | null;
-          backdropImg: string | null;
-          genre: string[];
-          img: string | null;
-          mediaId: string;
-          rate: number;
-          service: string | null;
-          summary: string;
-          title: string;
-          type: string;
-          updateDays: string[] | null;
-          url: string | null;
-        }[];
-      };
+          additional: Json | null
+          author: string | null
+          backdropImg: string | null
+          genre: string[]
+          img: string | null
+          mediaId: string
+          rate: number
+          service: string | null
+          summary: string
+          title: string
+          type: string
+          updateDays: string[] | null
+          url: string | null
+        }[]
+      }
       get_random_medias: {
         Args: {
-          length: number;
-        };
+          length: number
+        }
         Returns: {
-          additional: Json | null;
-          author: string | null;
-          backdropImg: string | null;
-          genre: string[];
-          img: string | null;
-          mediaId: string;
-          rate: number;
-          service: string | null;
-          summary: string;
-          title: string;
-          type: string;
-          updateDays: string[] | null;
-          url: string | null;
-        }[];
-      };
-    };
+          additional: Json | null
+          author: string | null
+          backdropImg: string | null
+          genre: string[]
+          img: string | null
+          mediaId: string
+          rate: number
+          service: string | null
+          summary: string
+          title: string
+          type: string
+          updateDays: string[] | null
+          url: string | null
+        }[]
+      }
+    }
     Enums: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
 
-type PublicSchema = Database[Extract<keyof Database, 'public'>];
+type PublicSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   PublicTableNameOrOptions extends
-    | keyof (PublicSchema['Tables'] & PublicSchema['Views'])
+    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] &
-        Database[PublicTableNameOrOptions['schema']]['Views'])
+    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+        Database[PublicTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
-      Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
-      Row: infer R;
+  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (PublicSchema['Tables'] &
-        PublicSchema['Views'])
-    ? (PublicSchema['Tables'] &
-        PublicSchema['Views'])[PublicTableNameOrOptions] extends {
-        Row: infer R;
+  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+        Row: infer R
       }
       ? R
       : never
-    : never;
+    : never
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
-    | keyof PublicSchema['Tables']
+    | keyof PublicSchema["Tables"]
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
-      Insert: infer I;
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
     }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
-    ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
-        Insert: infer I;
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Insert: infer I
       }
       ? I
       : never
-    : never;
+    : never
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
-    | keyof PublicSchema['Tables']
+    | keyof PublicSchema["Tables"]
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
-      Update: infer U;
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
     }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
-    ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
-        Update: infer U;
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Update: infer U
       }
       ? U
       : never
-    : never;
+    : never
 
 export type Enums<
   PublicEnumNameOrOptions extends
-    | keyof PublicSchema['Enums']
+    | keyof PublicSchema["Enums"]
     | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions['schema']]['Enums']
+    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
-  : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
-    ? PublicSchema['Enums'][PublicEnumNameOrOptions]
-    : never;
+  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never

@@ -7,8 +7,6 @@ import type { Dispatch, SetStateAction } from 'react';
 import style from '@/styles/Media.module.css';
 import cardStyle from '@/styles/Card.module.css';
 
-import { useSession } from 'next-auth/react';
-
 import axios, { CanceledError } from 'axios';
 import useSWRMutation from 'swr/mutation';
 
@@ -39,7 +37,7 @@ export default function Media({
   let [page, setPage] = useState<number>(0);
 
   const [mediaData, setMediaData] = useState<MediaData[]>([]); //작품 데이터
-  let [mediaCount, setMediaCount] = useState<number>(0); //작품 데이터 갯수
+  let [mediaCount, setMediaCount] = useState<number | null>(null); //작품 데이터 갯수
   const [filter, setFilter] = useState<FilterType>({
     title: [],
     genre: [],
@@ -103,23 +101,19 @@ export default function Media({
   }, []);
 
   useDidMountEffect(() => {
-    if (mediaData.length < mediaCount || mediaCount === 0) {
-      trigger({
-        filter: filter,
-        page: [mediaData.length, (page + 1) * row * 4],
-      });
+    if (mediaCount) {
+      if (mediaData.length >= mediaCount) return;
     }
+
+    trigger({
+      filter: filter,
+      page: [mediaData.length, (page + 1) * row * 4],
+    });
   }, [row, page]);
 
   useDidMountEffect(() => {
-    if (data) {
-      setMediaCount(data.mediaCount);
-      setMediaData([...mediaData, ...data.mediaData]);
-    }
-  }, [data]);
-
-  useDidMountEffect(() => {
     if (controller) controller.abort();
+
     Promise.all([
       setPage(0),
       setMediaData([]),
@@ -129,6 +123,13 @@ export default function Media({
       }),
     ]);
   }, [filter]);
+
+  useDidMountEffect(() => {
+    if (data) {
+      setMediaCount(data.mediaCount);
+      setMediaData([...mediaData, ...data.mediaData]);
+    }
+  }, [data]);
 
   useDidMountEffect(() => {
     if (inView && !isMutating) {
@@ -161,9 +162,9 @@ export default function Media({
         )
           .slice(
             0,
-            (page + 1) * row * 4 <= mediaCount
+            (page + 1) * row * 4 <= mediaCount!
               ? (page + 1) * row * 4
-              : mediaCount + (row - (mediaCount % row))
+              : mediaCount! + (row - (mediaCount! % row))
           )
           .map((media: MediaData | number, i: number) => {
             if (like && setLike && max) {
@@ -219,7 +220,7 @@ export default function Media({
             )
           : null}
       </div>
-      {(page + 1) * row * 4 >= mediaCount || isMutating ? null : (
+      {(page + 1) * row * 4 >= mediaCount! || isMutating ? null : (
         <div id='observer' ref={ref}></div>
       )}
     </div>

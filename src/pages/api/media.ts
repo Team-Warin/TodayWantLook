@@ -21,19 +21,31 @@ export default async function Media(
   if (req.method === 'POST') {
     const supabase = CreateClient();
 
-    let result = (
-      await supabase.schema('todaywantlook').rpc('get_medias', {
+    const { data: count } = await supabase
+      .schema('todaywantlook')
+      .rpc('get_count', {
         _title: req.body.filter.title.join(''),
         _genre: req.body.filter.genre.join(''),
         _type: req.body.filter.type.join(''),
         _update: req.body.filter.updateDays.join(''),
-      })
+      });
+
+    let result = (
+      await supabase
+        .schema('todaywantlook')
+        .rpc('get_medias', {
+          _title: req.body.filter.title.join(''),
+          _genre: req.body.filter.genre.join(''),
+          _type: req.body.filter.type.join(''),
+          _update: req.body.filter.updateDays.join(''),
+        })
+        .range(req.body.page[0], req.body.page[1] - 1)
     ).data;
 
     if (result) {
       return res.status(200).send({
-        mediaData: result.slice(req.body.page[0], req.body.page[1]),
-        mediaCount: result.length,
+        mediaData: result,
+        mediaCount: count,
       });
     }
   } else {
