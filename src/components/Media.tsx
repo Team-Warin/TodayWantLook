@@ -88,7 +88,7 @@ export default function Media({
           rows = Math.floor(containerWidth / (cardWidth + 16));
         }
 
-        setRow(rows);
+        if (rows !== row) setRow(rows);
       }
     };
 
@@ -200,7 +200,7 @@ export default function Media({
             }
 
             return (
-              <div key={i} ref={card}>
+              <div key={i}>
                 <Card isLoading={isMutating} data={media} />
               </div>
             );
