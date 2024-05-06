@@ -4,7 +4,7 @@ export type Json = {
   rest: boolean;
   up: boolean;
   singularityList: string[];
-} | null;
+};
 
 export type Database = {
   todaywantlook: {
@@ -62,6 +62,20 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      get_count:
+        | {
+            Args: Record<PropertyKey, never>;
+            Returns: number;
+          }
+        | {
+            Args: {
+              _title: string;
+              _type: string;
+              _genre: string;
+              _update: string;
+            };
+            Returns: number;
+          };
       get_medias: {
         Args: {
           _title: string;
