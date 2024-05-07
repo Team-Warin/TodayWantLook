@@ -1,5 +1,5 @@
-export default function division(array: unknown[], slice: number): unknown[] {
-  const result: unknown[] = [];
+export default function division<T>(array: T[], slice: number): T[][] {
+  const result: T[][] = [];
   const divide: number =
     Math.floor(array.length / slice) +
     (Math.floor(array.length % slice) > 0 ? 1 : 0);

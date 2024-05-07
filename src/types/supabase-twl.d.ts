@@ -32,7 +32,7 @@ export type Database = {
           genre: string[];
           img?: string | null;
           mediaId?: string;
-          rate: number;
+          rate?: number;
           service?: string | null;
           summary: string;
           title: string;
