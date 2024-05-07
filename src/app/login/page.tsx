@@ -2,6 +2,8 @@ import type { MediaData } from '@/types/media';
 
 import style from '@/styles/Login.module.css';
 
+import dynamic from 'next/dynamic';
+
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -14,6 +16,8 @@ import { CreateClient } from '@/modules/supabase';
 
 import division from '@/modules/division';
 import Card from '@/components/Card';
+
+const LoginBG = dynamic(() => import('@/components/LoginBG'));
 
 export default async function Login({
   searchParams,
@@ -29,35 +33,12 @@ export default async function Login({
     .schema('todaywantlook')
     .rpc('get_random_medias', { length: 40 });
 
-  const bgMediaList = division(media!, 10) as MediaData[][];
+  const bgMediaList = division(media!, 10);
 
   return (
     <div className={style.container}>
       <div className={style.bgContainer}>
-        {bgMediaList.map((mediaList: MediaData[], i: number) => {
-          return (
-            <div key={i} className={style.bgCard}>
-              {[...Array(2).keys()].map((i: number) => {
-                return (
-                  <div key={i} className={style.cardSlider}>
-                    {mediaList.map((media: MediaData, i: number) => {
-                      return (
-                        <Card
-                          isLoading={false}
-                          data={media}
-                          info={false}
-                          lazy={false}
-                          size={5}
-                          key={i}
-                        ></Card>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+        <LoginBG bgMediaList={bgMediaList} />
       </div>
       <div className={style.overlay}>
         <div className={style.loginMenu}>
