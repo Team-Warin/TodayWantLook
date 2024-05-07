@@ -23,8 +23,7 @@ export default function LoginBG({
                         isLoading={false}
                         data={media}
                         info={false}
-                        lazy={false}
-                        size={5}
+                        size={7}
                         key={i}
                       ></Card>
                     );
