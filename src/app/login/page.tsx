@@ -1,5 +1,3 @@
-import type { MediaData } from '@/types/media';
-
 import style from '@/styles/Login.module.css';
 
 import dynamic from 'next/dynamic';
@@ -31,9 +29,9 @@ export default async function Login({
   const supabse = CreateClient();
   const { data: media } = await supabse
     .schema('todaywantlook')
-    .rpc('get_random_medias', { length: 40 });
+    .rpc('get_random_medias', { length: 24 });
 
-  const bgMediaList = division(media!, 10);
+  const bgMediaList = division(media!, media!.length / 4);
 
   return (
     <div className={style.container}>

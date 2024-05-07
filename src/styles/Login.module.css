@@ -7,7 +7,7 @@
 }
 
 .bgCard {
-  @apply flex flex-nowrap gap-5;
+  @apply flex flex-nowrap gap-5 relative;
 }
 
 .bgCard:nth-child(odd) > div {
