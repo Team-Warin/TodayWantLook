@@ -1,9 +1,11 @@
 'use client';
 
 import type { FilterType } from '@/types/media';
-import { useRef, useState, type Dispatch, type SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 
 import style from '@/styles/Filter.module.css';
+
+import { useState } from 'react';
 
 import { Button } from '@nextui-org/button';
 import { Accordion, AccordionItem } from '@nextui-org/accordion';
@@ -96,7 +98,12 @@ export default function Filter({
                   value={value}
                   onValueChange={setValue}
                   onKeyDown={(e) => {
-                    if (!isMutating && e.code === 'Enter' && value) {
+                    if (
+                      !isMutating &&
+                      e.code === 'Enter' &&
+                      value &&
+                      value.length >= 1
+                    ) {
                       let temp = { ...filter };
                       temp.title = [
                         `(?=.*(${[...value.replace(' ', '')].join('.*')}).*).*`,
