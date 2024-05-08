@@ -9,13 +9,13 @@ const BMJUA = localFont({
   ],
 });
 
-const Sokcho = localFont({
+const WAGURI = localFont({
   src: [
     {
-      path: '../font/SokchoBadaDotum.woff2',
+      path: '../font/WAGURITTF.woff2',
       weight: '500',
     },
   ],
 });
 
-export { BMJUA, Sokcho };
+export { BMJUA, WAGURI };

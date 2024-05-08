@@ -10,7 +10,7 @@ import cardStyle from '@/styles/Card.module.css';
 import axios, { CanceledError } from 'axios';
 import useSWRMutation from 'swr/mutation';
 
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import useDidMountEffect from './hooks/useDidMountEffect';
 
@@ -19,6 +19,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import Filter from './Filter';
 import Card from './Card';
+import Link from 'next/link';
 
 export default function Media({
   max,
@@ -201,7 +202,9 @@ export default function Media({
 
             return (
               <div key={i}>
-                <Card isLoading={isMutating} data={media} />
+                <MediaLink media={media}>
+                  <Card isLoading={isMutating} data={media} />
+                </MediaLink>
               </div>
             );
           })}
@@ -227,4 +230,16 @@ export default function Media({
       )}
     </div>
   );
+}
+
+function MediaLink({
+  media,
+  children,
+}: {
+  media: MediaData | number;
+  children: React.ReactNode;
+}) {
+  if (typeof media === 'number') return children;
+
+  return <Link href={`/media/${media.mediaId}`}>{children}</Link>;
 }

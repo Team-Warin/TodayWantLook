@@ -1,0 +1,35 @@
+.container {
+  @apply mt-7 ps-10 pe-10 w-full flex justify-center;
+}
+
+.mediaInfo {
+  @apply w-full;
+}
+
+.mediaContainer {
+  @apply p-5 flex gap-5 bg-white w-full rounded-lg shadow-md;
+}
+
+.mediaIntroContainer {
+  @apply w-full flex justify-between;
+}
+
+.mediaTitle {
+  @apply text-[32px] font-bold;
+}
+
+.mediaAdditional {
+  @apply flex gap-3 h-[25px];
+}
+
+.mediaAuthor {
+  @apply text-[15px] text-gray-600;
+}
+
+.mediaGenre {
+  @apply mt-2 w-full flex flex-wrap gap-3 text-[12px];
+}
+
+.mediaGenre > div {
+  @apply cursor-pointer rounded-lg;
+}

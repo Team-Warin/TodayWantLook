@@ -2,7 +2,7 @@
   <div>
     <img src="https://raw.githubusercontent.com/TodayWantLook/TWL-NextJS/a32f3cd37794bf49c0c47c7434a861d2fec8a857/public/Logo.svg" width=70/>
   </div>
-  <a herf="https://todaywantlook.vercel.app">TodayWantLook</a>
+  <a href="https://todaywantlook.vercel.app">TodayWantLook</a>
   <br>
   <sub><sup><b>(오늘 뭐 봐??)</b></sup></sub>
   <br>

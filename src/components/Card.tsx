@@ -9,7 +9,7 @@ import { Skeleton } from '@nextui-org/skeleton';
 import { ForwardedRef, forwardRef } from 'react';
 
 interface CardProps {
-  isLoading: boolean;
+  isLoading?: boolean;
   data: MediaData | number;
   info?: boolean;
   quality?: number;
@@ -21,7 +21,7 @@ interface CardProps {
  * Card UI Component
  */
 function Card(
-  { isLoading, data, info, quality, lazy, size }: CardProps,
+  { isLoading = true, data, info, quality, lazy, size }: CardProps,
   ref: ForwardedRef<HTMLDivElement>
 ) {
   if (isLoading && typeof data === 'number') {
@@ -66,10 +66,10 @@ function Card(
                 alt={'poster'}
               ></Image>
             ) : null}
-            {data.backdropImg ? (
+            {data.backdropImg || (!data.backdropImg && data.img) ? (
               <Image
-                className={`absolute z-0 ${data.img ? 'blur-md' : null}`}
-                src={data.backdropImg}
+                className={`absolute z-0 ${!data.backdropImg && data.img ? 'blur-md' : null}`}
+                src={data.backdropImg ?? data.img!}
                 fill={true}
                 sizes='(max-width: auto) 100%, (max-width: auto) 100%'
                 quality={quality ?? data.img ? 50 : 75}
