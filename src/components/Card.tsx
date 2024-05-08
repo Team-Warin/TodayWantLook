@@ -66,10 +66,10 @@ function Card(
                 alt={'poster'}
               ></Image>
             ) : null}
-            {data.backdropImg ? (
+            {data.backdropImg || (!data.backdropImg && data.img) ? (
               <Image
-                className={`absolute z-0 ${data.img ? 'blur-md' : null}`}
-                src={data.backdropImg}
+                className={`absolute z-0 ${!data.backdropImg && data.img ? 'blur-md' : null}`}
+                src={data.backdropImg ?? data.img!}
                 fill={true}
                 sizes='(max-width: auto) 100%, (max-width: auto) 100%'
                 quality={quality ?? data.img ? 50 : 75}
