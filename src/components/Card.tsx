@@ -9,7 +9,7 @@ import { Skeleton } from '@nextui-org/skeleton';
 import { ForwardedRef, forwardRef } from 'react';
 
 interface CardProps {
-  isLoading: boolean;
+  isLoading?: boolean;
   data: MediaData | number;
   info?: boolean;
   quality?: number;
@@ -21,7 +21,7 @@ interface CardProps {
  * Card UI Component
  */
 function Card(
-  { isLoading, data, info, quality, lazy, size }: CardProps,
+  { isLoading = true, data, info, quality, lazy, size }: CardProps,
   ref: ForwardedRef<HTMLDivElement>
 ) {
   if (isLoading && typeof data === 'number') {
