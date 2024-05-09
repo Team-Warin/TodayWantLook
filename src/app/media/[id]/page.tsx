@@ -10,9 +10,9 @@ import { getKeys } from '@/modules/getKeys';
 import Card from '@/components/Card';
 import { Chip } from '@nextui-org/chip';
 import { Tooltip } from '@nextui-org/tooltip';
-import { getYouTube } from '@/modules/getYoutube';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
+import YouTubeResult from '@/components/YouTubeResult';
 
 export default async function Media({ params }: { params: { id: string } }) {
   const supabase = await CreateClient();
@@ -22,8 +22,6 @@ export default async function Media({ params }: { params: { id: string } }) {
     .select('*')
     .match({ mediaId: params.id })
     .single();
-
-  const youtubes = await getYouTube(media?.title!, media?.service!);
 
   const additional = getKeys(media?.additional!).reduce(
     (arr: string[], cur) => {
@@ -102,27 +100,7 @@ export default async function Media({ params }: { params: { id: string } }) {
         </div>
 
         {/* WebToon Video */}
-        <h1
-          className={style.mediaYouTubeTitle}
-        >{`"${media?.title!} 웹툰 리뷰" 유튜브 검색 결과${youtubes.length ? '!' : '를 찾지 못했습니다.'}`}</h1>
-        {youtubes.length ? (
-          <div className={style.mediaVideoContainer}>
-            {youtubes.map((video, i) => {
-              return (
-                <iframe
-                  key={i}
-                  src={video}
-                  width='560'
-                  height='315'
-                  title={media?.title!}
-                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
-                  referrerPolicy='strict-origin-when-cross-origin'
-                  allowFullScreen
-                ></iframe>
-              );
-            })}
-          </div>
-        ) : null}
+        <YouTubeResult media={media!} />
       </div>
     </div>
   );

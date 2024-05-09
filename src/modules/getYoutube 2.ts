@@ -1,3 +1,5 @@
+import { videoInfo } from 'youtube-ext';
+
 const youtubesearchapi = require('youtube-search-api');
 
 interface SearchResult {
@@ -17,14 +19,16 @@ export async function getYouTube(title: string, servie: string) {
   const videos: SearchResult[] = (
     await youtubesearchapi.GetListByKeyword(
       `${converKR[servie]} ${title} 웹툰 리뷰`,
-      true,
-      40
+      true
     )
   ).items;
 
   const regex = new RegExp([...title.replaceAll(' ', '')].join('.*'));
-  const promise = videos.map((video) => {
-    if (urls.length >= 4) return;
+  for (const video of videos) {
+    const info = await videoInfo(`https://www.youtube.com/watch?v=${video.id}`);
+
+    if (urls.length >= 4) break;
+    if (!info.embed?.iframeUrl) continue;
 
     if (regex.test(video.title)) {
       if (video.type === 'video')
@@ -34,9 +38,7 @@ export async function getYouTube(title: string, servie: string) {
           `https://www.youtube.com/embed/?listType=playlist&list=` + video.id
         );
     }
-  });
-
-  await Promise.all(promise);
+  }
 
   return urls;
 }
