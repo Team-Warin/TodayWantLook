@@ -2,28 +2,28 @@
   @apply mt-7 ps-10 pe-10 w-full flex justify-center;
 }
 
-.mediaInfo {
-  @apply w-full;
+.mediaCardContainer {
+  @apply w-full p-5 gap-5 bg-white rounded-lg shadow-md;
 }
 
-.mediaContainer {
-  @apply p-5 flex gap-5 bg-white w-full rounded-lg shadow-md;
+.mediaInfoContainer {
+  @apply w-full flex gap-3 justify-between;
 }
 
-.mediaIntroContainer {
-  @apply w-full flex justify-between;
+.mediaCard {
+  @apply flex gap-3;
 }
 
-.mediaTitle {
+.mediaTitle > div > h1 {
   @apply text-[32px] font-bold;
 }
 
-.mediaAdditional {
-  @apply flex gap-3 h-[25px];
+.mediaTitle > p {
+  @apply text-[15px] text-gray-600;
 }
 
-.mediaAuthor {
-  @apply text-[15px] text-gray-600;
+.mediaAdditional {
+  @apply flex justify-items-end;
 }
 
 .mediaGenre {
@@ -31,5 +31,17 @@
 }
 
 .mediaGenre > div {
-  @apply cursor-pointer rounded-lg;
+  @apply cursor-pointer bg-genre text-white;
+}
+
+.mediaVideoContainer {
+  @apply w-full mt-5 flex gap-3 overflow-x-scroll;
+}
+
+.mediaVideoContainer > iframe {
+  @apply rounded-md flex-shrink-0;
+}
+
+.mediaYouTubeTitle {
+  @apply mt-6 text-[22px];
 }

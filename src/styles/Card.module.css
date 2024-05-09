@@ -6,6 +6,10 @@
   @apply h-[calc(258px+var(--size))] overflow-hidden rounded-lg relative shadow-md;
 }
 
+.additional {
+  @apply w-full p-1 flex justify-end absolute z-20 gap-1;
+}
+
 .poster {
   @apply absolute origin-bottom bottom-0 scale-[1.7] z-10;
 }
