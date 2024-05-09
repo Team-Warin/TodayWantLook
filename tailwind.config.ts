@@ -14,6 +14,7 @@ const config: Config = {
       colors: {
         twl: '#74e174',
         google: '#f1f4f9',
+        genre: '#66C466',
       },
     },
   },

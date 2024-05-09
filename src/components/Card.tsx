@@ -8,6 +8,8 @@ import Image from 'next/image';
 import { Skeleton } from '@nextui-org/skeleton';
 import { ForwardedRef, forwardRef } from 'react';
 
+import { getKeys } from '@/modules/getKeys';
+
 interface CardProps {
   isLoading?: boolean;
   data: MediaData | number;
@@ -46,6 +48,16 @@ function Card(
       </div>
     );
   } else if (typeof data !== 'number') {
+    const additional = getKeys(data?.additional!).reduce(
+      (arr: string[], cur) => {
+        if (data?.additional![cur] === true && cur !== 'up') {
+          arr.push(cur);
+        }
+        return arr;
+      },
+      [...data?.additional?.singularityList!]
+    );
+
     return (
       <div
         style={{ '--size': size ? `${size}vw` : '0vw' } as CardCSS}
@@ -53,6 +65,21 @@ function Card(
       >
         <div className={style.container}>
           <div className={style.poster_container}>
+            {info !== false ? (
+              <div className={style.additional}>
+                {additional.map((add, i) => {
+                  return (
+                    <Image
+                      key={i}
+                      width={20}
+                      height={20}
+                      src={`/icon/${data?.service}/${add}.webp`}
+                      alt={add}
+                    />
+                  );
+                })}
+              </div>
+            ) : null}
             {data.img ? (
               <Image
                 className={style.poster}
