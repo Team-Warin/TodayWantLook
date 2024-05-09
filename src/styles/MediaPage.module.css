@@ -23,7 +23,7 @@
 }
 
 .mediaAdditional {
-  @apply flex justify-items-end;
+  @apply flex justify-items-end h-[25px];
 }
 
 .mediaGenre {
