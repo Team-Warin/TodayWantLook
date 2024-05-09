@@ -105,22 +105,24 @@ export default async function Media({ params }: { params: { id: string } }) {
         <h1
           className={style.mediaYouTubeTitle}
         >{`"${media?.title!} 웹툰 리뷰" 유튜브 검색 결과${youtubes.length ? '!' : '를 찾지 못했습니다.'}`}</h1>
-        <div className={style.mediaVideoContainer}>
-          {youtubes.map((video, i) => {
-            return (
-              <iframe
-                key={i}
-                src={video}
-                width='560'
-                height='315'
-                title={media?.title!}
-                allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
-                referrerPolicy='strict-origin-when-cross-origin'
-                allowFullScreen
-              ></iframe>
-            );
-          })}
-        </div>
+        {youtubes.length ? (
+          <div className={style.mediaVideoContainer}>
+            {youtubes.map((video, i) => {
+              return (
+                <iframe
+                  key={i}
+                  src={video}
+                  width='560'
+                  height='315'
+                  title={media?.title!}
+                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+                  referrerPolicy='strict-origin-when-cross-origin'
+                  allowFullScreen
+                ></iframe>
+              );
+            })}
+          </div>
+        ) : null}
       </div>
     </div>
   );
