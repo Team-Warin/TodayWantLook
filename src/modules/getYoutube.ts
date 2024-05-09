@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const youtubesearchapi = require('youtube-search-api');
 
 interface SearchResult {
@@ -23,8 +25,14 @@ export async function getYouTube(title: string, servie: string) {
   ).items;
 
   const regex = new RegExp([...title.replaceAll(' ', '')].join('.*'));
-  const promise = videos.map((video) => {
+  const promise = videos.map(async (video) => {
     if (urls.length >= 4) return;
+
+    const embed = (
+      await axios.get(`https://cheetube.netlify.app/api/watch/${video.id}`)
+    ).data.player.embed;
+
+    if (!embed) return;
 
     if (regex.test(video.title)) {
       if (video.type === 'video')
