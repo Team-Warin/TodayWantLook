@@ -4,6 +4,7 @@ import { BMJUA, WAGURI } from '@/modules/font';
 import { CreateClient } from '@/modules/supabase';
 
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
 import { getKeys } from '@/modules/getKeys';
 
@@ -12,7 +13,8 @@ import { Chip } from '@nextui-org/chip';
 import { Tooltip } from '@nextui-org/tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
-import YouTubeResult from '@/components/YouTubeResult';
+
+const YouTubeResult = dynamic(() => import('@/components/YouTubeResult'));
 
 export default async function Media({ params }: { params: { id: string } }) {
   const supabase = await CreateClient();
@@ -100,7 +102,10 @@ export default async function Media({ params }: { params: { id: string } }) {
         </div>
 
         {/* WebToon Video */}
-        <YouTubeResult media={media!} />
+        <h1
+          className={style.mediaYouTubeTitle}
+        >{`"${media?.title!}" 관련 영상${media?.youtube.length! < 1 ? '을 유튜브에서 찾을 수 없었습니다.' : '!'}`}</h1>
+        <YouTubeResult urls={media?.youtube!} />
       </div>
     </div>
   );

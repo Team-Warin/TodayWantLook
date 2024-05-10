@@ -26,6 +26,10 @@
   @apply flex justify-items-end h-[25px];
 }
 
+.mediaAdditional > img {
+  @apply w-auto h-auto;
+}
+
 .mediaGenre {
   @apply mt-2 w-full flex flex-wrap gap-3 text-[12px];
 }

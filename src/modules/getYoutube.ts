@@ -20,7 +20,7 @@ export async function getYouTube(title: string, servie: string) {
     await youtubesearchapi.GetListByKeyword(
       `${converKR[servie]} ${title} 웹툰 리뷰`,
       true,
-      40
+      10
     )
   ).items;
 
