@@ -42,6 +42,7 @@ export default function Media({
   const [filter, setFilter] = useState<FilterType>({
     title: [],
     genre: [],
+    additional: [],
     type: [],
     updateDays: [],
   });

@@ -4,6 +4,7 @@ import { BMJUA, WAGURI } from '@/modules/font';
 import { CreateClient } from '@/modules/supabase';
 
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
 import { getKeys } from '@/modules/getKeys';
 
@@ -12,7 +13,8 @@ import { Chip } from '@nextui-org/chip';
 import { Tooltip } from '@nextui-org/tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
-import YouTubeResult from '@/components/YouTubeResult';
+
+const YouTubeResult = dynamic(() => import('@/components/YouTubeResult'));
 
 export default async function Media({ params }: { params: { id: string } }) {
   const supabase = await CreateClient();
@@ -30,7 +32,9 @@ export default async function Media({ params }: { params: { id: string } }) {
       }
       return arr;
     },
-    [...media?.additional?.singularityList!]
+    [...media?.additional?.singularityList!].concat(
+      media?.updateDays?.includes('finished') ? ['finished'] : []
+    )
   );
 
   const tooltip: {
@@ -46,10 +50,12 @@ export default async function Media({ params }: { params: { id: string } }) {
         | 'warning';
     };
   } = {
+    over15: { text: '15세', color: 'warning' },
     adult: { text: '청소년 시청 불가', color: 'danger' },
     waitFree: { text: '기다리면 무료', color: 'success' },
     new: { text: '신작', color: 'success' },
     rest: { text: '휴재', color: 'default' },
+    finished: { text: '완결', color: 'default' },
   };
 
   return (
@@ -90,7 +96,7 @@ export default async function Media({ params }: { params: { id: string } }) {
                   <Image
                     width={25}
                     height={25}
-                    src={`/icon/${media?.service}/${badge}.webp`}
+                    src={`/icon/${badge}.webp`}
                     alt={tooltip[badge].text}
                   />
                 </Tooltip>
@@ -100,7 +106,10 @@ export default async function Media({ params }: { params: { id: string } }) {
         </div>
 
         {/* WebToon Video */}
-        <YouTubeResult media={media!} />
+        <h1
+          className={style.mediaYouTubeTitle}
+        >{`"${media?.title!}" 관련 영상${media?.youtube.length! < 1 ? '을 유튜브에서 찾을 수 없었습니다.' : '!'}`}</h1>
+        <YouTubeResult urls={media?.youtube!} />
       </div>
     </div>
   );

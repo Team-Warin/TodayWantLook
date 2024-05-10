@@ -31,6 +31,7 @@
     "@supabase/supabase-js": "^2.43.1",
     "axios": "^1.6.8",
     "framer-motion": "^11.1.7",
+    "iniru-youtube-search-api": "^1.0.6",
     "next": "^14.2.1",
     "next-auth": "^5.0.0-beta.17",
     "next-compose-plugins": "^2.2.1",

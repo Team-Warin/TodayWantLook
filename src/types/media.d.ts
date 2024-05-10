@@ -24,6 +24,7 @@ interface FilterType {
   [key: string]: string[];
   title: string[];
   genre: string[];
+  additional: string[];
   type: string[];
   updateDays: string[];
 }
