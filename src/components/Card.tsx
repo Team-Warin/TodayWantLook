@@ -55,7 +55,9 @@ function Card(
         }
         return arr;
       },
-      [...data?.additional?.singularityList!]
+      [...data?.additional?.singularityList!].concat(
+        data.updateDays?.includes('finished') ? ['finished'] : []
+      )
     );
 
     return (
@@ -73,7 +75,7 @@ function Card(
                       key={i}
                       width={20}
                       height={20}
-                      src={`/icon/${data?.service}/${add}.webp`}
+                      src={`/icon/${add}.webp`}
                       alt={add}
                     />
                   );

@@ -24,26 +24,22 @@ export default async function Media(
 
     const additional = convertAdditional(req.body.filter.additional);
 
+    const query = {
+      _title: req.body.filter.title.join(''),
+      _genre: req.body.filter.genre.join(''),
+      _additional: additional,
+      _type: req.body.filter.type.join(''),
+      _update: req.body.filter.updateDays.join(''),
+    };
+
     const { data: count } = await supabase
       .schema('todaywantlook')
-      .rpc('get_count', {
-        _title: req.body.filter.title.join(''),
-        _genre: req.body.filter.genre.join(''),
-        _additional: additional,
-        _type: req.body.filter.type.join(''),
-        _update: req.body.filter.updateDays.join(''),
-      });
+      .rpc('get_count', query);
 
     let result = (
       await supabase
         .schema('todaywantlook')
-        .rpc('get_medias', {
-          _title: req.body.filter.title.join(''),
-          _genre: req.body.filter.genre.join(''),
-          _additional: additional,
-          _type: req.body.filter.type.join(''),
-          _update: req.body.filter.updateDays.join(''),
-        })
+        .rpc('get_medias', query)
         .range(req.body.page[0], req.body.page[1] - 1)
     ).data;
 

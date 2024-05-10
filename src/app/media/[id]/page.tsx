@@ -32,7 +32,9 @@ export default async function Media({ params }: { params: { id: string } }) {
       }
       return arr;
     },
-    [...media?.additional?.singularityList!]
+    [...media?.additional?.singularityList!].concat(
+      media?.updateDays?.includes('finished') ? ['finished'] : []
+    )
   );
 
   const tooltip: {
@@ -48,10 +50,12 @@ export default async function Media({ params }: { params: { id: string } }) {
         | 'warning';
     };
   } = {
+    over15: { text: '15세', color: 'warning' },
     adult: { text: '청소년 시청 불가', color: 'danger' },
     waitFree: { text: '기다리면 무료', color: 'success' },
     new: { text: '신작', color: 'success' },
     rest: { text: '휴재', color: 'default' },
+    finished: { text: '완결', color: 'default' },
   };
 
   return (
@@ -92,7 +96,7 @@ export default async function Media({ params }: { params: { id: string } }) {
                   <Image
                     width={25}
                     height={25}
-                    src={`/icon/${media?.service}/${badge}.webp`}
+                    src={`/icon/${badge}.webp`}
                     alt={tooltip[badge].text}
                   />
                 </Tooltip>
