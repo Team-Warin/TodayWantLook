@@ -34,8 +34,8 @@ interface Rate {
   mediaId: string;
   genre: string[];
   rate: number;
-  comment?: { date: Date; text: string };
-  check: {
+  comment: string | null;
+  checks: {
     view: boolean;
     like: boolean;
     rating: boolean;

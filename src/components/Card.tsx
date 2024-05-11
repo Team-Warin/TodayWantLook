@@ -17,13 +17,14 @@ interface CardProps {
   quality?: number;
   lazy?: boolean;
   size?: number;
+  isUrl?: boolean;
 }
 
 /**
  * Card UI Component
  */
 function Card(
-  { isLoading = true, data, info, quality, lazy, size }: CardProps,
+  { isLoading = true, data, info, quality, lazy, size, isUrl }: CardProps,
   ref: ForwardedRef<HTMLDivElement>
 ) {
   if ((isLoading && typeof data === 'number') || !data) {
@@ -68,7 +69,9 @@ function Card(
         ref={ref}
       >
         <div className={style.container}>
-          <div className={style.poster_container}>
+          <div
+            className={`${style.poster_container} ${isUrl && data.type === 'webtoon' ? 'rounded-t-lg' : 'rounded-lg'}`}
+          >
             {info !== false ? (
               <div className={style.additional}>
                 {additional.map((add, i) => {
@@ -111,6 +114,13 @@ function Card(
               ></Image>
             ) : null}
           </div>
+          {isUrl && data.type === 'webtoon' ? (
+            <div
+              className={`flex justify-center rounded-b-lg ${data.service === 'naver' ? 'bg-naver' : 'bg-kakao'}`}
+            >
+              <p className='text-white text-sm'>사진 클릭 시 URL 이동</p>
+            </div>
+          ) : null}
           {info !== false ? (
             <div className={style.poster_title}>
               <p>{data.title}</p>

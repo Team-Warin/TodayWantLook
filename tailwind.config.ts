@@ -15,6 +15,8 @@ const config: Config = {
         twl: '#74e174',
         google: '#f1f4f9',
         genre: '#66C466',
+        naver: '#03C75A',
+        kakao: '#FEE500',
       },
     },
   },
