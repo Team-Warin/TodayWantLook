@@ -12,7 +12,7 @@ import { getKeys } from '@/modules/getKeys';
 
 interface CardProps {
   isLoading?: boolean;
-  data: MediaData | number;
+  data?: MediaData | number;
   info?: boolean;
   quality?: number;
   lazy?: boolean;
@@ -26,7 +26,7 @@ function Card(
   { isLoading = true, data, info, quality, lazy, size }: CardProps,
   ref: ForwardedRef<HTMLDivElement>
 ) {
-  if (isLoading && typeof data === 'number') {
+  if ((isLoading && typeof data === 'number') || !data) {
     return (
       <div
         style={{ '--size': size ? `${size}vw` : '0vw' } as CardCSS}
@@ -36,18 +36,20 @@ function Card(
           <Skeleton className='rounded-lg'>
             <div className={style.poster_container}></div>
           </Skeleton>
-          <div className='mt-2'>
-            <Skeleton className='w-full rounded'>
-              <div className='h-4 bg-default-200'></div>
-            </Skeleton>
-            <Skeleton className='mt-1 w-3/5 rounded'>
-              <div className='h-3 bg-default-200'></div>
-            </Skeleton>
-          </div>
+          {info !== false ? (
+            <div className='mt-2'>
+              <Skeleton className='w-full rounded'>
+                <div className='h-4 bg-default-200'></div>
+              </Skeleton>
+              <Skeleton className='mt-1 w-3/5 rounded'>
+                <div className='h-3 bg-default-200'></div>
+              </Skeleton>
+            </div>
+          ) : null}
         </div>
       </div>
     );
-  } else if (typeof data !== 'number') {
+  } else if (typeof data !== 'number' && data) {
     const additional = getKeys(data?.additional!).reduce(
       (arr: string[], cur) => {
         if (data?.additional![cur] === true && cur !== 'up') {
