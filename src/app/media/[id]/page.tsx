@@ -44,13 +44,6 @@ export default async function Media({ params }: { params: { id: string } }) {
     })
     .single();
 
-  const { data: count } = await supabase
-    .schema('next_auth')
-    .rpc('users_ratings_count', {
-      _mediaid: media?.mediaId!,
-      _checks: JSON.stringify({ like: true }),
-    });
-
   const additional = getKeys(media?.additional!).reduce(
     (arr: string[], cur) => {
       if (media?.additional![cur] === true && cur !== 'up') {
@@ -96,10 +89,17 @@ export default async function Media({ params }: { params: { id: string } }) {
             </Link>
             <div className={`${style.mediaTitle} ${WAGURI.className}`}>
               <div className='flex items-center gap-3'>
-                <h1>{media?.title!}</h1>
-                <Chip radius='sm'>
+                <Chip color='warning' variant='flat' radius='sm'>
                   <FontAwesomeIcon icon={faStar} /> {media?.rate!}
                 </Chip>
+                <h1>{media?.title!}</h1>
+                {session ? (
+                  <Rating
+                    rate={rate!}
+                    genre={media?.genre!}
+                    mediaId={media?.mediaId!}
+                  />
+                ) : null}
               </div>
               <p>{media?.author!}</p>
 
@@ -135,11 +135,6 @@ export default async function Media({ params }: { params: { id: string } }) {
             })}
           </div>
         </div>
-
-        {/* WebToon Rating */}
-        {session ? (
-          <Rating rate={rate!} count={count ?? 0} mediaId={media?.mediaId!} />
-        ) : null}
 
         {/* WebToon Video */}
         <h1

@@ -7,47 +7,35 @@ import { CreateServerClient } from '@/modules/supabase';
 import { redirect } from 'next/navigation';
 import { revalidateTag } from 'next/cache';
 
-export async function Rate(mediaId: string, type: 'like' | 'comment') {
+export async function Rate(
+  mediaId: string,
+  genre: string[],
+  data: { type: 'like' | 'rate'; check: boolean }
+) {
   const user = await auth();
 
   if (!user) throw new Error('Use Not Permissions');
 
   const supabase = CreateServerClient();
 
-  if (['like', 'comment'].includes(type)) {
-    let { data: rate } = await supabase
-      .schema('next_auth')
-      .from('users_ratings')
-      .select('*')
-      .match({ mediaId: mediaId, userId: user.user.id })
-      .single();
+  let { data: rate } = await supabase
+    .schema('next_auth')
+    .from('users_ratings')
+    .select('*')
+    .match({ mediaId: mediaId, userId: user.user.id })
+    .single();
 
-    if (type === 'like') {
-      if (rate?.checks.like) rate.rate -= 5;
-      if (rate) rate.checks.like = !rate.checks.like;
-
-      if (rate === null) {
-        const { data } = await supabase
-          .schema('todaywantlook')
-          .from('medias')
-          .select('*')
-          .match({ mediaId: mediaId })
-          .single();
-
-        return await supabase
-          .schema('next_auth')
-          .from('users_ratings')
-          .insert({
-            userId: user.user.id,
-            mediaId: mediaId,
-            genre: data?.genre!,
-            rate: 5,
-            checks: { like: true, view: false, rating: false },
-          });
-      }
-
-      await supabase.schema('next_auth').from('users_ratings').upsert(rate!);
+  if (data.type === 'like') {
+    if (rate === null) {
+      return await supabase
+        .schema('next_auth')
+        .from('users_ratings')
+        .insert({ userId: user.user.id, mediaId: mediaId, genre: genre });
     }
+
+    rate.checks.like = !data.check;
+
+    await supabase.schema('next_auth').from('users_ratings').upsert(rate);
   }
 
   revalidateTag('media');
