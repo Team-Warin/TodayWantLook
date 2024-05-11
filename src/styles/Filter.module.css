@@ -1,5 +1,5 @@
 .unCheck {
-  @apply text-white shadow !bg-white scale-90;
+  @apply !text-twl shadow !bg-white scale-90;
   color: rgb(116, 225, 116);
   transition:
     color 0.3s ease,
