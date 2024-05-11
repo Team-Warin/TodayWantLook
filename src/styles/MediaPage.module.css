@@ -42,8 +42,8 @@
   @apply w-full mt-5 flex gap-3 overflow-x-scroll;
 }
 
-.mediaVideoContainer > iframe {
-  @apply rounded-md flex-shrink-0;
+.mediaVideo {
+  @apply rounded-md flex-shrink-0 w-[560px] h-[315px];
 }
 
 .mediaYouTubeTitle {

@@ -3,6 +3,7 @@ import style from '@/styles/MediaPage.module.css';
 import { BMJUA, WAGURI } from '@/modules/font';
 import { CreateClient } from '@/modules/supabase';
 
+import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 
@@ -13,6 +14,7 @@ import { Chip } from '@nextui-org/chip';
 import { Tooltip } from '@nextui-org/tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
+import Loading from './loading';
 
 const YouTubeResult = dynamic(() => import('@/components/YouTubeResult'));
 
@@ -58,12 +60,16 @@ export default async function Media({ params }: { params: { id: string } }) {
     finished: { text: '완결', color: 'default' },
   };
 
+  // return <Loading />; Loading UI Testing
+
   return (
     <div className={style.container}>
       <div className={style.mediaCardContainer}>
         <div className={style.mediaInfoContainer}>
           <div className={style.mediaCard}>
-            <Card data={media!} info={false} />
+            <Link rel='preconnect' href={media?.url!}>
+              <Card data={media!} info={false} />
+            </Link>
             <div className={`${style.mediaTitle} ${WAGURI.className}`}>
               <div className='flex items-center gap-3'>
                 <h1>{media?.title!}</h1>

@@ -8,6 +8,7 @@ export default function YouTubeResult({ urls }: { urls: string[] }) {
       {urls.slice(0, 4).map((url: string, i) => {
         return (
           <iframe
+            className={style.mediaVideo}
             key={i}
             width='560'
             height='315'
