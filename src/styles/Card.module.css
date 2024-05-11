@@ -1,9 +1,13 @@
+.cardWidth {
+  @apply w-[calc(149px+var(--size))];
+}
+
 .container {
   @apply w-[calc(149px+var(--size))] cursor-pointer;
 }
 
 .poster_container {
-  @apply h-[calc(258px+var(--size))] overflow-hidden rounded-lg relative shadow-md;
+  @apply h-[calc(258px+var(--size))] overflow-hidden relative shadow-md;
 }
 
 .additional {

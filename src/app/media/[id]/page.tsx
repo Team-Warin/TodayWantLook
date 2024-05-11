@@ -14,11 +14,18 @@ import { Chip } from '@nextui-org/chip';
 import { Tooltip } from '@nextui-org/tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
+
 import Loading from './loading';
+import Summary from '@/components/Summary';
+import Rating from '@/components/Rating';
+import { auth } from '@/auth';
+import { Code } from '@nextui-org/code';
 
 const YouTubeResult = dynamic(() => import('@/components/YouTubeResult'));
 
 export default async function Media({ params }: { params: { id: string } }) {
+  const session = await auth();
+
   const supabase = await CreateClient();
   const { data: media } = await supabase
     .schema('todaywantlook')
@@ -26,6 +33,23 @@ export default async function Media({ params }: { params: { id: string } }) {
     .select('*')
     .match({ mediaId: params.id })
     .single();
+
+  const { data: rate } = await supabase
+    .schema('next_auth')
+    .from('users_ratings')
+    .select('*')
+    .match({
+      mediaId: media?.mediaId!,
+      userId: session?.user.id,
+    })
+    .single();
+
+  const { data: count } = await supabase
+    .schema('next_auth')
+    .rpc('users_ratings_count', {
+      _mediaid: media?.mediaId!,
+      _checks: JSON.stringify({ like: true }),
+    });
 
   const additional = getKeys(media?.additional!).reduce(
     (arr: string[], cur) => {
@@ -68,7 +92,7 @@ export default async function Media({ params }: { params: { id: string } }) {
         <div className={style.mediaInfoContainer}>
           <div className={style.mediaCard}>
             <Link rel='preconnect' href={media?.url!}>
-              <Card data={media!} info={false} />
+              <Card data={media!} info={false} isUrl={true} />
             </Link>
             <div className={`${style.mediaTitle} ${WAGURI.className}`}>
               <div className='flex items-center gap-3'>
@@ -88,6 +112,7 @@ export default async function Media({ params }: { params: { id: string } }) {
                   );
                 })}
               </div>
+              <Summary summary={media?.summary!} />
             </div>
           </div>
           <div className={style.mediaAdditional}>
@@ -111,10 +136,20 @@ export default async function Media({ params }: { params: { id: string } }) {
           </div>
         </div>
 
+        {/* WebToon Rating */}
+        {session ? (
+          <Rating rate={rate!} count={count ?? 0} mediaId={media?.mediaId!} />
+        ) : null}
+
         {/* WebToon Video */}
         <h1
           className={style.mediaYouTubeTitle}
         >{`"${media?.title!}" 관련 영상${media?.youtube.length! < 1 ? '을 유튜브에서 찾을 수 없었습니다.' : '!'}`}</h1>
+        {media?.youtube.length! >= 1 ? (
+          <Code color='warning'>
+            [!] 오래된 작품이나 최신 작품은 다른 영상이 뜰 수 있습니다.
+          </Code>
+        ) : null}
         <YouTubeResult urls={media?.youtube!} />
       </div>
     </div>

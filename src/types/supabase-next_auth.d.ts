@@ -124,6 +124,7 @@ export type Database = {
       users_ratings: {
         Row: {
           checks: Json;
+          comment: string | null;
           genre: string[];
           id: string;
           mediaId: string;
@@ -132,14 +133,16 @@ export type Database = {
         };
         Insert: {
           checks?: Json;
+          comment?: string | null;
           genre: string[];
           id?: string;
           mediaId: string;
-          rate: number;
+          rate?: number;
           userId: string;
         };
         Update: {
           checks?: Json;
+          comment?: string | null;
           genre?: string[];
           id?: string;
           mediaId?: string;
@@ -189,6 +192,13 @@ export type Database = {
       uid: {
         Args: Record<PropertyKey, never>;
         Returns: string;
+      };
+      users_ratings_count: {
+        Args: {
+          _mediaid: string;
+          _checks: string;
+        };
+        Returns: number;
       };
     };
     Enums: {
