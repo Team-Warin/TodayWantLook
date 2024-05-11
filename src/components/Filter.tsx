@@ -139,8 +139,8 @@ export default function Filter({
                   return (
                     <Button
                       key={i}
-                      className={`rounded-full shadow-sm ${filter[title].includes(result.regex ?? '') || (filter[title].length < 1 && result.name === 'All') ? '' : style.unCheck}`}
                       color='primary'
+                      className={`rounded-full shadow-sm ${filter[title].includes(result.regex ?? '') || (filter[title].length < 1 && result.name === 'All') ? '' : style.unCheck}`}
                       size='sm'
                       onClick={() => {
                         let temp: FilterType = { ...filter };
