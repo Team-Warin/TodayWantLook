@@ -64,7 +64,7 @@ function convertAdditional(additional: string[]): string {
   } = {};
 
   additional.map((key) => {
-    if (!['over15', 'waitFree'].includes(key)) {
+    if (!['over15', 'waitFree', 'free'].includes(key)) {
       conAdditional[key] = true;
     } else {
       if (!conAdditional.singularityList) conAdditional.singularityList = [];

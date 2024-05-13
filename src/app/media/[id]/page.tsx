@@ -71,6 +71,7 @@ export default async function Media({ params }: { params: { id: string } }) {
   } = {
     over15: { text: '15세', color: 'warning' },
     adult: { text: '청소년 시청 불가', color: 'danger' },
+    free: { text: '연재 무료', color: 'success' },
     waitFree: { text: '기다리면 무료', color: 'success' },
     new: { text: '신작', color: 'success' },
     rest: { text: '휴재', color: 'default' },

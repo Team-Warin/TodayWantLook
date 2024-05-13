@@ -100,7 +100,7 @@ export default function Media({
     return () => {
       window.removeEventListener('resize', Row);
     };
-  }, []);
+  }, [row]);
 
   useDidMountEffect(() => {
     if (mediaCount) {

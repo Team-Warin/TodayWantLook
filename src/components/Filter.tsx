@@ -61,6 +61,7 @@ export default function Filter({
         { name: '19세', regex: 'adult' },
         { name: '신작', regex: 'new' },
         { name: '휴재', regex: 'rest' },
+        { name: '연재무료', regex: 'free' },
         { name: '기다무', regex: 'waitFree' },
       ],
     },
