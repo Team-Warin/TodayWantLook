@@ -1,0 +1,61 @@
+.container {
+  @apply w-full h-[800px] overflow-y-hidden relative;
+}
+
+.backdropImgContainer {
+  @apply relative h-full;
+}
+
+.backdropImgContainer > img {
+  @apply absolute bottom-0 z-10 opacity-0;
+  transform: translateX(-100%);
+  transition:
+    transform 1s ease,
+    opacity 1s ease;
+}
+
+.backdropImgContainer > img.show {
+  @apply z-20 opacity-100;
+  transform: translateX(0);
+}
+
+.overlay {
+  @apply z-30 absolute bg-gradient-to-l w-full h-full from-slate-50 via-slate-50 via-70%;
+}
+
+.overlay > div {
+  @apply p-20 flex gap-3 justify-end items-center w-full h-[600px];
+}
+
+.cardContainer {
+  @apply flex items-center relative;
+}
+
+.cardContainer > div {
+  @apply absolute z-10 opacity-0;
+  transform: translateY(100%);
+  transition:
+    transform 1s ease,
+    opacity 1s ease;
+}
+
+.cardContainer > div.show {
+  @apply z-20 opacity-100;
+  transform: translateY(0);
+}
+
+.rankContainer {
+  @apply flex flex-col gap-2 items-end;
+}
+
+.rank {
+  @apply font-bold text-5xl opacity-85;
+}
+
+.rank > span {
+  @apply font-bold text-3xl;
+}
+
+.title {
+  @apply font-bold text-4xl whitespace-nowrap;
+}

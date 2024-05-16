@@ -1,32 +1,32 @@
 import type { MediaData } from '@/types/media';
 
-import Scroll from '@/components/Scroll';
-import { auth } from '@/auth';
+import style from '@/styles/Main.module.css';
+
+import Intro from '@/components/Intro';
+
+import { CreateClient } from '@/modules/supabase';
 
 /**
  * / 페이지
  */
 export default async function Home() {
-  let data: MediaData[] = [];
+  const supabase = CreateClient();
 
-  const session = await auth();
-
-  // if (session) {
-  //   let result = await getRecommend(session);
-
-  //   data = await db
-  //     .collection<MediaData>('media')
-  //     .find({ mediaId: { $in: result } })
-  //     .toArray();
-  //   data.map((item) => {
-  //     item._id = item._id.toString();
-  //     return item;
-  //   });
-  // }
+  const { data: medias } = await supabase
+    .schema('todaywantlook')
+    .rpc('get_medias', {
+      _title: '',
+      _genre: '',
+      _additional: '{}',
+      _type: '',
+      _update: '',
+    })
+    .range(0, 9);
 
   return (
     <main>
-      <div></div>
+      <Intro medias={medias!} />
+      <div className={style.container}></div>
     </main>
   );
 }

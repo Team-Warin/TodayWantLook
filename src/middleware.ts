@@ -23,6 +23,22 @@ export default auth(async (req) => {
 
   if (ua === process.env.ADMIN_PWD) return;
 
+  if (req.nextUrl.pathname.startsWith('/media')) {
+    const mediaId: string | undefined = req.nextUrl.pathname
+      .match(/\d/g)
+      ?.join('');
+
+    const { data: media } = await supabase
+      .schema('todaywantlook')
+      .from('medias')
+      .select('*')
+      .match({ mediaId: mediaId })
+      .single();
+
+    if (!mediaId || !media)
+      return NextResponse.redirect(new URL('/404', req.url));
+  }
+
   if (req.auth?.user && session) {
     if (session.roles.includes('admin')) return;
 

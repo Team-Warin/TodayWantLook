@@ -20,6 +20,8 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import Filter from './Filter';
 import Card from './Card';
 import Link from 'next/link';
+import { Button } from '@nextui-org/button';
+import { getKeys } from '@/modules/getKeys';
 
 export default function Media({
   max,
@@ -39,6 +41,9 @@ export default function Media({
 
   const [mediaData, setMediaData] = useState<MediaData[]>([]); //작품 데이터
   let [mediaCount, setMediaCount] = useState<number | null>(null); //작품 데이터 갯수
+
+  let [mediaNull, setMediaNull] = useState<boolean>(false);
+
   const [filter, setFilter] = useState<FilterType>({
     title: [],
     genre: [],
@@ -119,6 +124,7 @@ export default function Media({
     if (controller) controller.abort();
 
     Promise.all([
+      setMediaNull(false),
       setPage(0),
       setMediaData([]),
       trigger({
@@ -132,6 +138,8 @@ export default function Media({
     if (data) {
       setMediaCount(data.mediaCount);
       setMediaData([...mediaData, ...data.mediaData]);
+
+      if (mediaData.length < 1 && data.mediaData.length < 1) setMediaNull(true);
     }
   }, [data]);
 
@@ -150,6 +158,30 @@ export default function Media({
       ></div>
       <Filter isMutating={isMutating} filter={filter} setFilter={setFilter} />
       {/* 작품 콘테이너 */}
+
+      {mediaNull && !isMutating ? (
+        <div className={style.mediaNull}>
+          <p>
+            작품 정보가 없습니다.
+            <Button
+              size='md'
+              color='danger'
+              variant='light'
+              onClick={() =>
+                setFilter(() => {
+                  let temp = { ...filter };
+
+                  getKeys(temp).map((key) => (temp[key] = []));
+                  return temp;
+                })
+              }
+            >
+              필터 초기화
+            </Button>
+          </p>
+        </div>
+      ) : null}
+
       <div className={`${style.mediaContainer} mt-5`}>
         {(isMutating
           ? [

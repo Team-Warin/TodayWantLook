@@ -1,5 +1,5 @@
 .container {
-  @apply w-full h-[80px] flex justify-between items-center;
+  @apply w-full h-[80px] flex justify-between items-center z-50;
 }
 
 .logo {

@@ -30,7 +30,9 @@ export default function Navbar({ session }: { session: Session | null }) {
     return <></>;
 
   return (
-    <div className={`${style.container} relative`}>
+    <div
+      className={`${style.container} ${pathname === '/' ? 'fixed' : 'relative'}`}
+    >
       <div
         className={`${style.container} p-10 ${pathname === '/' ? 'fixed' : 'absolute'}`}
       >
