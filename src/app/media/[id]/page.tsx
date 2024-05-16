@@ -1,7 +1,13 @@
 import style from '@/styles/MediaPage.module.css';
 
 import { BMJUA, WAGURI } from '@/modules/font';
-import { CreateClient } from '@/modules/supabase';
+import { CreateClient, CreateServerClient } from '@/modules/supabase';
+
+import { redirect } from 'next/navigation';
+import { revalidateTag } from 'next/cache';
+
+import { auth } from '@/auth';
+import Loading from './loading';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -10,29 +16,57 @@ import dynamic from 'next/dynamic';
 import { getKeys } from '@/modules/getKeys';
 
 import Card from '@/components/Card';
-import { Chip } from '@nextui-org/chip';
-import { Tooltip } from '@nextui-org/tooltip';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
-
-import Loading from './loading';
 import Summary from '@/components/Summary';
-import Rating from '@/components/Rating';
-import { auth } from '@/auth';
+
+import { Chip } from '@nextui-org/chip';
 import { Code } from '@nextui-org/code';
+import { Tooltip } from '@nextui-org/tooltip';
+import { Button } from '@nextui-org/button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as dontLike } from '@fortawesome/free-regular-svg-icons/faHeart';
+import { faHeart as isLike } from '@fortawesome/free-solid-svg-icons/faHeart';
 
 const YouTubeResult = dynamic(() => import('@/components/YouTubeResult'));
 
 export default async function Media({ params }: { params: { id: string } }) {
+  const supabase = await CreateClient();
   const session = await auth();
 
-  const supabase = await CreateClient();
   const { data: media } = await supabase
     .schema('todaywantlook')
     .from('medias')
     .select('*')
     .match({ mediaId: params.id })
     .single();
+
+  async function setLike() {
+    'use server';
+
+    const supabase = await CreateServerClient();
+
+    let { data: rate } = await supabase
+      .schema('next_auth')
+      .from('users_ratings')
+      .select('*')
+      .match({ mediaId: params.id, userId: session?.user.id })
+      .single();
+
+    if (rate === null) {
+      return await supabase.schema('next_auth').from('users_ratings').insert({
+        userId: session?.user.id!,
+        mediaId: params.id,
+        genre: media?.genre!,
+      });
+    }
+
+    rate.checks.like = !rate.checks.like;
+
+    await supabase.schema('next_auth').from('users_ratings').upsert(rate);
+
+    revalidateTag('media');
+  }
 
   const { data: rate } = await supabase
     .schema('next_auth')
@@ -95,11 +129,22 @@ export default async function Media({ params }: { params: { id: string } }) {
                 </Chip>
                 <h1>{media?.title!}</h1>
                 {session ? (
-                  <Rating
-                    rate={rate!}
-                    genre={media?.genre!}
-                    mediaId={media?.mediaId!}
-                  />
+                  <Tooltip color='danger' content='좋아요'>
+                    <form action={setLike}>
+                      <Button
+                        className='text-2xl'
+                        isIconOnly
+                        variant='light'
+                        color='danger'
+                        size='lg'
+                        type='submit'
+                      >
+                        <FontAwesomeIcon
+                          icon={rate?.checks.like === true ? isLike : dontLike}
+                        />
+                      </Button>
+                    </form>
+                  </Tooltip>
                 ) : null}
               </div>
               <p>{media?.author!}</p>
@@ -135,6 +180,11 @@ export default async function Media({ params }: { params: { id: string } }) {
               );
             })}
           </div>
+        </div>
+
+        <div className={style.barContainer}>
+          <hr />
+          <h1>평가</h1>
         </div>
 
         {/* WebToon Video */}

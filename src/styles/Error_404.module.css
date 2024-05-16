@@ -1,0 +1,19 @@
+.container {
+  @apply flex justify-center items-center w-full h-dvh;
+}
+
+.ErrorMessage {
+  @apply flex flex-col justify-center items-center p-10 bg-white rounded;
+}
+
+.ErrorMessage > h1 {
+  @apply text-4xl font-black;
+}
+
+.ErrorMessage > p {
+  @apply mt-3;
+}
+
+.ErrorMessage > p > a {
+  @apply text-twl font-bold;
+}

@@ -29,3 +29,7 @@
 .submitContainer > div {
   @apply w-full p-5 flex justify-between items-center h-[80px] bg-slate-50 fixed bottom-0 z-30;
 }
+
+.mediaNull {
+  @apply w-full p-5 flex justify-center items-center;
+}
