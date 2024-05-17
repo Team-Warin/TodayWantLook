@@ -40,6 +40,7 @@ export default async function Media(
       await supabase
         .schema('todaywantlook')
         .rpc('get_medias', query)
+        .order('rate', { ascending: false, nullsFirst: false })
         .range(req.body.page[0], req.body.page[1] - 1)
     ).data;
 

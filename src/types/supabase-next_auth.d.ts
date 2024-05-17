@@ -189,6 +189,12 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      get_average_rate: {
+        Args: {
+          _mediaid: string;
+        };
+        Returns: number;
+      };
       uid: {
         Args: Record<PropertyKey, never>;
         Returns: string;

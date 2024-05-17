@@ -10,7 +10,7 @@ interface MediaData {
   backdropImg: string | null;
   service: string | null;
   updateDays: string[] | null;
-  rate: numObjectId;
+  rate?: number;
   additional: {
     new: boolean;
     adult: boolean;

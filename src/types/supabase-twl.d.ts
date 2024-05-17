@@ -1,5 +1,3 @@
-// npx supabase gen types typescript --project-id "fppbvujbkhuxipoivhxy" --schema todaywantlook > ./src/types/supabase-twl.d.ts -y
-
 export type Json = {
   new: boolean;
   adult: boolean;
@@ -19,7 +17,6 @@ export type Database = {
           genre: string[];
           img: string | null;
           mediaId: string;
-          rate: number;
           service: string | null;
           summary: string;
           title: string;
@@ -35,7 +32,6 @@ export type Database = {
           genre: string[];
           img?: string | null;
           mediaId?: string;
-          rate?: number;
           service?: string | null;
           summary: string;
           title: string;
@@ -51,7 +47,6 @@ export type Database = {
           genre?: string[];
           img?: string | null;
           mediaId?: string;
-          rate?: number;
           service?: string | null;
           summary?: string;
           title?: string;
@@ -91,56 +86,31 @@ export type Database = {
             };
             Returns: number;
           };
-      get_medias:
-        | {
-            Args: {
-              _title: string;
-              _type: string;
-              _genre: string;
-              _additional: string;
-              _update: string;
-            };
-            Returns: {
-              additional: Json | null;
-              author: string | null;
-              backdropImg: string | null;
-              genre: string[];
-              img: string | null;
-              mediaId: string;
-              rate: number;
-              service: string | null;
-              summary: string;
-              title: string;
-              type: string;
-              updateDays: string[] | null;
-              url: string | null;
-              youtube: string[];
-            }[];
-          }
-        | {
-            Args: {
-              _title: string;
-              _type: string;
-              _genre: string;
-              _update: string;
-            };
-            Returns: {
-              additional: Json | null;
-              author: string | null;
-              backdropImg: string | null;
-              genre: string[];
-              img: string | null;
-              mediaId: string;
-              rate: number;
-              service: string | null;
-              summary: string;
-              title: string;
-              type: string;
-              updateDays: string[] | null;
-              url: string | null;
-              youtube: string[];
-            }[];
-          };
+      get_medias: {
+        Args: {
+          _title: string;
+          _type: string;
+          _genre: string;
+          _additional: string;
+          _update: string;
+        };
+        Returns: {
+          type: string;
+          mediaId: string;
+          title: string;
+          summary: string;
+          genre: string[];
+          author: string;
+          url: string;
+          img: string;
+          backdropImg: string;
+          service: string;
+          updateDays: string[];
+          additional: Json;
+          youtube: string[];
+          rate: number;
+        }[];
+      };
       get_random_medias: {
         Args: {
           length: number;
@@ -152,7 +122,6 @@ export type Database = {
           genre: string[];
           img: string | null;
           mediaId: string;
-          rate: number;
           service: string | null;
           summary: string;
           title: string;
