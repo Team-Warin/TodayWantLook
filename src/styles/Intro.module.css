@@ -1,13 +1,13 @@
 .container {
-  @apply w-full h-[800px] overflow-y-hidden relative;
+  @apply w-full h-[900px] overflow-y-hidden relative;
 }
 
 .backdropImgContainer {
-  @apply relative h-[700px];
+  @apply relative h-[1300px];
 }
 
 .backdropImgContainer > img {
-  @apply absolute bottom-0 z-10 opacity-0;
+  @apply absolute top-0 z-10 opacity-0;
   transform: translateX(-100%);
   transition:
     transform 1s ease,
@@ -16,11 +16,11 @@
 
 .backdropImgContainer > img.show {
   @apply z-20 opacity-100;
-  transform: translateX(0);
+  transform: translateX(-35%);
 }
 
 .overlay {
-  @apply z-30 absolute bg-gradient-to-l w-full h-full from-slate-50 via-slate-50 via-70%;
+  @apply z-30 absolute bg-gradient-to-l w-full h-full from-slate-50 via-slate-50 via-45% backdrop-blur-md;
 }
 
 .overlay > div {
