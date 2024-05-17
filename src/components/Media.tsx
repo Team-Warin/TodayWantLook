@@ -205,7 +205,9 @@ export default function Media({
           .map((media: MediaData | number, i: number) => {
             if (like && setLike && max) {
               const checked =
-                typeof media !== 'number' ? like.includes(media) : false;
+                typeof media !== 'number'
+                  ? like.some((m) => m.mediaId === media.mediaId)
+                  : false;
 
               return (
                 <div
