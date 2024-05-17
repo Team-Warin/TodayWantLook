@@ -107,8 +107,7 @@ export default function Intro({ medias }: { medias: MediaData[] }) {
             ref={i === 0 ? Bg1 : Bg2}
             className={i == (selector ?? -1) % 2 ? style.show : ''}
             src={img.img ?? img.backdropImg!}
-            width={500}
-            height={300}
+            fill={true}
             alt={'poster'}
           />
         ))}
