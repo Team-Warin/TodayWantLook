@@ -1,5 +1,5 @@
 .container {
-  @apply w-full h-[800px] overflow-y-hidden relative;
+  @apply w-full h-[900px] overflow-y-hidden relative;
 }
 
 .backdropImgContainer {
