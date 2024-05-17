@@ -15,7 +15,7 @@
 }
 
 .poster {
-  @apply absolute origin-bottom bottom-0 scale-[1.7] z-10;
+  @apply absolute origin-bottom bottom-0 scale-[1.5] z-10;
 }
 
 .poster_title {

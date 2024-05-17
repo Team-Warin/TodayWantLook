@@ -85,7 +85,7 @@ export default function Intro({ medias }: { medias: MediaData[] }) {
           </div>
           <div
             className={`${style.cardContainer} ${cardStyle.container}`}
-            style={{ '--size': '7vw' } as CardCSS}
+            style={{ '--size': '10vw' } as CardCSS}
           >
             {media.map((data, i) => (
               <div
@@ -93,7 +93,7 @@ export default function Intro({ medias }: { medias: MediaData[] }) {
                 className={i == (selector ?? -1) % 2 ? style.show : ''}
               >
                 <Link href={`/media/${data.mediaId}`}>
-                  <Card data={data} info={false} size={7}></Card>
+                  <Card data={data} info={false} size={10}></Card>
                 </Link>
               </div>
             ))}
@@ -106,7 +106,7 @@ export default function Intro({ medias }: { medias: MediaData[] }) {
             key={i}
             ref={i === 0 ? Bg1 : Bg2}
             className={i == (selector ?? -1) % 2 ? style.show : ''}
-            src={img.backdropImg!}
+            src={img.img ?? img.backdropImg!}
             width={500}
             height={300}
             alt={'poster'}

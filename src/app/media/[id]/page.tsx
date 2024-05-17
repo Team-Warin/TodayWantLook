@@ -16,6 +16,7 @@ import dynamic from 'next/dynamic';
 import { getKeys } from '@/modules/getKeys';
 
 import Card from '@/components/Card';
+import Rating from '@/components/Rating';
 import Summary from '@/components/Summary';
 
 import { Chip } from '@nextui-org/chip';
@@ -68,7 +69,7 @@ export default async function Media({ params }: { params: { id: string } }) {
     revalidateTag('media');
   }
 
-  const { data: rate } = await supabase
+  const { data: rates } = await supabase
     .schema('next_auth')
     .from('users_ratings')
     .select('*')
@@ -77,6 +78,10 @@ export default async function Media({ params }: { params: { id: string } }) {
       userId: session?.user.id,
     })
     .single();
+
+  const { data: rate } = await supabase
+    .schema('next_auth')
+    .rpc('get_average_rate', { _mediaid: params.id });
 
   const additional = getKeys(media?.additional!).reduce(
     (arr: string[], cur) => {
@@ -125,7 +130,7 @@ export default async function Media({ params }: { params: { id: string } }) {
             <div className={`${style.mediaTitle} ${WAGURI.className}`}>
               <div className='flex items-center gap-3'>
                 <Chip color='warning' variant='flat' radius='sm'>
-                  <FontAwesomeIcon icon={faStar} /> {media?.rate!}
+                  <FontAwesomeIcon icon={faStar} /> {rate ?? 0}
                 </Chip>
                 <h1>{media?.title!}</h1>
                 {session ? (
@@ -140,7 +145,7 @@ export default async function Media({ params }: { params: { id: string } }) {
                         type='submit'
                       >
                         <FontAwesomeIcon
-                          icon={rate?.checks.like === true ? isLike : dontLike}
+                          icon={rates?.checks.like === true ? isLike : dontLike}
                         />
                       </Button>
                     </form>
@@ -184,8 +189,9 @@ export default async function Media({ params }: { params: { id: string } }) {
 
         <div className={style.barContainer}>
           <hr />
-          <h1>평가</h1>
+          <h1>나의 평가</h1>
         </div>
+        <Rating media={media!} rate={rates} />
 
         {/* WebToon Video */}
         <h1

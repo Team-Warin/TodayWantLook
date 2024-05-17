@@ -1,0 +1,15 @@
+.ratingStar {
+  @apply text-gray-400 text-2xl;
+
+  & > svg {
+    @apply scale-80 transition-transform;
+  }
+
+  & > svg.on {
+    @apply text-yellow-300 scale-100;
+  }
+}
+
+.ratingContainer {
+  @apply flex flex-col gap-2;
+}

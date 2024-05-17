@@ -3,7 +3,7 @@
 }
 
 .backdropImgContainer {
-  @apply relative h-full;
+  @apply relative h-[700px];
 }
 
 .backdropImgContainer > img {

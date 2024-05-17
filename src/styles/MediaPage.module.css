@@ -72,10 +72,6 @@
   }
 }
 
-.ratingContainer {
-  @apply mt-3 pe-1 flex justify-end items-center gap-1;
-}
-
 .barContainer {
   @apply flex items-center gap-3 mt-5;
 }

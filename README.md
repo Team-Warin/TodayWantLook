@@ -68,7 +68,7 @@ bun dev
 | **INIRU**  | `Leader`, `Main Developer`, `Front-End`, `Back-End`, `DataBase`, `Collaborative Filtering`, `Git Project Leader` |
 | **KIMMJ**  |                  `UI/UX Design`, `UI/UX Developer`, `Idea`, `Logo Design`, `DataBase ER Model`                   |
 | **HYUNW**  |                           `Server Developer`, `QA Tester`, `Media API`, `Social Login`                           |
-| **이준엽** |                                                   `Mentoring`                                                    |
+| **킹고바이오 CEO** |                                                   `Mentoring`                                               |
 
 ## 라이센스
 

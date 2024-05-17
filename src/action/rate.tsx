@@ -10,7 +10,7 @@ import { revalidateTag } from 'next/cache';
 export async function Rate(
   mediaId: string,
   genre: string[],
-  data: { type: 'like' | 'rate'; check: boolean }
+  data: { rate: number; comment: string }
 ) {
   const user = await auth();
 
@@ -25,19 +25,32 @@ export async function Rate(
     .match({ mediaId: mediaId, userId: user.user.id })
     .single();
 
-  if (data.type === 'like') {
-    if (rate === null) {
-      return await supabase
-        .schema('next_auth')
-        .from('users_ratings')
-        .insert({ userId: user.user.id, mediaId: mediaId, genre: genre });
-    }
+  let { data: media } = await supabase
+    .schema('todaywantlook')
+    .from('medias')
+    .select('*')
+    .match({ mediaId: mediaId })
+    .single();
 
-    rate.checks.like = !data.check;
-
-    await supabase.schema('next_auth').from('users_ratings').upsert(rate);
+  if (rate === null) {
+    return await supabase
+      .schema('next_auth')
+      .from('users_ratings')
+      .insert({
+        userId: user.user.id,
+        mediaId: mediaId,
+        genre: genre,
+        rate: data.rate,
+        checks: { like: false, view: false, rating: true },
+        comment: data.comment,
+      });
   }
 
-  revalidateTag('media');
+  rate.rate = data.rate;
+  rate.checks.rating = true;
+  rate.comment = data.comment;
+  await supabase.schema('next_auth').from('users_ratings').upsert(rate);
+
+  revalidateTag('/media');
   redirect(`/media/${mediaId}`);
 }

@@ -21,6 +21,7 @@ export default async function Home() {
       _type: '',
       _update: '',
     })
+    .order('rate', { ascending: false, nullsFirst: false })
     .range(0, 9);
 
   return (
