@@ -187,22 +187,28 @@ export default async function Media({ params }: { params: { id: string } }) {
           </div>
         </div>
 
-        <div className={style.barContainer}>
-          <hr />
-          <h1>나의 평가</h1>
-        </div>
-        <Rating media={media!} rate={rates} />
+        {session ? (
+          <>
+            <div className={style.barContainer}>
+              <hr />
+              <h1>나의 평가</h1>
+            </div>
+            <Rating media={media!} rate={rates} />
+          </>
+        ) : null}
 
         {/* WebToon Video */}
         <h1
           className={style.mediaYouTubeTitle}
         >{`"${media?.title!}" 관련 영상${media?.youtube.length! < 1 ? '을 유튜브에서 찾을 수 없었습니다.' : '!'}`}</h1>
         {media?.youtube.length! >= 1 ? (
-          <Code color='warning'>
-            [!] 오래된 작품이나 최신 작품은 다른 영상이 뜰 수 있습니다.
-          </Code>
+          <>
+            <Code color='warning'>
+              [!] 오래된 작품이나 최신 작품은 다른 영상이 뜰 수 있습니다.
+            </Code>
+            <YouTubeResult urls={media?.youtube!} />
+          </>
         ) : null}
-        <YouTubeResult urls={media?.youtube!} />
       </div>
     </div>
   );
