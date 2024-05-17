@@ -22,6 +22,7 @@ export default async function Home() {
       _update: '',
     })
     .order('rate', { ascending: false, nullsFirst: false })
+    .order('title')
     .range(0, 9);
 
   return (
