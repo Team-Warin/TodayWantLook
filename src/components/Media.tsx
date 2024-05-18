@@ -218,7 +218,7 @@ export default function Media({
 
                     let temp = [...like];
 
-                    if (temp.includes(media)) {
+                    if (temp.some((m) => m.mediaId === media.mediaId)) {
                       temp = temp.filter((e) => e.mediaId !== media.mediaId);
                     } else if (like.length < max) {
                       temp.push(media);

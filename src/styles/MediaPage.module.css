@@ -83,3 +83,11 @@
 .barContainer > hr {
   @apply w-[2%] rounded border-2 border-twl;
 }
+
+.ratingLoginContainer {
+  @apply p-5 flex justify-center items-center bg-slate-50 rounded-lg;
+
+  & > p > a {
+    @apply text-blue-400;
+  }
+}

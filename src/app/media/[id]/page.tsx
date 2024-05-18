@@ -67,6 +67,7 @@ export default async function Media({ params }: { params: { id: string } }) {
     await supabase.schema('next_auth').from('users_ratings').upsert(rate);
 
     revalidateTag('media');
+    redirect(`/media/${params.id}`);
   }
 
   const { data: rates } = await supabase
@@ -187,15 +188,27 @@ export default async function Media({ params }: { params: { id: string } }) {
           </div>
         </div>
 
+        <div className={style.barContainer}>
+          <hr />
+          <h1>나의 평가</h1>
+        </div>
         {session ? (
-          <>
-            <div className={style.barContainer}>
-              <hr />
-              <h1>나의 평가</h1>
-            </div>
-            <Rating media={media!} rate={rates} />
-          </>
-        ) : null}
+          <Rating media={media!} rate={rates} />
+        ) : (
+          <div className={style.ratingLoginContainer}>
+            <p>
+              <Link
+                href={{
+                  pathname: '/login',
+                  query: { callbackurl: `/media/${media?.mediaId}` },
+                }}
+              >
+                로그인
+              </Link>{' '}
+              후 이용할 수 있습니다.
+            </p>
+          </div>
+        )}
 
         {/* WebToon Video */}
         <h1

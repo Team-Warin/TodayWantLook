@@ -1,0 +1,7 @@
+.alert {
+  @apply fixed bottom-0 flex items-center gap-2 p-2 ps-5 pe-5 text-white rounded-lg z-[100];
+}
+
+.success {
+  @apply bg-green-400;
+}

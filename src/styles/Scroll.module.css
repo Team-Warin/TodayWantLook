@@ -1,0 +1,40 @@
+.sectionTitle {
+  @apply ps-4 mt-5;
+  font-size: 25px;
+}
+
+.sectionTitle span {
+  font-size: 25px;
+}
+
+.container {
+  @apply relative;
+}
+
+.scrollContainer {
+  @apply flex gap-3 items-center w-full mt-2 ps-4 pe-4;
+}
+
+.scrollContainer > div {
+  @apply flex gap-3;
+}
+
+.arrow {
+  @apply absolute h-[258px] opacity-0 z-20 cursor-pointer transition-opacity flex justify-center items-center;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 42px;
+  width: 50px;
+}
+
+.arrow:nth-child(1) {
+  @apply rounded-br-md rounded-tr-md;
+}
+
+.arrow:nth-child(2) {
+  @apply right-0;
+  @apply rounded-bl-md rounded-tl-md;
+}
+
+.container:hover .arrow {
+  @apply opacity-100;
+}
