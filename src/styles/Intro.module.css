@@ -3,7 +3,7 @@
 }
 
 .backdropImgContainer {
-  @apply relative h-[1300px];
+  @apply relative h-[1300px] brightness-75;
 }
 
 .backdropImgContainer > img {

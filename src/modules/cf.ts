@@ -8,11 +8,11 @@ export default async function CF_Media(
   maxRelatedItem: number,
   maxRelatedUser: number,
   userId: string,
-  medias: number
+  medias: MediaData[]
 ): Promise<MediaData[] | null> {
   const cf = new CF();
   const supabase = CreateClient();
-  const data = await supabase
+  const { data } = await supabase
     .schema('next_auth')
     .from('users_ratings')
     .select('*');
@@ -23,9 +23,10 @@ export default async function CF_Media(
   cf.train(data, 'userId', 'mediaId', 'rate');
 
   const recommendResult = cf.recommendToUser(userId, medias);
+
   let mediaList: MediaData[] = [];
 
-  recommendResult.forEach(async (item: { itemId: string; play: number }) => {
+  for (let item of recommendResult) {
     const { data: media } = await supabase
       .schema('todaywantlook')
       .from('medias')
@@ -33,8 +34,8 @@ export default async function CF_Media(
       .match({ mediaId: item.itemId })
       .single();
 
-    if (media) mediaList.push(media);
-  });
+    if (media !== null) mediaList.push(media);
+  }
 
-  return mediaList ?? null;
+  return mediaList;
 }

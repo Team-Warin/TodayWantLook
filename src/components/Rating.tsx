@@ -15,6 +15,7 @@ import { Button } from '@nextui-org/button';
 import { Textarea } from '@nextui-org/input';
 import { Database } from '@/types/supabase-next_auth';
 import { Rate } from '@/action/rate';
+import { useAlert } from './context/Alert-Context';
 
 export default function Rating({
   media,
@@ -23,6 +24,8 @@ export default function Rating({
   media: MediaData;
   rate: Database['next_auth']['Tables']['users_ratings']['Row'] | null;
 }) {
+  const { show } = useAlert();
+
   let [star, setStar] = useState<number>(rate ? rate.rate : 0);
   let [alert, setAlert] = useState<string>();
 
@@ -68,6 +71,10 @@ export default function Rating({
           await Rate(media.mediaId, media.genre, {
             rate: star,
             comment: comment.current?.value,
+          });
+          await show({
+            status: 'success',
+            message: '성공적으로 서버에 전달되었습니다.',
           });
         }}
       >

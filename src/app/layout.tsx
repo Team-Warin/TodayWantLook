@@ -10,6 +10,8 @@ import AuthSession from '@/components/provider/AuthSession';
 
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
+import AlertProvider from '@/components/context/Alert-Context';
+import Alert from '@/components/Alert';
 
 config.autoAddCss = false;
 
@@ -31,10 +33,13 @@ export default async function RootLayout({
   return (
     <html lang='ko' className='white'>
       <body className={BMJUA.className}>
-        <AuthSession>
-          <Navbar session={session} />
-          {children}
-        </AuthSession>
+        <AlertProvider>
+          <AuthSession>
+            <Alert />
+            <Navbar session={session} />
+            {children}
+          </AuthSession>
+        </AlertProvider>
       </body>
     </html>
   );

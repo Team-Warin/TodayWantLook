@@ -1,22 +1,35 @@
 'use client';
 
-import type { MediaData } from '@/types/media';
-
-import style from '@/styles/Main.module.css';
+import style from '@/styles/Scroll.module.css';
 
 import Card from '@/components/Card';
+
+import useSWR from 'swr';
+import axios from 'axios';
 
 import { ScrollShadow } from '@nextui-org/scroll-shadow';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { MediaData } from '@/types/media';
 
-export default function Scroll({ data }: { data: MediaData[] }) {
+export default function Scroll({
+  title,
+  userId,
+}: {
+  title: React.ReactNode;
+  userId: string;
+}) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
 
   const [width, setWidth] = useState<number>(0);
+
+  const fetcher = (url: string) =>
+    axios.post(url, { type: 'cf', userId: userId }).then((res) => res.data);
+
+  const { data, isLoading } = useSWR('/api/media', fetcher);
 
   const handleScroll = useCallback(() => {
     if (scrollRef.current) {
@@ -41,63 +54,121 @@ export default function Scroll({ data }: { data: MediaData[] }) {
   });
 
   return (
-    <div className={style.container}>
-      <div
-        className={style.arrow}
-        onClick={() => {
-          if (scrollRef.current) {
-            scrollRef.current.scrollTo({
-              left: scrollRef.current.scrollLeft - 500,
-              behavior: 'smooth',
-            });
-          }
-        }}
-      >
-        <FontAwesomeIcon
-          icon={faChevronLeft}
-          className='text-white opacity-80'
-        />
+    <>
+      {title}
+      <div className={style.container}>
+        <div
+          className={style.arrow}
+          onClick={() => {
+            if (scrollRef.current) {
+              scrollRef.current.scrollTo({
+                left: scrollRef.current.scrollLeft - 500,
+                behavior: 'smooth',
+              });
+            }
+          }}
+        >
+          <FontAwesomeIcon
+            icon={faChevronLeft}
+            className='text-white opacity-80'
+          />
+        </div>
+        <div
+          className={style.arrow}
+          onClick={() => {
+            if (scrollRef.current) {
+              scrollRef.current.scrollTo({
+                left: scrollRef.current.scrollLeft + 500,
+                behavior: 'smooth',
+              });
+            }
+          }}
+        >
+          <FontAwesomeIcon
+            icon={faChevronRight}
+            className='text-white opacity-80'
+          />
+        </div>
+        <ScrollShadow
+          hideScrollBar
+          orientation='horizontal'
+          offset={-10}
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className={style.scrollContainer}
+        >
+          <div>
+            {(data ? data : [...new Array(20).keys()]).map(
+              (item: MediaData | number, i: number) => {
+                return (
+                  <Card
+                    key={i}
+                    isLoading={isLoading}
+                    data={item}
+                    info={false}
+                  ></Card>
+                );
+              }
+            )}
+          </div>
+          <div>
+            {(data ? data : [...new Array(20).keys()]).map(
+              (item: MediaData | number, i: number) => {
+                return (
+                  <Card
+                    key={i}
+                    isLoading={isLoading}
+                    data={item}
+                    info={false}
+                  ></Card>
+                );
+              }
+            )}
+          </div>
+          <div ref={contentRef}>
+            {(data ? data : [...new Array(20).keys()]).map(
+              (item: MediaData | number, i: number) => {
+                return (
+                  <Card
+                    key={i}
+                    isLoading={isLoading}
+                    data={item}
+                    info={false}
+                  ></Card>
+                );
+              }
+            )}
+          </div>
+          <div>
+            {(data ? data : [...new Array(20).keys()]).map(
+              (item: MediaData | number, i: number) => {
+                return (
+                  <Card
+                    key={i}
+                    isLoading={isLoading}
+                    data={item}
+                    info={false}
+                  ></Card>
+                );
+              }
+            )}
+          </div>
+          <div>
+            {(data ? data : [...new Array(20).keys()]).map(
+              (item: MediaData | number, i: number) => {
+                return (
+                  <Card
+                    key={i}
+                    isLoading={isLoading}
+                    data={item}
+                    info={false}
+                  ></Card>
+                );
+              }
+            )}
+          </div>
+        </ScrollShadow>
       </div>
-      <div
-        className={style.arrow}
-        onClick={() => {
-          if (scrollRef.current) {
-            scrollRef.current.scrollTo({
-              left: scrollRef.current.scrollLeft + 500,
-              behavior: 'smooth',
-            });
-          }
-        }}
-      >
-        <FontAwesomeIcon
-          icon={faChevronRight}
-          className='text-white opacity-80'
-        />
-      </div>
-      <ScrollShadow
-        hideScrollBar
-        orientation='horizontal'
-        offset={-10}
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className={style.scrollContainer}
-      >
-        <div>
-          {data.map((item, i) => {
-            return <Card key={i} isLoading={false} data={item}></Card>;
-          })}
-        </div>
-        <div ref={contentRef}>
-          {data.map((item, i) => {
-            return <Card key={i} isLoading={false} data={item}></Card>;
-          })}
-        </div>
-        <div>
-          {data.map((item, i) => {
-            return <Card key={i} isLoading={false} data={item}></Card>;
-          })}
-        </div>
-      </ScrollShadow>
-    </div>
+    </>
   );
 }
