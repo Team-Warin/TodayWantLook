@@ -20,7 +20,7 @@
 }
 
 .arrow {
-  @apply absolute h-[258px] opacity-0 z-20 cursor-pointer transition-opacity flex justify-center items-center;
+  @apply absolute h-[258px] opacity-0 z-20 cursor-pointer transition-opacity flex justify-center items-center invisible md:visible;
   background-color: rgba(0, 0, 0, 0.5);
   font-size: 42px;
   width: 50px;

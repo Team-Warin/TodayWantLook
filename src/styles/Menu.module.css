@@ -1,0 +1,72 @@
+.barContainer {
+  @apply flex items-center gap-3 mt-3;
+
+  &:nth-child(1) {
+    @apply mt-10;
+  }
+
+  & > h1 {
+    @apply text-xl font-bold;
+  }
+
+  & > hr {
+    @apply w-[2%] rounded border-2;
+  }
+}
+
+.menuBtn {
+  @apply visible md:invisible;
+  @apply absolute right-10 flex flex-col justify-center gap-[8.5px] cursor-pointer w-[30px] h-[35px] z-30;
+
+  & > div {
+    @apply relative top-0 opacity-100 border-t-[2.5px] border-gray-800 rounded-md;
+    transition:
+      top 0.3s ease 0.3s,
+      transform 0.3s ease-out 0.1s,
+      opacity 1s ease;
+  }
+}
+
+.menuBtn.active {
+  & > div {
+    transition:
+      top 0.3s ease 0.1s,
+      transform 0.3s ease-out 0.5s,
+      opacity 1s ease;
+  }
+
+  & > div:nth-child(1) {
+    top: 10.5px;
+    transform: rotate(-45deg);
+  }
+
+  & > div:nth-child(2) {
+    @apply opacity-0;
+  }
+
+  & > div:nth-child(3) {
+    top: -10.5px;
+    transform: rotate(45deg);
+  }
+}
+
+.menuContainer {
+  @apply p-5 fixed top-0 right-0 w-[270px] h-dvh bg-white transition-transform shadow-lg visible md:invisible;
+  transform: translateX(100%);
+
+  &.active {
+    transform: translateX(0%);
+  }
+}
+
+.noSessionContainer {
+  @apply mt-2 p-2 pt-6 pb-6 flex justify-center items-center bg-slate-100 rounded-md;
+}
+
+.SessionContainer {
+  @apply mt-2 p-2 pt-6 pb-6 flex flex-col gap-2 justify-center items-center text-medium font-bold;
+}
+
+.logout {
+  @apply absolute bottom-2;
+}

@@ -1,7 +1,14 @@
 .container {
-  @apply w-full h-[80px] flex justify-between items-center z-50;
+  @apply w-full h-[60px] flex justify-between items-center z-50;
+  @apply md:h-[80px];
 }
 
-.logo {
-  @apply text-xl font-bold;
+.links {
+  @apply invisible;
+  @apply md:visible;
+}
+
+.userContainer {
+  @apply invisible;
+  @apply md:visible;
 }
