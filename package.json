@@ -33,17 +33,14 @@
     "axios": "^1.6.8",
     "framer-motion": "^11.1.7",
     "hangul-js": "^0.2.6",
-    "iniru-youtube-search-api": "^1.0.6",
     "next": "^14.2.1",
-    "next-auth": "^5.0.0-beta.17",
+    "next-auth": "^5.0.0-beta.18",
     "next-compose-plugins": "^2.2.1",
     "nodeml": "^0.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intersection-observer": "^9.8.2",
-    "swr": "^2.2.5",
-    "youtube-ext": "^1.1.25",
-    "youtube-search-api": "^1.2.1"
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.1.1",
