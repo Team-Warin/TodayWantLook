@@ -13,6 +13,8 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { MediaData } from '@/types/media';
+import Link from 'next/link';
+import { MediaLink } from './Media';
 
 export default function Scroll({
   title,
@@ -101,12 +103,9 @@ export default function Scroll({
             {(data ? data : [...new Array(20).keys()]).map(
               (item: MediaData | number, i: number) => {
                 return (
-                  <Card
-                    key={i}
-                    isLoading={isLoading}
-                    data={item}
-                    info={false}
-                  ></Card>
+                  <MediaLink key={i} media={item}>
+                    <Card isLoading={isLoading} data={item} info={false}></Card>
+                  </MediaLink>
                 );
               }
             )}
@@ -115,12 +114,9 @@ export default function Scroll({
             {(data ? data : [...new Array(20).keys()]).map(
               (item: MediaData | number, i: number) => {
                 return (
-                  <Card
-                    key={i}
-                    isLoading={isLoading}
-                    data={item}
-                    info={false}
-                  ></Card>
+                  <MediaLink key={i} media={item}>
+                    <Card isLoading={isLoading} data={item} info={false}></Card>
+                  </MediaLink>
                 );
               }
             )}
@@ -129,12 +125,9 @@ export default function Scroll({
             {(data ? data : [...new Array(20).keys()]).map(
               (item: MediaData | number, i: number) => {
                 return (
-                  <Card
-                    key={i}
-                    isLoading={isLoading}
-                    data={item}
-                    info={false}
-                  ></Card>
+                  <MediaLink key={i} media={item}>
+                    <Card isLoading={isLoading} data={item} info={false}></Card>
+                  </MediaLink>
                 );
               }
             )}
@@ -143,12 +136,9 @@ export default function Scroll({
             {(data ? data : [...new Array(20).keys()]).map(
               (item: MediaData | number, i: number) => {
                 return (
-                  <Card
-                    key={i}
-                    isLoading={isLoading}
-                    data={item}
-                    info={false}
-                  ></Card>
+                  <MediaLink key={i} media={item}>
+                    <Card isLoading={isLoading} data={item} info={false}></Card>
+                  </MediaLink>
                 );
               }
             )}
@@ -157,12 +147,9 @@ export default function Scroll({
             {(data ? data : [...new Array(20).keys()]).map(
               (item: MediaData | number, i: number) => {
                 return (
-                  <Card
-                    key={i}
-                    isLoading={isLoading}
-                    data={item}
-                    info={false}
-                  ></Card>
+                  <MediaLink key={i} media={item}>
+                    <Card isLoading={isLoading} data={item} info={false}></Card>
+                  </MediaLink>
                 );
               }
             )}

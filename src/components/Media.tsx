@@ -87,12 +87,14 @@ export default function Media({
       if (card.current) {
         const cardWidth: number = card.current.clientWidth ?? 149;
         const containerWidth: number = window.innerWidth - 24;
+        const gap: number = 8;
+
         let rows = 0;
 
-        if (containerWidth % (cardWidth + 16) >= cardWidth) {
-          rows = Math.floor(containerWidth / (cardWidth + 16)) + 1;
+        if (containerWidth % (cardWidth + gap) >= cardWidth) {
+          rows = Math.floor(containerWidth / (cardWidth + gap)) + 1;
         } else {
-          rows = Math.floor(containerWidth / (cardWidth + 16));
+          rows = Math.floor(containerWidth / (cardWidth + gap));
         }
 
         if (rows !== row) setRow(rows);
@@ -267,7 +269,7 @@ export default function Media({
   );
 }
 
-function MediaLink({
+export function MediaLink({
   media,
   children,
 }: {
