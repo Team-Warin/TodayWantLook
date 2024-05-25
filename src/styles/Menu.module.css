@@ -28,6 +28,8 @@
 }
 
 .menuBtn.active {
+  @apply fixed;
+
   & > div {
     transition:
       top 0.3s ease 0.1s,

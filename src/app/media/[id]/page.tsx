@@ -125,9 +125,13 @@ export default async function Media({ params }: { params: { id: string } }) {
       <div className={style.mediaCardContainer}>
         <div className={style.mediaInfoContainer}>
           <div className={style.mediaCard}>
-            <Link rel='preconnect' href={media?.url!}>
-              <Card data={media!} info={false} isUrl={true} />
-            </Link>
+            {media?.url ? (
+              <Link rel='preconnect' href={media?.url}>
+                <Card data={media!} info={false} isUrl={true} />
+              </Link>
+            ) : (
+              <Card data={media!} info={false} />
+            )}
             <div className={`${style.mediaTitle} ${WAGURI.className}`}>
               <div className='flex items-center gap-3'>
                 <Chip color='warning' variant='flat' radius='sm'>

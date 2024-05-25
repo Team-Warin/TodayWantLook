@@ -86,7 +86,6 @@ export default function Filter({
         { name: 'All' },
         { name: '웹툰', regex: '(?=.*(webtoon).*).*' },
         { name: '영화', regex: '(?=.*(movie).*).*' },
-        { name: '드라마', regex: '(?=.*(drama).*).*' },
       ],
     },
   };
