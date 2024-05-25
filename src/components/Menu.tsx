@@ -74,10 +74,10 @@ export default function Menu({
             <hr />
             <h1>메뉴</h1>
           </div>
-          <Listbox aria-label='Menu'>
-            {menu.map((item) => {
+          <Listbox aria-labelledby='' aria-label='Menu'>
+            {menu.map((item, i) => {
               return (
-                <ListboxItem key={item.name}>
+                <ListboxItem key={i}>
                   <Link
                     className={`${pathname === item.url ? 'text-twl' : ''}`}
                     href={item.url}

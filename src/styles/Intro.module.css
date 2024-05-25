@@ -1,9 +1,9 @@
 .container {
-  @apply w-full h-[900px] overflow-y-hidden relative;
+  @apply w-full h-[900px] overflow-hidden relative;
 }
 
 .backdropImgContainer {
-  @apply relative h-[1300px] brightness-75;
+  @apply relative w-[900px] h-[1300px] brightness-75;
 }
 
 .backdropImgContainer > img {
@@ -15,12 +15,11 @@
 }
 
 .backdropImgContainer > img.show {
-  @apply z-20 opacity-100;
-  transform: translateX(-35%);
+  @apply z-20 opacity-100 translate-x-[-20%] md:translate-x-[-35%];
 }
 
 .overlay {
-  @apply z-30 absolute bg-gradient-to-l w-full h-full from-slate-50 via-slate-50 via-45% backdrop-blur-md;
+  @apply z-30 absolute bg-gradient-to-l w-full h-full from-slate-50 via-slate-50 via-15% md:via-45% backdrop-blur-md;
 }
 
 .overlay > div {
@@ -45,7 +44,7 @@
 }
 
 .rankContainer {
-  @apply flex flex-col gap-2 items-end;
+  @apply flex flex-wrap flex-col gap-2 items-end;
 }
 
 .rank {
@@ -57,5 +56,9 @@
 }
 
 .title {
-  @apply font-bold text-4xl whitespace-nowrap;
+  @apply font-bold text-4xl whitespace-nowrap hidden md:block;
+}
+
+.titleMobile {
+  @apply font-bold text-4xl whitespace-nowrap visible md:invisible;
 }
