@@ -15,6 +15,7 @@ import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
 import { Listbox, ListboxItem } from '@nextui-org/listbox';
 import { Popover, PopoverTrigger, PopoverContent } from '@nextui-org/popover';
+import Menu from './Menu';
 
 /**
  * Navbar UI Components
@@ -45,7 +46,7 @@ export default function Navbar({ session }: { session: Session | null }) {
               return (
                 <Link
                   key={i}
-                  className={`${pathname === menu.url ? 'text-twl' : ''} transition-colors`}
+                  className={`${pathname === menu.url ? 'text-twl' : ''} ${style.links} cursor-pointer transition-colors`}
                   href={menu.url}
                 >
                   {menu.name}
@@ -54,7 +55,7 @@ export default function Navbar({ session }: { session: Session | null }) {
             })}
           </div>
         </div>
-        <div>
+        <div className={style.userContainer}>
           {session?.user.image ? (
             <Popover placement='bottom-end'>
               <PopoverTrigger>
@@ -97,6 +98,7 @@ export default function Navbar({ session }: { session: Session | null }) {
             </Link>
           )}
         </div>
+        <Menu session={session} pathname={pathname} menu={navMenu} />
       </div>
     </div>
   );
