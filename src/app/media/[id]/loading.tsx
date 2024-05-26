@@ -9,7 +9,9 @@ export default function Loading() {
       <div className={style.mediaCardContainer}>
         <div className={style.mediaInfoContainer}>
           <div className={style.mediaCard}>
-            <Card isLoading={true} info={false} />
+            <div className={style.mediaMobile}>
+              <Card isLoading={true} info={false} />
+            </div>
           </div>
         </div>
         <h1 className={style.mediaYouTubeTitle}>관련 영상을 불러오는중...</h1>

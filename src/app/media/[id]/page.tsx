@@ -1,4 +1,5 @@
 import style from '@/styles/MediaPage.module.css';
+import cardStyle from '@/styles/Card.module.css';
 
 import { BMJUA, WAGURI } from '@/modules/font';
 import { CreateClient, CreateServerClient } from '@/modules/supabase';
@@ -128,7 +129,12 @@ export default async function Media({ params }: { params: { id: string } }) {
             <div className={style.mediaMobile}>
               {media?.url ? (
                 <Link rel='preconnect' href={media?.url}>
-                  <Card data={media!} info={false} isUrl={true} />
+                  <Card
+                    className={cardStyle.mediaPage}
+                    data={media!}
+                    info={false}
+                    isUrl={true}
+                  />
                 </Link>
               ) : (
                 <Card data={media!} info={false} />
