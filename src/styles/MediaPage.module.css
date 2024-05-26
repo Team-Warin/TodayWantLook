@@ -19,7 +19,7 @@
 }
 
 .mediaTitle {
-  @apply relative;
+  @apply relative mt-3;
 }
 
 .mediaTitle > div > h1 {
@@ -27,7 +27,7 @@
 }
 
 .mediaTitle > p {
-  @apply text-[15px] text-gray-600;
+  @apply text-[13px] md:text-[15px] text-gray-600;
 }
 
 .mediaAdditional {

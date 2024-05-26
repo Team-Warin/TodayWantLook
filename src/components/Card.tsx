@@ -18,13 +18,23 @@ interface CardProps {
   lazy?: boolean;
   size?: number;
   isUrl?: boolean;
+  className?: string;
 }
 
 /**
  * Card UI Component
  */
 function Card(
-  { isLoading = true, data, info, quality, lazy, size, isUrl }: CardProps,
+  {
+    isLoading = true,
+    data,
+    info,
+    quality,
+    lazy,
+    size,
+    isUrl,
+    className,
+  }: CardProps,
   ref: ForwardedRef<HTMLDivElement>
 ) {
   if ((isLoading && typeof data === 'number') || !data) {
@@ -33,9 +43,9 @@ function Card(
         style={{ '--size': size ? `${size}vw` : '0vw' } as CardCSS}
         ref={ref}
       >
-        <div className={style.container}>
+        <div className={`${style.container} ${className}`}>
           <Skeleton className='rounded-lg'>
-            <div className={style.poster_container}></div>
+            <div className={`${style.poster_container} ${className}`}></div>
           </Skeleton>
           {info !== false ? (
             <div className='mt-2'>
@@ -68,9 +78,9 @@ function Card(
         style={{ '--size': size ? `${size}vw` : '0vw' } as CardCSS}
         ref={ref}
       >
-        <div className={style.container}>
+        <div className={`${style.container} ${className}`}>
           <div
-            className={`${style.poster_container} ${isUrl && data.type === 'webtoon' ? 'rounded-t-lg' : 'rounded-lg'}`}
+            className={`${style.poster_container} ${className} ${isUrl && data.type === 'webtoon' ? 'rounded-t-lg' : 'rounded-lg'}`}
           >
             {info !== false ? (
               <div className={style.additional}>

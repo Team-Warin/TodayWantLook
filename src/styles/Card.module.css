@@ -1,13 +1,21 @@
 .cardWidth {
-  @apply w-[calc(109px+var(--size)+var(--size))] md:w-[calc(149px+var(--size))];
+  @apply w-[calc(119px+var(--size)+var(--size))] md:w-[calc(149px+var(--size))];
 }
 
 .container {
-  @apply w-[calc(109px+var(--size)+var(--size))] md:w-[calc(149px+var(--size))] cursor-pointer;
+  @apply w-[calc(119px+var(--size)+var(--size))] md:w-[calc(149px+var(--size))] cursor-pointer;
+
+  &.mediaPage {
+    @apply w-[calc(149px+var(--size)+var(--size))];
+  }
 }
 
 .poster_container {
   @apply h-[calc(188px+var(--size)+var(--size))] md:h-[calc(258px+var(--size))] overflow-hidden relative shadow-md;
+
+  &.mediaPage {
+    @apply h-[calc(218px+var(--size)+var(--size))];
+  }
 }
 
 .additional {
