@@ -1,9 +1,9 @@
 .cardWidth {
-  @apply w-[calc(109px+var(--size)+var(--size))] md:w-[calc(149px+var(--size))];
+  @apply w-[calc(129px+var(--size)+var(--size))] md:w-[calc(149px+var(--size))];
 }
 
 .container {
-  @apply w-[calc(109px+var(--size)+var(--size))] md:w-[calc(149px+var(--size))] cursor-pointer;
+  @apply w-[calc(129px+var(--size)+var(--size))] md:w-[calc(149px+var(--size))] cursor-pointer;
 }
 
 .poster_container {

@@ -1,13 +1,21 @@
 function nameCreate(): string {
-  const prefix = ['웹툰을', '발톱을', '영화를', '드라마를', '학교를'];
+  const prefix = [
+    '웹툰을',
+    '발톱을',
+    '영화를',
+    '드라마를',
+    '학교를',
+    '유튜브를',
+  ];
   const adjective = [
     '좋아하는',
     '싫어하는',
     '혐오하는',
     '무서워하는',
     '재밌어하는',
+    '사랑하는',
   ];
-  const names = ['하마', '말', '당나귀', '고양이', '물범'];
+  const names = ['하마', '말', '당나귀', '고양이', '물범', '강아지'];
 
   return `${prefix[Math.floor(Math.random() * prefix.length)]} ${
     adjective[Math.floor(Math.random() * adjective.length)]
