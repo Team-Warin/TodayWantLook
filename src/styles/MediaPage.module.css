@@ -1,9 +1,9 @@
 .container {
-  @apply mt-7 ps-10 pe-10 w-full flex justify-center;
+  @apply mt-7 ps-2 pe-2 md:ps-10 md:pe-10 w-full flex justify-center;
 }
 
 .mediaCardContainer {
-  @apply w-full p-5 gap-5 bg-white rounded-lg shadow-md;
+  @apply relative w-full p-5 gap-5 bg-white rounded-lg shadow-md;
 }
 
 .mediaInfoContainer {
@@ -11,7 +11,11 @@
 }
 
 .mediaCard {
-  @apply flex gap-3;
+  @apply w-full md:w-auto md:flex gap-3;
+}
+
+.mediaMobile {
+  @apply w-full md:w-auto flex justify-center md:block;
 }
 
 .mediaTitle {
@@ -27,7 +31,7 @@
 }
 
 .mediaAdditional {
-  @apply flex justify-items-end h-[25px] gap-1;
+  @apply absolute right-3 flex h-[25px] gap-1;
 }
 
 .mediaAdditional > img {
@@ -47,11 +51,11 @@
 }
 
 .mediaVideo {
-  @apply rounded-md flex-shrink-0 w-[560px] h-[315px];
+  @apply rounded-md flex-shrink-0 w-[260px] h-[175px] md:w-[560px] md:h-[315px];
 }
 
 .mediaYouTubeTitle {
-  @apply mt-6 text-[22px];
+  @apply mt-6 text-[18px] md:text-[22px];
 }
 
 .summary {

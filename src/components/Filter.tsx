@@ -51,6 +51,7 @@ export default function Filter({
         { name: '드라마', regex: '(?=.*(드라마).*).*' },
         { name: '요리', regex: '(?=.*(음식|요리).*).*' },
         { name: '스포츠', regex: '(?=.*(스포츠).*).*' },
+        { name: '애니메이션', regex: '(?=.*(애니메이션|애니).*).*' },
       ],
     },
     additional: {

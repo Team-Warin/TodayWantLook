@@ -125,16 +125,23 @@ export default async function Media({ params }: { params: { id: string } }) {
       <div className={style.mediaCardContainer}>
         <div className={style.mediaInfoContainer}>
           <div className={style.mediaCard}>
-            {media?.url ? (
-              <Link rel='preconnect' href={media?.url}>
-                <Card data={media!} info={false} isUrl={true} />
-              </Link>
-            ) : (
-              <Card data={media!} info={false} />
-            )}
+            <div className={style.mediaMobile}>
+              {media?.url ? (
+                <Link rel='preconnect' href={media?.url}>
+                  <Card data={media!} info={false} isUrl={true} />
+                </Link>
+              ) : (
+                <Card data={media!} info={false} />
+              )}
+            </div>
             <div className={`${style.mediaTitle} ${WAGURI.className}`}>
               <div className='flex items-center gap-3'>
-                <Chip color='warning' variant='flat' radius='sm'>
+                <Chip
+                  className='hidden md:block'
+                  color='warning'
+                  variant='flat'
+                  radius='sm'
+                >
                   <FontAwesomeIcon icon={faStar} /> {rate ?? 0}
                 </Chip>
                 <h1>{media?.title!}</h1>
@@ -142,7 +149,7 @@ export default async function Media({ params }: { params: { id: string } }) {
                   <Tooltip color='danger' content='좋아요'>
                     <form action={setLike}>
                       <Button
-                        className='text-2xl'
+                        className='text-2xl hidden md:block'
                         isIconOnly
                         variant='light'
                         color='danger'
@@ -157,7 +164,7 @@ export default async function Media({ params }: { params: { id: string } }) {
                   </Tooltip>
                 ) : null}
               </div>
-              <p>{media?.author!}</p>
+              {media?.author ? <p>{media?.author}</p> : null}
 
               <div className={`${BMJUA.className} ${style.mediaGenre}`}>
                 {media?.genre.map((genre, i) => {
@@ -191,6 +198,23 @@ export default async function Media({ params }: { params: { id: string } }) {
             })}
           </div>
         </div>
+
+        {session ? (
+          <form action={setLike}>
+            <Button
+              className='mt-3 w-full text-2xl md:hidden'
+              isIconOnly
+              variant={rates?.checks.like === true ? undefined : 'bordered'}
+              color='danger'
+              size='lg'
+              type='submit'
+            >
+              <FontAwesomeIcon
+                icon={rates?.checks.like === true ? isLike : dontLike}
+              />
+            </Button>
+          </form>
+        ) : null}
 
         <div className={style.barContainer}>
           <hr />
