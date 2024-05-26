@@ -143,7 +143,7 @@ export default async function Media({ params }: { params: { id: string } }) {
             <div className={`${style.mediaTitle} ${WAGURI.className}`}>
               <div className='flex items-center gap-3'>
                 <Chip
-                  className='hidden md:block'
+                  className='hidden md:flex'
                   color='warning'
                   variant='flat'
                   radius='sm'
